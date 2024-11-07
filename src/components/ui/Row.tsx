@@ -22,7 +22,7 @@ export default function Row({
       </div>
       <div
         className={classNames('relative flex grow items-center gap-3 py-3', {
-          'after:bg-separator/35 after:absolute after:bottom-0 after:block after:h-px after:w-full after:scale-y-[0.3]':
+          'after:absolute after:bottom-0 after:block after:h-px after:w-full after:scale-y-[0.3] after:bg-separator/35':
             separator,
         })}
       >

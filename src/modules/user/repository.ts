@@ -2,7 +2,6 @@
 
 import { Prisma, PrismaClient } from '@prisma/client';
 import UserWhereInput = Prisma.UserWhereInput;
-import { EventAction } from '@/modules/event/types';
 
 const prisma = new PrismaClient();
 

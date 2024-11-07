@@ -7,7 +7,6 @@ import { useLottie } from 'lottie-react';
 import { getGiftAnimationBySymbol, giftPreviewIcon } from '@/components/utils';
 import useToast from '@/hooks/useToast';
 import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
-import { fa } from '@faker-js/faker';
 
 type Props = {
   gift: Gift;

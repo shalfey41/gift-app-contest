@@ -6,7 +6,6 @@ export const fetchCache = 'force-no-store';
 
 import { Bot, InlineKeyboard, InlineQueryResultBuilder, webhookCallback } from 'grammy';
 import { createUserIfNotExists, getUserByTelegramId } from '@/modules/user/service';
-import * as repository from '@/modules/bot/repository';
 import { createSendEvent, getBoughtGiftsByUserId } from '@/modules/event/service';
 import { sendGreetingsMessage } from '@/modules/bot/service';
 

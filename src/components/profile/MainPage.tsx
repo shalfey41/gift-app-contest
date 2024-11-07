@@ -1,16 +1,6 @@
-import React, { useState } from 'react';
-
-enum Page {
-  giftsList,
-}
+import React from 'react';
 
 export default function MainPage() {
-  const [page, setPage] = useState(Page.giftsList);
-
-  const goTo = (page: Page) => {
-    setPage(page);
-  };
-
   return (
     <>
       <h1>Profile</h1>

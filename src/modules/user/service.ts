@@ -25,6 +25,7 @@ export const getUserByTelegramId = async (telegramId: number) => {
 };
 
 export const getLeaderboardUsers = async ({ nameQuery }: { nameQuery?: string }) => {
+  console.log(nameQuery);
   try {
     // return repository.getUsers({
     //   where: {
