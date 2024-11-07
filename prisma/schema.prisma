@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId          BigInt   @unique
+  name                String
+  nameLowerCase       String
+  avatarUrl           String
+  giftsReceived       Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  eventsAsBuyer       Event[]  @relation("BuyerRelation")
+  eventsAsRemitter    Event[]  @relation("RemitterRelation")
+  eventsAsBeneficiary Event[]  @relation("BeneficiaryRelation")
+
+  @@index([nameLowerCase])
+  @@index([nameLowerCase, giftsReceived(sort: Desc)])
+}
+
+model Gift {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  symbol          String
+  name            String
+  price           Float
+  asset           String
+  totalAmount     Int
+  availableAmount Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Event           Event[]
+}
+
+model Event {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  action        String
+  buyerId       String?  @db.ObjectId
+  remitterId    String?  @db.ObjectId
+  beneficiaryId String?  @db.ObjectId
+  giftId        String   @db.ObjectId
+  isGiftSent    Boolean?
+  invoiceId     BigInt?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  gift          Gift     @relation(fields: [giftId], references: [id])
+  buyer         User?    @relation("BuyerRelation", fields: [buyerId], references: [id])
+  remitter      User?    @relation("RemitterRelation", fields: [remitterId], references: [id])
+  beneficiary   User?    @relation("BeneficiaryRelation", fields: [beneficiaryId], references: [id])
+
+  @@index([giftId, createdAt(sort: Desc)])
+  @@index([beneficiaryId, createdAt(sort: Desc)])
+  @@index([beneficiaryId, remitterId, buyerId, createdAt(sort: Desc)])
+}
+
+model ActiveInvoce {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  invoiceId BigInt   @unique
+  userId    String   @db.ObjectId
+  giftId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
