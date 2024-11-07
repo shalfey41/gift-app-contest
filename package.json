@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prisma:build": "prisma generate && prisma db push",
-    "build": "prisma:build && next build",
+    "build": "npm run prisma:build && next build",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write ."
