@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "prisma:build": "prisma generate && prisma db push",
+    "build": "prisma:build && next build",
     "start": "next start",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
