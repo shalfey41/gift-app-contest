@@ -11,6 +11,8 @@ import { sendGreetingsMessage } from '@/modules/bot/service';
 import { StartParam } from '@/modules/bot/types';
 import { giftPreviewIcon } from '@/components/utils';
 
+//
+
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const webAppUrl = process.env.WEB_APP_URL;
 
