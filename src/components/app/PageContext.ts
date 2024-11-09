@@ -1,12 +1,14 @@
 import { createContext, ReactNode, JSX } from 'react';
 
 export enum Page {
-  store,
-  gifts,
-  leaderboard,
-  profile,
-  receiveGift,
+  store = 'store',
+  gifts = 'gifts',
+  leaderboard = 'leaderboard',
+  profile = 'profile',
+  receiveGift = 'receiveGift',
 }
+
+export const pages = Object.values(Page);
 
 export type ToastOptions = {
   iconSrc: string;
@@ -25,26 +27,24 @@ export type PopupOptions = {
   onClose: () => void;
 };
 
-export const PageContext = createContext<{
-  route: {
-    page: Page;
-    params?: Record<string, string>;
-  };
-  setRoute: (route: { page: Page; params?: Record<string, string> }) => void;
+export type Route = {
   page: Page;
+  params?: Record<string, string>;
+};
+
+export const PageContext = createContext<{
+  route: Route;
+  setRoute: (route: { page: Page; params?: Record<string, string> }) => void;
   popup: PopupOptions | null;
   bottomBarHeight: number;
-  setPage: (page: Page) => void;
   toggleBottomBar: (flag: boolean) => void;
   setBottomBar: (component: ReactNode) => void;
   setToast: (options: ToastOptions | null) => void;
   setPopup: (options: PopupOptions | null) => void;
 }>({
-  page: Page.store,
   route: { page: Page.store },
   popup: null,
   bottomBarHeight: 0,
-  setPage: () => {},
   setRoute: () => {},
   toggleBottomBar: () => {},
   setBottomBar: () => {},

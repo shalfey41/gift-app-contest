@@ -4,6 +4,8 @@ import giftBlueStarAnimation from '@/lottie/gift-blue-star.json';
 import giftGreenStarAnimation from '@/lottie/gift-green-star.json';
 import giftRedStarAnimation from '@/lottie/gift-red-star.json';
 import { ErrorCode } from '@/modules/types';
+import { Page, pages, Route } from '@/components/app/PageContext';
+import { StartParam, startParamArray } from '@/modules/bot/types';
 
 export const getCssVar = (name: string) => {
   return getComputedStyle(document.documentElement).getPropertyValue(name) as `#${string}`;
@@ -114,5 +116,55 @@ export const parseError = (error: ErrorCode) => {
     default: {
       return 'Unknown error happened';
     }
+  }
+};
+
+export const parseStartParam = (startParam?: string): Route => {
+  const defaultRoute = {
+    page: Page.store,
+  };
+
+  if (!startParam) {
+    return defaultRoute;
+  }
+
+  let command: StartParam;
+  let params: string;
+
+  try {
+    [command, params] = startParam.split('_') as [StartParam, string];
+
+    if (!startParamArray.includes(command) || !params) {
+      return defaultRoute;
+    }
+  } catch {
+    return defaultRoute;
+  }
+
+  switch (command) {
+    case StartParam.receiveGift: {
+      return {
+        page: Page.receiveGift,
+        params: { eventId: params },
+      };
+    }
+
+    case StartParam.viewGift: {
+      return {
+        page: Page.profile,
+        params: { eventId: params },
+      };
+    }
+
+    case StartParam.openPage: {
+      if (!pages.includes(params as Page)) {
+        return defaultRoute;
+      }
+
+      return { page: params as unknown as Page };
+    }
+
+    default:
+      return defaultRoute;
   }
 };

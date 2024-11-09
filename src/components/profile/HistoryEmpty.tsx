@@ -5,7 +5,7 @@ import animation from '@/lottie/emoji-balloons.json';
 import Button from '@/components/ui/Button';
 
 export default function HistoryEmpty() {
-  const { setBottomBar, setPage } = useContext(PageContext);
+  const { setBottomBar, setRoute } = useContext(PageContext);
   const { View } = useLottie({
     animationData: animation,
     renderer: 'canvas',
@@ -16,12 +16,12 @@ export default function HistoryEmpty() {
   useEffect(() => {
     setBottomBar(
       <div className="px-4">
-        <Button size="large" className="w-full" onClick={() => setPage(Page.store)}>
+        <Button size="large" className="w-full" onClick={() => setRoute({ page: Page.store })}>
           Open Store
         </Button>
       </div>,
     );
-  }, [setBottomBar, setPage]);
+  }, [setBottomBar, setRoute]);
 
   return (
     <section className="flex h-full items-center justify-center px-4">

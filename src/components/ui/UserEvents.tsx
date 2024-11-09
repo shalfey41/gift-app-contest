@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import { Page, PageContext } from '@/components/app/PageContext';
 import Loader from '@/components/ui/Loader';
 import { useReceivedGiftsByUserIdQuery } from '@/queries/useEventQuery';
@@ -15,9 +15,10 @@ type Props = {
 };
 
 export default function UserEvents({ userId }: Props) {
-  const { setPage } = useContext(PageContext);
+  const { route, setRoute } = useContext(PageContext);
   const { showPopup, closePopup } = usePopup();
   const { data: events, isPending: isLoadingEvents } = useReceivedGiftsByUserIdQuery(userId);
+  const wasGiftOpenedByRoute = useRef(false);
 
   const selectGift = useCallback(
     (event: EventGetPayload<{ include: EventInclude }>) => {
@@ -70,6 +71,24 @@ export default function UserEvents({ userId }: Props) {
     [closePopup, showPopup],
   );
 
+  useEffect(() => {
+    if (!events || !events?.total || wasGiftOpenedByRoute.current) {
+      return;
+    }
+
+    if (!route.params?.eventId) {
+      return;
+    }
+
+    const event = events.list.find((event) => event.id === route.params?.eventId);
+
+    if (event) {
+      selectGift(event);
+      wasGiftOpenedByRoute.current = true;
+      setRoute({ page: Page.profile });
+    }
+  }, [events]);
+
   if (isLoadingEvents) {
     return (
       <div className="mt-5 flex w-full justify-center">
@@ -82,7 +101,7 @@ export default function UserEvents({ userId }: Props) {
     return (
       <ListEmpty
         title="You can buy a gift to receive a gift in return."
-        onClick={() => setPage(Page.store)}
+        onClick={() => setRoute({ page: Page.store })}
       />
     );
   }

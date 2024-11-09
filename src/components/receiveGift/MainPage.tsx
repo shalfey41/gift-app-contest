@@ -1,20 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useReceiveGiftByEventIdQuery } from '@/queries/useEventQuery';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import ReceiveStatusPage from '@/components/receiveGift/ReceiveStatusPage';
 import { ErrorCode } from '@/modules/types';
+import { PageContext } from '@/components/app/PageContext';
 
 export default function MainPage() {
-  // todo get eventId from start param
-  const [eventId, setEventId] = useState<string | null>(null);
+  const { route, setRoute } = useContext(PageContext);
+  const eventId = useRef(route.params?.eventId);
   const { data: user } = useCurrentUserQuery();
   const {
     data: event,
     isPending: isLoadingEvent,
     error,
-  } = useReceiveGiftByEventIdQuery(eventId || '', user?.id || '');
+  } = useReceiveGiftByEventIdQuery(eventId.current || '', user?.id || '');
+
+  useEffect(() => {
+    if (route.params?.eventId) {
+      setRoute({ page: route.page });
+    }
+  }, []);
 
   return (
     <ReceiveStatusPage

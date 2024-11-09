@@ -14,19 +14,18 @@ import { useTraceUpdate } from '@/hooks/useTraceUpdate';
 import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
 import WebApp from '@twa-dev/sdk';
+import { parseStartParam } from '@/components/utils';
 
 export default function App() {
-  const startParam = WebApp.initDataUnsafe.start_param;
   const bottomBarRef = useRef<HTMLDivElement>(null);
   const [bottomBarHeight, setBottomBarHeight] = useState(0);
-  const [page, setPage] = useState(Page.store);
-  const [route, setRoute] = useState({ page: Page.store });
+  const [route, setRoute] = useState(parseStartParam(WebApp.initDataUnsafe.start_param));
   const [showBottomBar, toggleBottomBar] = useState(true);
   const [bottomBar, setBottomBar] = useState<React.ReactNode>(<MenuBar />);
   const [toast, setToast] = useState<ToastOptions | null>(null);
   const [popup, setPopup] = useState<PopupOptions | null>(null);
 
-  useTraceUpdate('App', { route, page, showBottomBar, bottomBar, toast, popup, bottomBarHeight });
+  useTraceUpdate('App', { route, showBottomBar, bottomBar, toast, popup, bottomBarHeight });
 
   useEffect(() => {
     if (bottomBarRef.current) {
@@ -45,11 +44,9 @@ export default function App() {
   return (
     <PageContext.Provider
       value={{
-        page,
         route,
         popup,
         bottomBarHeight,
-        setPage,
         toggleBottomBar,
         setBottomBar,
         setToast,
@@ -61,23 +58,23 @@ export default function App() {
         className={classNames('relative grow bg-background')}
         style={{ paddingBottom: bottomBarHeight }}
       >
-        {page === Page.store && <StorePage />}
-        {page === Page.gifts && <GiftsPage />}
-        {page === Page.leaderboard && <LeaderboardPage />}
-        {page === Page.profile && <ProfilePage />}
-        {page === Page.receiveGift && <ReceiveGiftPage />}
+        {route.page === Page.store && <StorePage />}
+        {route.page === Page.gifts && <GiftsPage />}
+        {route.page === Page.leaderboard && <LeaderboardPage />}
+        {route.page === Page.profile && <ProfilePage />}
+        {route.page === Page.receiveGift && <ReceiveGiftPage />}
 
-        {popup && <div className="absolute inset-0 bg-black/30" />}
+        {popup && <div className="absolute inset-0 z-20 bg-black/30" />}
       </div>
 
-      <div className="fixed bottom-0 w-full bg-tab-bar" ref={bottomBarRef}>
+      <div className="fixed bottom-0 z-30 w-full bg-tab-bar" ref={bottomBarRef}>
         {popup && (
-          <div className="absolute top-full z-10 w-full -translate-y-full pb-4">
+          <div className="absolute top-full w-full -translate-y-full">
             <Popup />
           </div>
         )}
         {toast && (
-          <div className="absolute top-0 z-20 w-full -translate-y-full p-4 pb-8">
+          <div className="absolute top-0 w-full -translate-y-full p-4 pb-8">
             <Toast
               iconSrc={toast.iconSrc}
               title={toast.title}
@@ -88,7 +85,7 @@ export default function App() {
           </div>
         )}
         {showBottomBar && (
-          <div className="relative z-30 pb-4">
+          <div className="relative pb-4">
             <BottomBar>{bottomBar}</BottomBar>
           </div>
         )}

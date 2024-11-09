@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function GiftsListPage({ userGifts, goNext, isLoading }: Props) {
-  const { setPage, setBottomBar } = useContext(PageContext);
+  const { setRoute, setBottomBar } = useContext(PageContext);
 
   useEffect(() => {
     setBottomBar(<MenuBar />);
@@ -42,7 +42,7 @@ export default function GiftsListPage({ userGifts, goNext, isLoading }: Props) {
           return (
             <ListEmpty
               title={`You don't have any gifts yet.`}
-              onClick={() => setPage(Page.store)}
+              onClick={() => setRoute({ page: Page.store })}
             />
           );
         }

@@ -14,7 +14,7 @@ const pages = [
 ];
 
 export default function MenuBar() {
-  const { page: currentPage, setPage } = useContext(PageContext);
+  const { route, setRoute } = useContext(PageContext);
 
   return (
     <div className="grid grid-cols-4 gap-2 pt-2">
@@ -23,8 +23,8 @@ export default function MenuBar() {
           key={page}
           animation={animation}
           label={label}
-          isActive={page === currentPage}
-          onClick={() => setPage(page)}
+          isActive={page === route.page}
+          onClick={() => setRoute({ page })}
         />
       ))}
     </div>

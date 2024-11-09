@@ -5,9 +5,15 @@ import { CommandContext, Context, InlineKeyboard } from 'grammy';
 import * as repository from '@/modules/bot/repository';
 import { getAvatarBackgroundColorByName, handleBotError, isHashValid } from '@/modules/bot/utils';
 import { getEventById } from '@/modules/event/service';
+import { StartParam } from '@/modules/bot/types';
 
+const botUrl = process.env.TELEGRAM_BOT_URL;
 const webAppUrl = process.env.WEB_APP_URL;
 const token = process.env.TELEGRAM_BOT_TOKEN;
+
+if (!botUrl) {
+  throw new Error('TELEGRAM_BOT_URL environment variable not found.');
+}
 
 if (!webAppUrl) {
   throw new Error('WEB_APP_URL environment variable not found.');
@@ -45,8 +51,10 @@ export const reactToBuyEvent = async (eventId: string) => {
   }
 
   try {
-    // todo startapp=mygifts
-    const keyboard = new InlineKeyboard().webApp('Open Gifts', webAppUrl);
+    const keyboard = new InlineKeyboard().url(
+      'Open Gifts',
+      `${botUrl}/app?startapp=${StartParam.openPage}_gifts`,
+    );
 
     await repository.sendMessage(
       Number(event.buyer?.telegramId),
@@ -73,8 +81,10 @@ export const reactToSendEvent = async (eventId: string) => {
   }
 
   try {
-    // todo startapp=mygifts
-    const keyboard = new InlineKeyboard().webApp('View Gift', webAppUrl);
+    const keyboard = new InlineKeyboard().url(
+      'View Gift',
+      `${botUrl}/app?startapp=${StartParam.viewGift}_${event.id}`,
+    );
 
     await repository.sendMessage(
       Number(event.beneficiary.telegramId),
@@ -101,7 +111,6 @@ export const reactToReceiveEvent = async (eventId: string) => {
   }
 
   try {
-    // todo startapp=mygifts
     const keyboard = new InlineKeyboard().webApp('Open App', webAppUrl);
 
     await repository.sendMessage(
@@ -126,7 +135,7 @@ export const getBotInfo = async () => {
 export const sendGreetingsMessage = async (ctx: CommandContext<Context>) => {
   try {
     // todo english russian language
-    const keyboard = new InlineKeyboard().webApp('Open App', webAppUrl);
+    const keyboard = new InlineKeyboard().url('Open App', `${botUrl}/app`);
     const photoId =
       'AgACAgIAAxkBAAMCZytdwK49uum7MgMdYXEjm6aaQGkAAs_lMRsl3lhJDGBGeBmpyzMBAAMCAAN5AAM2BA';
 

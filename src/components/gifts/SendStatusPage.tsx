@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function SendStatusPage({ event, isLoading, goBack }: Props) {
-  const { setBottomBar, setPage } = useContext(PageContext);
+  const { setBottomBar, setRoute } = useContext(PageContext);
   const { data: currentUser, isLoading: isLoadingCurrentUser } = useCurrentUserQuery();
   const { showToast } = useToast();
   const giftAnimation = getGiftAnimationBySymbol(event?.gift.symbol);
@@ -92,7 +92,7 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
   useEffect(() => {
     setBottomBar(
       <div className="grid gap-2 px-4">
-        <Button size="large" onClick={() => setPage(Page.profile)}>
+        <Button size="large" onClick={() => setRoute({ page: Page.profile })}>
           Open Profile
         </Button>
       </div>,
@@ -109,10 +109,10 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
         text: toastMessage.text,
         buttonText: toastMessage.buttonText,
         // todo send param to giftId
-        onClick: () => setPage(Page.profile),
+        onClick: () => setRoute({ page: Page.profile }),
       });
     }, 500);
-  }, [setPage, showToast, setBottomBar, event, toastMessage]);
+  }, [setRoute, showToast, setBottomBar, event, toastMessage]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">

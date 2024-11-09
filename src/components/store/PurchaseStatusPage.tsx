@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function PurchaseStatusPage({ gift, goBack }: Props) {
-  const { setBottomBar, setPage } = useContext(PageContext);
+  const { setBottomBar, setRoute } = useContext(PageContext);
   const { showToast } = useToast();
   const giftAnimation = getGiftAnimationBySymbol(gift.symbol);
   const { View: GiftAnimation } = useLottie({
@@ -33,10 +33,10 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
   useEffect(() => {
     setBottomBar(
       <div className="grid gap-2 px-4">
-        <Button size="large" onClick={() => setPage(Page.gifts)}>
+        <Button size="large" onClick={() => setRoute({ page: Page.gifts })}>
           Send Gift
         </Button>
-        <Button variant="outline" size="large" onClick={() => setPage(Page.gifts)}>
+        <Button variant="outline" size="large" onClick={() => setRoute({ page: Page.gifts })}>
           Open Store
         </Button>
       </div>,
@@ -48,10 +48,10 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
         title: 'You Bought a Gift',
         text: 'Now send it to your friend.',
         buttonText: 'Send',
-        onClick: () => setPage(Page.gifts),
+        onClick: () => setRoute({ page: Page.gifts }),
       });
     }, 500);
-  }, [setPage, showToast, setBottomBar, gift.symbol]);
+  }, [setRoute, showToast, setBottomBar, gift.symbol]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">
