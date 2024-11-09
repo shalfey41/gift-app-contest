@@ -1,11 +1,16 @@
+import { NextResponse } from 'next/server';
 import { deleteExpiredInvoices } from '@/modules/activeInvoice/service';
 
 export const dynamic = 'force-dynamic';
 
-export function GET() {
+export function GET(request: Request) {
   console.log('CRON STARTED');
+
+  if (request.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   deleteExpiredInvoices();
 
-  return new Response('ok');
+  return NextResponse.json({ ok: true });
 }
