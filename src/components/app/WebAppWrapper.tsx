@@ -4,39 +4,24 @@ import React, { PropsWithChildren, useEffect } from 'react';
 import WebApp from '@twa-dev/sdk';
 import { useValidateInitDataQuery } from '@/queries/useBotQuery';
 import AppLoader from '@/components/app/AppLoader';
-import { getCssVar } from '@/components/utils';
+import { initLanguage } from '@/modules/i18n/client';
+import { initColorTheme } from '@/modules/theme/client';
+import AppError from '@/components/app/AppError';
 
 WebApp.expand();
 WebApp.ready();
+WebApp.disableVerticalSwipes();
 
 export default function WebAppWrapper({ children }: PropsWithChildren) {
   const { data: isValidHash, isLoading, isError } = useValidateInitDataQuery();
 
   useEffect(() => {
-    // todo language and theme
-    const setThemeClass = () => {
-      document.documentElement.className = WebApp.colorScheme;
-
-      if (WebApp.colorScheme === 'dark') {
-        // WebApp.setBackgroundColor('#121212');
-      } else {
-        WebApp.setBackgroundColor(getCssVar('--color-bg-tab-bar'));
-        WebApp.setBottomBarColor(getCssVar('--color-bg-tab-bar'));
-      }
-    };
-
-    setThemeClass();
-
-    WebApp.onEvent('themeChanged', setThemeClass);
-
-    return () => {
-      WebApp.offEvent('themeChanged', setThemeClass);
-    };
+    initColorTheme();
+    initLanguage();
   }, []);
 
   if (isError) {
-    // todo error
-    return <h1>You need to open the app from telegram</h1>;
+    return <AppError>You need to open the app from telegram</AppError>;
   }
 
   if (isLoading) {
@@ -44,8 +29,7 @@ export default function WebAppWrapper({ children }: PropsWithChildren) {
   }
 
   if (!isValidHash) {
-    // todo error
-    return <h1>Hash is not valid</h1>;
+    return <AppError>Hash is not valid</AppError>;
   }
 
   return children;

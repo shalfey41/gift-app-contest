@@ -1,27 +1,34 @@
-import React, { PropsWithChildren } from 'react';
+import React, { HTMLAttributes } from 'react';
 import classNames from 'classnames';
 
 type Props = {
   left: React.ReactNode;
-  subtitle: string;
+  subtitle?: string;
   right?: React.ReactNode;
   separator?: boolean;
-};
+  py?: number;
+  onClick?: () => void;
+  ref?: React.Ref<HTMLDivElement>;
+} & HTMLAttributes<HTMLDivElement>;
 
-export default function Row({
-  children,
-  left,
-  right,
-  subtitle,
-  separator = true,
-}: PropsWithChildren<Props>) {
+const Row = React.forwardRef<HTMLDivElement, Props>(function Row(
+  { children, left, right, subtitle, separator = true, py = 3, onClick, ...rest },
+  ref,
+) {
   return (
-    <div className="flex items-center gap-3 px-4">
-      <div className="py-3">
+    <div
+      {...rest}
+      ref={ref}
+      className={classNames('flex items-center gap-3 bg-background px-4', {
+        'cursor-pointer transition-opacity hover:opacity-80': onClick,
+      })}
+      onClick={() => onClick?.()}
+    >
+      <div className={`py-${py}`}>
         <div className="h-10 w-10">{left}</div>
       </div>
       <div
-        className={classNames('relative flex grow items-center gap-3 py-3', {
+        className={classNames(`relative flex grow items-center gap-3 py-3`, {
           'after:absolute after:bottom-0 after:block after:h-px after:w-full after:scale-y-[0.3] after:bg-separator/35':
             separator,
         })}
@@ -34,4 +41,6 @@ export default function Row({
       </div>
     </div>
   );
-}
+});
+
+export default Row;

@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prisma:build": "prisma generate && prisma db push",
-    "build": "npm run prisma:build && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@faker-js/faker": "^9.2.0",
@@ -20,11 +20,13 @@
     "classnames": "^2.5.1",
     "crypto-bot-api": "^0.3.3",
     "grammy": "^1.31.0",
+    "i18next": "^23.16.5",
     "lottie-react": "^2.4.0",
     "next": "14.2.16",
     "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-i18next": "^15.1.1",
     "use-debounce": "^10.0.4"
   },
   "devDependencies": {

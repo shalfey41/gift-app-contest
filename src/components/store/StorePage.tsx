@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from 'react';
 import { Gift } from '@prisma/client';
 import { PageContext } from '@/components/app/PageContext';
-import MenuBar from '@/components/app/menu/MenuBar';
+import MenuBar from '@/components/ui/menu/MenuBar';
 import StoreGift from '@/components/store/StoreGift';
-import Loader from '@/components/ui/loader/Loader';
+import Loader from '@/components/ui/Loader';
 
 type Props = {
   gifts: Gift[];

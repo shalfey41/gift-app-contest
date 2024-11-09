@@ -14,7 +14,7 @@ import {
 import GiftEventsRow from '@/components/store/GiftEventsRow';
 import { PageContext } from '@/components/app/PageContext';
 import Button from '@/components/ui/Button';
-import Loader from '@/components/ui/loader/Loader';
+import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
@@ -162,7 +162,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
           {isLoadingEvents ? (
             <div className="px-4">
-              <Loader width={30} />
+              <Loader />
             </div>
           ) : Array.isArray(recentEvents) && recentEvents.length > 0 ? (
             recentEvents?.map((event, i) => (

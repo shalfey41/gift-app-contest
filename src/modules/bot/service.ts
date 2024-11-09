@@ -67,6 +67,11 @@ export const reactToSendEvent = async (eventId: string) => {
     return;
   }
 
+  // do not send message to test users
+  if (event.beneficiary.telegramId < 0) {
+    return;
+  }
+
   try {
     // todo startapp=mygifts
     const keyboard = new InlineKeyboard().webApp('View Gift', webAppUrl);
@@ -74,6 +79,34 @@ export const reactToSendEvent = async (eventId: string) => {
     await repository.sendMessage(
       Number(event.beneficiary.telegramId),
       `⚡️*${event.remitter.name}* has given you the gift of *${event.gift.name}*`,
+      { keyboard },
+    );
+  } catch (error: unknown) {
+    handleBotError(error);
+  }
+};
+
+export const reactToReceiveEvent = async (eventId: string) => {
+  const event = await getEventById(eventId, {
+    include: { gift: true, remitter: true, beneficiary: true },
+  });
+
+  if (!event || !event.beneficiary || !event.remitter || !event.gift) {
+    return;
+  }
+
+  // do not send message to test users
+  if (event.remitter.telegramId < 0) {
+    return;
+  }
+
+  try {
+    // todo startapp=mygifts
+    const keyboard = new InlineKeyboard().webApp('Open App', webAppUrl);
+
+    await repository.sendMessage(
+      Number(event.remitter.telegramId),
+      `👌️*${event.beneficiary.name}* received your gift of *${event.gift.name}*`,
       { keyboard },
     );
   } catch (error: unknown) {

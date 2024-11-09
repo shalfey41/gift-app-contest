@@ -1,14 +1,26 @@
 'use server';
 
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Pagination } from '@/modules/types';
+import { Prisma, PrismaClient, User } from '@prisma/client';
 import UserWhereInput = Prisma.UserWhereInput;
+import UserGetPayload = Prisma.UserGetPayload;
+import UserOrderByWithAggregationInput = Prisma.UserOrderByWithAggregationInput;
+import UserSelect = Prisma.UserSelect;
 
 const prisma = new PrismaClient();
 
 export const getUserByTelegramId = async (telegramId: number) => {
-  return prisma.user.findFirst({
+  return prisma.user.findUnique({
     where: {
       telegramId,
+    },
+  });
+};
+
+export const getUserById = async (userId: string) => {
+  return prisma.user.findUnique({
+    where: {
+      id: userId,
     },
   });
 };
@@ -40,19 +52,15 @@ export const upsertUserByTelegramId = async (
 export const getUsers = async (options?: {
   page?: number;
   limit?: number;
-  orderBy?: { createdAt: 'asc' | 'desc' };
-  include?: {
-    eventsAsBuyer?: boolean;
-    eventsAsRemitter?: boolean;
-    eventsAsBeneficiary?: boolean;
-  };
+  orderBy?: UserOrderByWithAggregationInput;
   where?: UserWhereInput;
-}) => {
+  select?: UserSelect;
+}): Promise<Pagination<UserGetPayload<null>>> => {
   const page = options?.page ?? 1;
   const limit = options?.limit ?? 50;
   const orderBy = options?.orderBy;
-  const include = options?.include;
   const where = options?.where;
+  const select = options?.select;
 
   const take = Math.max(limit, 1);
   const skip = (Math.max(page, 1) - 1) * take;
@@ -60,17 +68,13 @@ export const getUsers = async (options?: {
     skip: skip,
     take: limit,
     where,
-    ...(orderBy ? { orderBy } : {}),
+    orderBy,
   };
 
   const [list, total] = await Promise.all([
     prisma.user.findMany({
       ...query,
-      include: {
-        eventsAsBuyer: include?.eventsAsBuyer,
-        eventsAsRemitter: include?.eventsAsRemitter,
-        eventsAsBeneficiary: include?.eventsAsBeneficiary,
-      },
+      select,
     }),
     prisma.user.count(query),
   ]);
@@ -78,95 +82,26 @@ export const getUsers = async (options?: {
 
   return {
     list,
+    page,
     total,
     totalPages,
   };
 };
 
-export const getUserRank = async (userId: string) => {
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { giftsReceived: true },
-  });
-
-  if (!user) {
-    throw new Error('User not found.');
-  }
-
-  const userGiftsReceived = user.giftsReceived;
-
-  const higherGiftsCount = await prisma.user.count({
+export const getUserRank = async (user: User) => {
+  const higherRankCount = await prisma.user.count({
     where: {
-      giftsReceived: { gt: userGiftsReceived },
-    },
-  });
-
-  return higherGiftsCount + 1;
-};
-
-export const getLeaderboardUsers = async (userId: string) => {
-  // Fetch the top users for the leaderboard
-  const leaderboardUsers = await prisma.user.findMany({
-    orderBy: { giftsReceived: 'desc' },
-    take: 50,
-    select: {
-      id: true,
-      name: true,
-      avatarUrl: true,
-      giftsReceived: true,
-    },
-  });
-
-  // Assign places to the leaderboard users
-  const leaderboard = leaderboardUsers.map((user, index) => ({
-    id: user.id,
-    place: index + 1,
-    giftsReceived: user.giftsReceived,
-    user: {
-      id: user.id,
-      name: user.name,
-      avatarUrl: user.avatarUrl,
-    },
-  }));
-
-  // Check if the current user is already in the leaderboard
-  const userInLeaderboard = leaderboard.find((u) => u.id === userId);
-
-  let currentUserData = null;
-
-  if (!userInLeaderboard) {
-    // Compute the user's rank on-demand
-    const userRank = await getUserRank(userId);
-
-    // Fetch current user's data
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        avatarUrl: true,
-        giftsReceived: true,
-      },
-    });
-
-    if (user) {
-      currentUserData = {
-        id: user.id,
-        place: userRank,
-        giftsReceived: user.giftsReceived,
-        user: {
-          id: user.id,
-          name: user.name,
-          avatarUrl: user.avatarUrl,
+      OR: [
+        { giftsReceived: { gt: user.giftsReceived } },
+        {
+          giftsReceived: user.giftsReceived,
+          createdAt: { lt: user.createdAt },
         },
-      };
-    }
-  }
+      ],
+    },
+  });
 
-  return {
-    leaderboard,
-    currentUser: currentUserData,
-  };
+  return higherRankCount + 1;
 };
 
 export const createUsers = async (
@@ -179,4 +114,17 @@ export const createUsers = async (
   }>,
 ) => {
   return prisma.user.createMany({ data });
+};
+
+export const incrementReceivedGifts = async (id: string) => {
+  return prisma.user.updateMany({
+    where: {
+      id,
+    },
+    data: {
+      giftsReceived: {
+        increment: 1,
+      },
+    },
+  });
 };

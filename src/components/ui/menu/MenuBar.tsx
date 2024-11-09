@@ -4,7 +4,7 @@ import tabStoreAnimation from '@/lottie/tab-store.json';
 import tabGiftsAnimation from '@/lottie/tab-gifts.json';
 import tabLeaderboardAnimation from '@/lottie/tab-leaderboard.json';
 import tabProfileAnimation from '@/lottie/tab-profile.json';
-import MenuItem from '@/components/app/menu/MenuItem';
+import MenuItem from '@/components/ui/menu/MenuItem';
 
 const pages = [
   { page: Page.store, label: 'Store', animation: tabStoreAnimation },

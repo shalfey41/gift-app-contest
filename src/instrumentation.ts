@@ -5,6 +5,7 @@ export async function register() {
       import('@/modules/activeInvoice/service'),
     ]);
 
+    // todo understand what is going on on Vercel
     bot.resetBotWebhook();
     activeInvoice.deleteExpiredInvoices();
 

@@ -50,16 +50,16 @@ bot.on('inline_query', async (ctx) => {
       giftId = ctx.inlineQuery.query;
     }
 
-    const boughtGiftsEvents = await getBoughtGiftsByUserId(user.id, { limit: 50, id: giftId });
+    const boughtGiftsEvents = await getBoughtGiftsByUserId(user.id, giftId);
 
-    if (!boughtGiftsEvents) {
+    if (!boughtGiftsEvents || !boughtGiftsEvents.total) {
       await ctx.answerInlineQuery([]);
       return;
     }
 
     // todo english russian language
     // todo maybe change https photo url
-    const userGifts = boughtGiftsEvents
+    const userGifts = boughtGiftsEvents.list
       ?.map((event) => {
         if (!event.gift) {
           return;

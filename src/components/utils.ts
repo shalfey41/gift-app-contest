@@ -3,6 +3,7 @@ import giftDeliciousCakeAnimation from '@/lottie/gift-delicious-cake.json';
 import giftBlueStarAnimation from '@/lottie/gift-blue-star.json';
 import giftGreenStarAnimation from '@/lottie/gift-green-star.json';
 import giftRedStarAnimation from '@/lottie/gift-red-star.json';
+import { ErrorCode } from '@/modules/types';
 
 export const getCssVar = (name: string) => {
   return getComputedStyle(document.documentElement).getPropertyValue(name) as `#${string}`;
@@ -67,7 +68,7 @@ export const getGiftGradientBySymbol = (symbol: string) => {
   }
 };
 
-export const getGiftAnimationBySymbol = (symbol: string) => {
+export const getGiftAnimationBySymbol = (symbol?: string) => {
   switch (symbol) {
     case GiftSymbol.cake: {
       return giftDeliciousCakeAnimation;
@@ -87,6 +88,31 @@ export const getGiftAnimationBySymbol = (symbol: string) => {
 
     default: {
       return null;
+    }
+  }
+};
+
+export const parseError = (error: ErrorCode) => {
+  switch (error) {
+    case ErrorCode.entityNotFound: {
+      return 'Gift not found';
+    }
+
+    case ErrorCode.eventReceiveRemitterIsBeneficiary: {
+      return `You can't receive your own gift`;
+    }
+
+    case ErrorCode.eventReceiveWrongBeneficiary: {
+      return 'This gift is not for you';
+    }
+
+    case ErrorCode.eventReceiveGiftAlreadyReceived: {
+      return 'Gift already received';
+    }
+
+    case ErrorCode.unknown:
+    default: {
+      return 'Unknown error happened';
     }
   }
 };

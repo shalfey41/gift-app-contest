@@ -1,22 +1,23 @@
 'use server';
 
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
+import { Pagination } from '@/modules/types';
+import EventWhereInput = Prisma.EventWhereInput;
+import EventGetPayload = Prisma.EventGetPayload;
+import EventInclude = Prisma.EventInclude;
+import EventUncheckedCreateInput = Prisma.EventUncheckedCreateInput;
+import EventOrderByWithAggregationInput = Prisma.EventOrderByWithAggregationInput;
 
 const prisma = new PrismaClient();
 
 export const getEventById = async (
   id: string,
   options?: {
-    include?: {
-      buyer?: boolean;
-      gift?: boolean;
-      remitter?: boolean;
-      beneficiary?: boolean;
-    };
+    include?: EventInclude;
   },
 ) => {
-  return prisma.event.findFirst({
+  return prisma.event.findUnique({
     where: {
       id,
     },
@@ -29,41 +30,14 @@ export const getEventById = async (
   });
 };
 
-export const createBuyEvent = async ({
-  giftId,
-  userId,
-  invoiceId,
-}: {
-  giftId: string;
-  userId: string;
-  invoiceId: number;
-}) => {
+export const createEvent = async (data: EventUncheckedCreateInput, include?: EventInclude) => {
   return prisma.event.create({
-    data: {
-      action: EventAction.buy,
-      giftId,
-      buyerId: userId,
-      isGiftSent: false,
-      invoiceId,
-    },
-  });
-};
-
-export const createSendEvent = async ({
-  giftId,
-  remitterId,
-  beneficiaryId,
-}: {
-  giftId: string;
-  remitterId: string;
-  beneficiaryId?: string;
-}) => {
-  return prisma.event.create({
-    data: {
-      action: EventAction.send,
-      giftId,
-      remitterId,
-      beneficiaryId,
+    data,
+    include: {
+      buyer: include?.buyer,
+      gift: include?.gift,
+      remitter: include?.remitter,
+      beneficiary: include?.beneficiary,
     },
   });
 };
@@ -89,23 +63,48 @@ export const getEventsByGiftId = async (
   });
 };
 
-export const getBoughtGiftsByUserId = async (
-  userId: string,
-  options?: { limit?: number; orderBy?: 'asc' | 'desc'; id?: string },
-) => {
-  return prisma.event.findMany({
-    where: {
-      buyerId: userId,
-      id: options?.id,
-      action: EventAction.buy,
-      isGiftSent: false,
-    },
-    include: {
-      gift: true,
-    },
-    take: options?.limit,
-    ...(options?.orderBy ? { orderBy: { createdAt: options.orderBy } } : {}),
-  });
+export const getEvents = async (options?: {
+  page?: number;
+  limit?: number;
+  orderBy?: EventOrderByWithAggregationInput;
+  include?: EventInclude;
+  where?: EventWhereInput;
+}): Promise<Pagination<EventGetPayload<{ include: EventInclude }>>> => {
+  const page = options?.page ?? 1;
+  const limit = options?.limit ?? 50;
+  const orderBy = options?.orderBy;
+  const include = options?.include;
+  const where = options?.where;
+
+  const take = Math.max(limit, 1);
+  const skip = (Math.max(page, 1) - 1) * take;
+  const query = {
+    skip: skip,
+    take: limit,
+    where,
+    ...(orderBy ? { orderBy } : {}),
+  };
+
+  const [list, total] = await Promise.all([
+    prisma.event.findMany({
+      ...query,
+      include: {
+        gift: include?.gift,
+        buyer: include?.buyer,
+        remitter: include?.remitter,
+        beneficiary: include?.beneficiary,
+      },
+    }),
+    prisma.event.count(query),
+  ]);
+  const totalPages = Math.ceil(total / take);
+
+  return {
+    list,
+    total,
+    page,
+    totalPages,
+  };
 };
 
 export const updateEventById = async (id: string, data: { isGiftSent: boolean }) => {
@@ -114,6 +113,30 @@ export const updateEventById = async (id: string, data: { isGiftSent: boolean })
       id,
     },
     data,
+  });
+};
+
+export const updateBuyEventById = async (id: string) => {
+  return prisma.event.updateMany({
+    where: {
+      id,
+      isGiftSent: false,
+    },
+    data: {
+      isGiftSent: true,
+    },
+  });
+};
+
+export const updateSendEventById = async (id: string) => {
+  return prisma.event.updateMany({
+    where: {
+      id,
+      isGiftReceived: false,
+    },
+    data: {
+      isGiftReceived: true,
+    },
   });
 };
 

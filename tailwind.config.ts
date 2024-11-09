@@ -33,9 +33,14 @@ const config: Config = {
         'label-tab-bar': 'rgb(var(--color-label-tab-bar))',
         separator: 'rgb(var(--color-separator))',
         notification: 'rgb(var(--color-bg-notification))',
+        'close-button': 'rgb(var(--color-close-button))',
+        'close-icon': 'rgb(var(--color-close-icon))',
 
         'accent-blue': 'var(--color-accent-blue)',
         'tab-bar': 'var(--color-bg-tab-bar)',
+      },
+      boxShadow: {
+        toggle: '0 3px 1px 0 rgba(0, 0, 0, 0.04), 0 3px 8px 0 rgba(0, 0, 0, 0.12)',
       },
     },
   },
