@@ -7,7 +7,7 @@ import GiftsPage from '@/components/gifts/MainPage';
 import LeaderboardPage from '@/components/leaderboard/MainPage';
 import ProfilePage from '@/components/profile/MainPage';
 import ReceiveGiftPage from '@/components/receiveGift/MainPage';
-import { Page, PageContext, PopupOptions, ToastOptions } from '@/components/app/PageContext';
+import { PageContext, PopupOptions, ToastOptions } from '@/components/app/PageContext';
 import MenuBar from '@/components/ui/menu/MenuBar';
 import BottomBar from '@/components/ui/BottomBar';
 import { useTraceUpdate } from '@/hooks/useTraceUpdate';
@@ -15,6 +15,7 @@ import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
 import WebApp from '@twa-dev/sdk';
 import { parseStartParam } from '@/components/utils';
+import { Page } from '@/modules/types';
 
 export default function App() {
   const bottomBarRef = useRef<HTMLDivElement>(null);

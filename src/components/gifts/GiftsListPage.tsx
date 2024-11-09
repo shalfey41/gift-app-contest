@@ -1,10 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { UserGift } from '@/modules/event/types';
 import Loader from '@/components/ui/Loader';
-import { Pagination } from '@/modules/types';
+import { Page, Pagination } from '@/modules/types';
 import GiftCard from '@/components/gifts/GiftCard';
 import ListEmpty from '@/components/ui/ListEmpty';
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import MenuBar from '@/components/ui/menu/MenuBar';
 
 type Props = {

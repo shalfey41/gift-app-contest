@@ -5,7 +5,7 @@ import WebApp from '@twa-dev/sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { InvoiceStatus } from 'crypto-bot-api';
 import { Gift } from '@prisma/client';
-import { useRecentGiftEventsQuery } from '@/queries/useEventQuery';
+import { useBoughtGiftsByUserIdQueryKey, useRecentGiftEventsQuery } from '@/queries/useEventQuery';
 import {
   assetIcon,
   getGiftAnimationBySymbol,
@@ -36,12 +36,27 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
     className: 'h-[267px] w-[267px]',
   });
   const queryClient = useQueryClient();
-  const invoiceId = useRef<number | null>(null);
-  const timeoutId = useRef<number | null>(null);
-
   const isMounted = useRef(false);
   const [isLoading, setLoader] = useState(false);
   const { data: user } = useCurrentUserQuery();
+
+  const checkInvoiceStatus = useCallback(
+    async (invoiceId: number) => {
+      const status = await getInvoiceStatus(invoiceId);
+
+      if (status === InvoiceStatus.Paid) {
+        queryClient.invalidateQueries({ queryKey: [useGiftsQueryKey] });
+        queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey, user?.id] });
+
+        if (isMounted.current) {
+          goNext();
+        }
+      } else {
+        setTimeout(() => checkInvoiceStatus(invoiceId), 5000);
+      }
+    },
+    [goNext, queryClient, user],
+  );
 
   const pay = useCallback(async () => {
     if (!user) {
@@ -69,44 +84,8 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
     }
 
     WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
-    invoiceId.current = invoice.id;
-  }, [gift, goBack, user]);
-
-  useEffect(() => {
-    const checkInvoiceStatus = async () => {
-      if (timeoutId.current) {
-        clearTimeout(timeoutId.current);
-      }
-
-      if (!invoiceId.current) {
-        return;
-      }
-
-      const status = await getInvoiceStatus(invoiceId.current);
-
-      if (!isMounted.current || !document.hasFocus()) {
-        return;
-      }
-
-      if (status === InvoiceStatus.Paid) {
-        queryClient.invalidateQueries({ queryKey: [useGiftsQueryKey] });
-        goNext();
-        return;
-      }
-
-      timeoutId.current = window.setTimeout(() => checkInvoiceStatus(), 3000);
-    };
-
-    window.addEventListener('focus', checkInvoiceStatus, false);
-
-    return () => {
-      window.removeEventListener('focus', checkInvoiceStatus);
-
-      if (timeoutId.current) {
-        clearTimeout(timeoutId.current);
-      }
-    };
-  }, [goNext, queryClient]);
+    checkInvoiceStatus(invoice.id);
+  }, [checkInvoiceStatus, gift, goBack, user]);
 
   // handle checkInvoiceStatus race condition
   useEffect(() => {

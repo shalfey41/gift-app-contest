@@ -31,14 +31,17 @@ export default function UserProfilePage({ profile, goNext, isLoading }: Props) {
 
   return (
     <>
-      <div className="flex items-start justify-between gap-4 px-4 pb-6 pt-2">
-        <div>
+      <div
+        className="grid items-start gap-4 px-4 pb-6 pt-2"
+        style={{ gridTemplateColumns: 'max-content 1fr max-content' }}
+      >
+        <div className="flex w-20 justify-start">
           <ThemeToggle />
         </div>
 
         <UserProfile profile={profile} />
 
-        <div>
+        <div className="flex w-20 justify-end">
           <LanguageToggle />
         </div>
       </div>

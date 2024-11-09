@@ -2,14 +2,14 @@ import React, { useContext, useEffect } from 'react';
 import { Prisma } from '@prisma/client';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import useToast from '@/hooks/useToast';
 import { getGiftAnimationBySymbol, giftPreviewIcon, parseError } from '@/components/utils';
 import { useLottie } from 'lottie-react';
 import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
 import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
-import { ErrorCode } from '@/modules/types';
+import { ErrorCode, Page } from '@/modules/types';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }> | null;

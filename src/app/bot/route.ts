@@ -8,6 +8,8 @@ import { Bot, InlineKeyboard, InlineQueryResultBuilder, webhookCallback } from '
 import { createUserIfNotExists, getUserByTelegramId } from '@/modules/user/service';
 import { createSendEvent, getBoughtGiftsByUserId } from '@/modules/event/service';
 import { sendGreetingsMessage } from '@/modules/bot/service';
+import { StartParam } from '@/modules/bot/types';
+import { giftPreviewIcon } from '@/components/utils';
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const webAppUrl = process.env.WEB_APP_URL;
@@ -24,8 +26,6 @@ const bot = new Bot(token);
 const SEND_GIFT_COMMAND = 'sendGift';
 
 bot.command('start', async (ctx) => {
-  console.log('bot command start');
-  console.log(JSON.stringify(ctx));
   if (ctx.from?.id && ctx.from?.first_name) {
     createUserIfNotExists(ctx.from.id, ctx.from.first_name);
   }
@@ -71,8 +71,7 @@ bot.on('inline_query', async (ctx) => {
           id: event.gift.id,
           eventId: event.id,
           name: event.gift.name,
-          // todo add small preview to DB
-          photoUrl: 'https://avatar.iran.liara.run/public',
+          photoUrl: `${webAppUrl}/${giftPreviewIcon[event.gift.symbol]}`,
           boughtAt: event.boughtAt.valueOf().toString(),
         };
       })
@@ -84,7 +83,10 @@ bot.on('inline_query', async (ctx) => {
     }
 
     const results = userGifts.map((gift) => {
-      const keyboard = new InlineKeyboard().url('Receive Gift', `${webAppUrl}/app?startapp=ahah`);
+      const keyboard = new InlineKeyboard().url(
+        'Receive Gift',
+        `${webAppUrl}/app?startapp=${StartParam.receiveGift}_${gift?.eventId}`,
+      );
 
       const articleId = `${SEND_GIFT_COMMAND}_${gift.id}_${gift.eventId}`;
       return InlineQueryResultBuilder.article(articleId, 'Send Gift', {
@@ -133,6 +135,10 @@ bot.on('chosen_inline_result', async (ctx) => {
   } catch (error) {
     handleBotError(error);
   }
+});
+
+bot.on('message:photo', async (ctx) => {
+  console.log(ctx.message.photo);
 });
 
 export const POST = webhookCallback(bot, 'std/http');

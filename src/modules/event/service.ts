@@ -59,6 +59,7 @@ export const createSendEvent = async ({
       giftId,
       remitterId,
       beneficiaryId,
+      isGiftReceived: false,
     });
 
     if (event.beneficiaryId) {

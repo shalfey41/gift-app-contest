@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import { useLottie } from 'lottie-react';
 import animation from '@/lottie/emoji-balloons.json';
 import Button from '@/components/ui/Button';
+import { Page } from '@/modules/types';
 
 export default function HistoryEmpty() {
   const { setBottomBar, setRoute } = useContext(PageContext);

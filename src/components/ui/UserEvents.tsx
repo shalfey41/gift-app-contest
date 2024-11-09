@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import Loader from '@/components/ui/Loader';
 import { useReceivedGiftsByUserIdQuery } from '@/queries/useEventQuery';
 import ListEmpty from '@/components/ui/ListEmpty';
@@ -9,6 +9,7 @@ import { assetIcon, getGiftAnimationBySymbol } from '@/components/utils';
 import { Prisma } from '@prisma/client';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
+import { Page } from '@/modules/types';
 
 type Props = {
   userId: string;

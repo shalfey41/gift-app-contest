@@ -3,8 +3,7 @@ import giftDeliciousCakeAnimation from '@/lottie/gift-delicious-cake.json';
 import giftBlueStarAnimation from '@/lottie/gift-blue-star.json';
 import giftGreenStarAnimation from '@/lottie/gift-green-star.json';
 import giftRedStarAnimation from '@/lottie/gift-red-star.json';
-import { ErrorCode } from '@/modules/types';
-import { Page, pages, Route } from '@/components/app/PageContext';
+import { ErrorCode, Page, pages, Route } from '@/modules/types';
 import { StartParam, startParamArray } from '@/modules/bot/types';
 
 export const getCssVar = (name: string) => {

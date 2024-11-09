@@ -6,10 +6,16 @@ import * as repository from '@/modules/bot/repository';
 import { getAvatarBackgroundColorByName, handleBotError, isHashValid } from '@/modules/bot/utils';
 import { getEventById } from '@/modules/event/service';
 import { StartParam } from '@/modules/bot/types';
+import { Page } from '@/modules/types';
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const webAppUrl = process.env.WEB_APP_URL;
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const photoId = process.env.BOT_PHOTO_ID;
+
+if (!photoId) {
+  throw new Error('BOT_PHOTO_ID environment variable not found.');
+}
 
 if (!botUrl) {
   throw new Error('TELEGRAM_BOT_URL environment variable not found.');
@@ -53,7 +59,7 @@ export const reactToBuyEvent = async (eventId: string) => {
   try {
     const keyboard = new InlineKeyboard().url(
       'Open Gifts',
-      `${botUrl}/app?startapp=${StartParam.openPage}_gifts`,
+      `${botUrl}/app?startapp=${StartParam.openPage}_${Page.gifts}`,
     );
 
     await repository.sendMessage(
@@ -83,7 +89,7 @@ export const reactToSendEvent = async (eventId: string) => {
   try {
     const keyboard = new InlineKeyboard().url(
       'View Gift',
-      `${botUrl}/app?startapp=${StartParam.viewGift}_${event.id}`,
+      `${botUrl}/app?startapp=${StartParam.receiveGift}_${event.id}`,
     );
 
     await repository.sendMessage(
@@ -136,8 +142,6 @@ export const sendGreetingsMessage = async (ctx: CommandContext<Context>) => {
   try {
     // todo english russian language
     const keyboard = new InlineKeyboard().url('Open App', `${botUrl}/app`);
-    const photoId =
-      'AgACAgIAAxkBAAMCZytdwK49uum7MgMdYXEjm6aaQGkAAs_lMRsl3lhJDGBGeBmpyzMBAAMCAAN5AAM2BA';
 
     await repository.sendPhoto(ctx.chatId, photoId, {
       caption: '🎁 Here you can buy and send gifts to your friends.',

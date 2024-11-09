@@ -3,7 +3,7 @@ import { BackButton } from '@twa-dev/sdk/react';
 import { Prisma } from '@prisma/client';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import useToast from '@/hooks/useToast';
 import { getGiftAnimationBySymbol, giftPreviewIcon } from '@/components/utils';
 import { useLottie } from 'lottie-react';
@@ -11,6 +11,7 @@ import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
 import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
+import { Page } from '@/modules/types';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }> | null;

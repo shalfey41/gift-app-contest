@@ -1,14 +1,5 @@
 import { createContext, ReactNode, JSX } from 'react';
-
-export enum Page {
-  store = 'store',
-  gifts = 'gifts',
-  leaderboard = 'leaderboard',
-  profile = 'profile',
-  receiveGift = 'receiveGift',
-}
-
-export const pages = Object.values(Page);
+import { Page, Route } from '@/modules/types';
 
 export type ToastOptions = {
   iconSrc: string;
@@ -25,11 +16,6 @@ export type PopupOptions = {
   buttonText: string;
   onClick: () => void;
   onClose: () => void;
-};
-
-export type Route = {
-  page: Page;
-  params?: Record<string, string>;
 };
 
 export const PageContext = createContext<{

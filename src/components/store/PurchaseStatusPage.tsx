@@ -1,12 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { BackButton } from '@twa-dev/sdk/react';
 import { Gift } from '@prisma/client';
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import Button from '@/components/ui/Button';
 import { useLottie } from 'lottie-react';
 import { getGiftAnimationBySymbol, giftPreviewIcon } from '@/components/utils';
 import useToast from '@/hooks/useToast';
 import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
+import { Page } from '@/modules/types';
 
 type Props = {
   gift: Gift;

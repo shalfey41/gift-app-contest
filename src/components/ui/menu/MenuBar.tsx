@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { Page, PageContext } from '@/components/app/PageContext';
+import { PageContext } from '@/components/app/PageContext';
 import tabStoreAnimation from '@/lottie/tab-store.json';
 import tabGiftsAnimation from '@/lottie/tab-gifts.json';
 import tabLeaderboardAnimation from '@/lottie/tab-leaderboard.json';
 import tabProfileAnimation from '@/lottie/tab-profile.json';
 import MenuItem from '@/components/ui/menu/MenuItem';
+import { Page } from '@/modules/types';
 
 const pages = [
   { page: Page.store, label: 'Store', animation: tabStoreAnimation },

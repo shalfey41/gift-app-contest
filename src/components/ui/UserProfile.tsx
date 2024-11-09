@@ -13,7 +13,7 @@ const prizePlace: Record<string, string> = {
 
 export default function UserProfile({ profile }: Props) {
   return (
-    <div className="grid max-w-52 justify-items-center">
+    <div className="grid w-full max-w-52 justify-items-center text-center">
       <div className="relative mb-5">
         <div className="h-[100px] w-[100px]">
           <img
