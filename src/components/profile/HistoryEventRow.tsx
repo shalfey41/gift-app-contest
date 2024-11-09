@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import Row from '@/components/ui/Row';
 import { Prisma } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
-import classNames from 'classnames';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
 import { giftPreviewIcon } from '@/components/utils';
