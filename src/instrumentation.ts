@@ -5,16 +5,19 @@ export async function register() {
       import('@/modules/activeInvoice/service'),
     ]);
 
-    // todo understand what is going on on Vercel
-    bot.resetBotWebhook();
-    activeInvoice.deleteExpiredInvoices();
+    try {
+      bot.resetBotWebhook();
+      activeInvoice.deleteExpiredInvoices();
 
-    // kind of cron job
-    setInterval(
-      () => {
-        activeInvoice.deleteExpiredInvoices();
-      },
-      1000 * 60 * 15, // 15 minutes
-    );
+      // kind of cron job
+      setInterval(
+        () => {
+          activeInvoice.deleteExpiredInvoices();
+        },
+        1000 * 60 * 15, // 15 minutes
+      );
+    } catch (error) {
+      console.error('error from instrumentation', error);
+    }
   }
 }
