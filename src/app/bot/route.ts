@@ -24,6 +24,8 @@ const bot = new Bot(token);
 const SEND_GIFT_COMMAND = 'sendGift';
 
 bot.command('start', async (ctx) => {
+  console.log('bot command start');
+  console.log(JSON.stringify(ctx));
   if (ctx.from?.id && ctx.from?.first_name) {
     createUserIfNotExists(ctx.from.id, ctx.from.first_name);
   }

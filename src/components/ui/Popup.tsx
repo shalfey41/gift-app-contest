@@ -20,7 +20,7 @@ export default function Popup({ className }: PropsWithChildren<Props>) {
     <div className={classNames('relative rounded-[10px] bg-secondary pb-2 pt-4', className)}>
       {popup?.onClose && (
         <button
-          className="bg-close-button text-close-icon absolute right-4 top-3 flex h-[30px] w-[30px] items-center justify-center rounded-full transition-opacity hover:opacity-80"
+          className="absolute right-4 top-3 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-close-button text-close-icon transition-opacity hover:opacity-80"
           onClick={popup.onClose}
         >
           <svg
