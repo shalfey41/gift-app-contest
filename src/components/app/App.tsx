@@ -16,6 +16,13 @@ import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
 import { parseStartParam } from '@/components/utils';
 import { Page } from '@/modules/types';
+import { AnimatePresence, motion } from 'framer-motion';
+
+const pageAnimation = {
+  initial: { opacity: 0, scale: 0.9 },
+  animate: { opacity: 1, scale: 1, filter: 'blur(0)' },
+  exit: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
+};
 
 export default function App() {
   const bottomBarRef = useRef<HTMLDivElement>(null);
@@ -59,11 +66,33 @@ export default function App() {
         className={classNames('relative grow bg-background')}
         style={{ paddingBottom: bottomBarHeight }}
       >
-        {route.page === Page.store && <StorePage />}
-        {route.page === Page.gifts && <GiftsPage />}
-        {route.page === Page.leaderboard && <LeaderboardPage />}
-        {route.page === Page.profile && <ProfilePage />}
-        {route.page === Page.receiveGift && <ReceiveGiftPage />}
+        <AnimatePresence>
+          {route.page === Page.store && (
+            <motion.div key={Page.store} {...pageAnimation}>
+              <StorePage />
+            </motion.div>
+          )}
+          {route.page === Page.gifts && (
+            <motion.div key={Page.gifts} {...pageAnimation}>
+              <GiftsPage />
+            </motion.div>
+          )}
+          {route.page === Page.leaderboard && (
+            <motion.div key={Page.leaderboard} {...pageAnimation}>
+              <LeaderboardPage />
+            </motion.div>
+          )}
+          {route.page === Page.profile && (
+            <motion.div key={Page.profile} {...pageAnimation}>
+              <ProfilePage />
+            </motion.div>
+          )}
+          {route.page === Page.receiveGift && (
+            <motion.div key={Page.receiveGift} {...pageAnimation}>
+              <ReceiveGiftPage />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {popup && <div className="absolute inset-0 z-20 bg-black/30" />}
       </div>
