@@ -16,7 +16,7 @@
   "user": {
     "anonymous": "Anonymous",
     "you": "You",
-    "recentActions": "Недавние действия ›",
+    "recentActions": "Recent Actions ›",
     "avatar": "User avatar",
     "giftReceived_one": "{{count}} gift received",
     "giftReceived_other": "{{count}} gifts received",

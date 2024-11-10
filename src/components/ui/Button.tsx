@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, ButtonHTMLAttributes } from 'react';
 import classNames from 'classnames';
+import Image from 'next/image';
 
 type Props = {
   iconPath?: string;
@@ -30,7 +31,7 @@ export default function Button({
       )}
       {...rest}
     >
-      {Boolean(iconPath) && <img width={24} src={iconPath} alt="icon" />}
+      {iconPath !== undefined && <Image width={24} height={24} src={iconPath} alt="icon" />}
       {children}
     </button>
   );

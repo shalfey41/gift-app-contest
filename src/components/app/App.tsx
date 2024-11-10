@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
+import WebApp from '@twa-dev/sdk';
 import StorePage from '@/components/store/MainPage';
 import GiftsPage from '@/components/gifts/MainPage';
 import LeaderboardPage from '@/components/leaderboard/MainPage';
@@ -13,7 +14,6 @@ import BottomBar from '@/components/ui/BottomBar';
 import { useTraceUpdate } from '@/hooks/useTraceUpdate';
 import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
-import WebApp from '@twa-dev/sdk';
 import { parseStartParam } from '@/components/utils';
 import { Page } from '@/modules/types';
 

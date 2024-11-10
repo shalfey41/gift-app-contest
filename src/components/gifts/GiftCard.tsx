@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { lazy, Suspense, useRef } from 'react';
 import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
 import { getGiftAnimationBySymbol } from '@/components/utils';
-import { useLottie } from 'lottie-react';
 import { useTranslation } from 'react-i18next';
+import { useInView } from 'framer-motion';
+
+const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
 type Props = {
   gift: Gift;
@@ -13,21 +15,25 @@ type Props = {
 export default function GiftCard({ gift, selectGift }: Props) {
   const { t } = useTranslation();
   const animation = getGiftAnimationBySymbol(gift.symbol);
-  const { View } = useLottie({
-    animationData: animation,
-    renderer: 'canvas',
-    className: 'h-full w-full',
-  });
+  const ref = useRef<HTMLDivElement>(null);
+  const isVisible = useInView(ref, { margin: '200px 0px', once: true });
 
   return (
     <article
+      ref={ref}
       onClick={() => selectGift(gift)}
       className="grid cursor-pointer justify-items-center rounded-xl bg-secondary px-4 pb-3 pt-2"
     >
       <h2 className="mb-1 overflow-hidden text-ellipsis text-nowrap text-center text-xxs text-label-secondary">
         {gift.name}
       </h2>
-      <div className="mb-2 flex h-20 w-20 items-center justify-center p-1">{View}</div>
+      <div className="mb-2 flex h-20 w-20 items-center justify-center p-1">
+        {isVisible && (
+          <Suspense>
+            <LazyGiftLottie animationData={animation} className="h-full w-full" renderer="canvas" />
+          </Suspense>
+        )}
+      </div>
       <Button>{t('gift.send')}</Button>
     </article>
   );
