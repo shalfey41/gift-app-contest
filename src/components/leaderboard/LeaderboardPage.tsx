@@ -7,6 +7,7 @@ import { Leaderboard, LeaderboardProfile } from '@/modules/user/types';
 import MenuBar from '@/components/ui/menu/MenuBar';
 import Loader from '@/components/ui/Loader';
 import LeaderboardUserRow from '@/components/leaderboard/LeaderboardUserRow';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   leaderboard?: Leaderboard | null;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function LeaderboardPage({ goNext, leaderboard, isLoadingLeaderboard }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar } = useContext(PageContext);
   const [searchQuery, setSearchQuery] = React.useState('');
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
@@ -48,7 +50,11 @@ export default function LeaderboardPage({ goNext, leaderboard, isLoadingLeaderbo
           }
 
           if (currentLeaderboard?.length === 0) {
-            return <p className="mt-8 flex w-full justify-center font-medium">No results</p>;
+            return (
+              <p className="mt-8 flex w-full justify-center font-medium">
+                {t('leaderboard.empty')}
+              </p>
+            );
           }
 
           return (

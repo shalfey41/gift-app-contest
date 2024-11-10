@@ -6,6 +6,7 @@ import { useAllEventsByUserIdQuery } from '@/queries/useEventQuery';
 import HistoryEventRow from '@/components/profile/HistoryEventRow';
 import HistoryEmpty from '@/components/profile/HistoryEmpty';
 import { groupEventsByDay } from '@/components/profile/utils';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   userId: string;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export default function HistoryPage({ userId, goBack }: Props) {
+  const { t } = useTranslation();
   const { toggleBottomBar } = useContext(PageContext);
   const { data, isLoading } = useAllEventsByUserIdQuery(userId);
   const eventsByDay = useMemo(() => groupEventsByDay(data?.list || []), [data]);
@@ -34,8 +36,8 @@ export default function HistoryPage({ userId, goBack }: Props) {
     <>
       <section className="px-4">
         <div className="mb-7 mt-6 grid justify-items-center gap-2 text-balance text-center">
-          <h1 className="text-lg font-semibold">Recent Actions</h1>
-          <p className="text-label-secondary">Here is your action history.</p>
+          <h1 className="text-lg font-semibold">{t('history.title')}</h1>
+          <p className="text-label-secondary">{t('history.text')}</p>
         </div>
       </section>
 

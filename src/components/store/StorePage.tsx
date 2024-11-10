@@ -4,6 +4,7 @@ import { PageContext } from '@/components/app/PageContext';
 import MenuBar from '@/components/ui/menu/MenuBar';
 import StoreGift from '@/components/store/StoreGift';
 import Loader from '@/components/ui/Loader';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   gifts: Gift[];
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function StorePage({ gifts, selectGift, isLoading }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar } = useContext(PageContext);
 
   useEffect(() => {
@@ -34,8 +36,8 @@ export default function StorePage({ gifts, selectGift, isLoading }: Props) {
             fillRule="evenodd"
           />
         </svg>
-        <h1 className="text-lg font-semibold">Buy and Send Gifts</h1>
-        <p className="text-label-secondary">Unique gifts for everyone by Crypto Pay.</p>
+        <h1 className="text-center text-lg font-semibold">{t('store.title')}</h1>
+        <p className="text-label-secondary">{t('store.text')}</p>
       </div>
 
       {isLoading ? (
@@ -49,7 +51,7 @@ export default function StorePage({ gifts, selectGift, isLoading }: Props) {
           ))}
         </div>
       ) : (
-        <p className="text-center text-label-secondary">No gifts yet</p>
+        <p className="text-center text-label-secondary">{t('store.empty')}</p>
       )}
     </section>
   );

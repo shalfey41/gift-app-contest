@@ -7,6 +7,7 @@ import UserEvents from '@/components/ui/UserEvents';
 import { LeaderboardProfile } from '@/modules/user/types';
 import ThemeToggle from '@/components/profile/ThemeToggle';
 import LanguageToggle from '@/components/profile/LanguageToggle';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   profile?: LeaderboardProfile | null;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function UserProfilePage({ profile, goNext, isLoading }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar } = useContext(PageContext);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export default function UserProfilePage({ profile, goNext, isLoading }: Props) {
               d="M13 20c-4.416 0-8-3.584-8-8s3.584-8 8-8 8 3.584 8 8-3.584 8-8 8Zm0-1.333A6.661 6.661 0 0 0 19.667 12 6.661 6.661 0 0 0 13 5.333 6.661 6.661 0 0 0 6.333 12 6.661 6.661 0 0 0 13 18.667Zm-4.102-5.82a.536.536 0 0 1-.549-.549c0-.306.235-.541.549-.541h3.553V7.012c0-.306.235-.541.541-.541a.54.54 0 0 1 .55.54v5.287a.54.54 0 0 1-.55.55H8.898Z"
             />
           </svg>
-          <span>Recent Actions ›</span>
+          <span>{t('user.recentActions')}</span>
         </button>
       </div>
 

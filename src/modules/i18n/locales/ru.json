@@ -1,3 +1,158 @@
 {
-  "welcome": "Добро пожаловать в React и react-i18next"
+  "webAppHashValidation": {
+    "noData": "Откройте приложение из телеграма",
+    "fail": "Невалидный хэш"
+  },
+  "contactList": {
+    "confirmTransfer": "Вы собираетесь отправить {{gift}} контакту {{contact}}",
+    "sendError": "Ошибка отправки подарка",
+    "instructionTitle": "Выберите контакт из списка или…",
+    "instructionItem1": "Откройте чат с вашим другом",
+    "instructionItem2": "Отправьте ему это сообщение:",
+    "instructionItem3": "Готово! Ваш друг получит подарок",
+    "instructionAction": "Скопировать сообщение",
+    "notRealUser": "(не настоящий пользователь)"
+  },
+  "user": {
+    "anonymous": "Аноним",
+    "you": "Вы",
+    "recentActions": "Недавние действия ›",
+    "avatar": "Автар пользователя",
+    "giftReceived_zero": "{{count}} подарков получено",
+    "giftReceived_one": "{{count}} подарок получен",
+    "giftReceived_few": "{{count}} подарка получено",
+    "giftReceived_many": "{{count}} подарков получено",
+    "receivedGiftsEmpty": "Купите подарок, чтобы получить подарок взамен."
+  },
+  "gift": {
+    "send": "Подарить",
+    "sendGift": "Отправить подарок",
+    "openStore": "Открыть магазин",
+    "close": "Закрыть",
+    "sendToContact": "Отправить подарок контакту",
+    "available": "{{amount}} из {{total}}",
+    "soldOut": "Распродано",
+    "oneOfTotal": "1 из {{total}}",
+    "table": {
+      "from": "От",
+      "gift": "Подарок",
+      "date": "Дата",
+      "price": "Стоимость",
+      "availability": "Наличие"
+    }
+  },
+  "gifts": {
+    "title": "Отправляйте подарки в Телеграме",
+    "text": "Подаренный другу подарок останется в его профиле этого приложения.",
+    "empty": "Вы не купили еще ни одного подарка."
+  },
+  "giftStatus": {
+    "buy": {
+      "toast": {
+        "title": "Вы купили подарок",
+        "message": "Теперь отправьте его другу.",
+        "button": "Отправить"
+      },
+      "page": {
+        "title": "Подарок куплен",
+        "message": "Подарок <0>{{gift}}</0> куплен за <1>{{price}} {{asset}}</1>."
+      }
+    },
+    "sent": {
+      "toast": {
+        "title": "Подарок отправлен",
+        "message": "{{gift}} контакту {{user}}"
+      },
+      "page": {
+        "title": "Подарок отправлен",
+        "message": "Вы отправили подарок <0>{{gift}}</0>."
+      }
+    },
+    "received": {
+      "toast": {
+        "title": "Вам подарок",
+        "message": "{{gift}} от {{user}}",
+        "button": "Посмотреть"
+      },
+      "page": {
+        "title": "Вам подарок!",
+        "message": "Вам отправили <0>{{gift}}</0>."
+      }
+    },
+    "error": {
+      "page": {
+        "title": "Видимо, вы оказались на неправильной странице",
+        "message": "Вы что, хакер?"
+      },
+      "entityNotFound": "Подарок не найден",
+      "eventReceiveRemitterIsBeneficiary": "Вы не можете получить свой собственный подарок",
+      "eventReceiveWrongBeneficiary": "Этот подарок не для вас",
+      "eventReceiveGiftAlreadyReceived": "Подарок уже получен",
+      "unknown": "Неизвестная ошибка"
+    },
+    "openProfile": "Открыть профиль"
+  },
+  "leaderboard": {
+    "empty": "На доске лидеров пока никого.",
+    "gift_zero": "{{count}} подарков",
+    "gift_one": "{{count}} подарок",
+    "gift_few": "{{count}} подарка",
+    "gift_many": "{{count}} подарков"
+  },
+  "history": {
+    "title": "Недавние действия",
+    "text": "Здесь находится история ваших действий.",
+    "empty": {
+      "title": "История пуста",
+      "text": "Покупайте, дарите и получайте подарки, чтобы действия отобразились здесь."
+    },
+    "buy": {
+      "title": "Покупка",
+      "text": "−{{price}} {{asset}}"
+    },
+    "send": {
+      "title": "Отправка",
+      "text": "для <0>{{user}}</0>"
+    },
+    "receive": {
+      "title": "Получение",
+      "text": "от <0>{{user}}</0>"
+    }
+  },
+  "store": {
+    "title": "Покупайте и отправляйте подарки",
+    "text": "Уникальные подарки от Crypto Pay.",
+    "empty": "Магазин пуст.",
+    "event": {
+      "title": "Недавние события",
+      "empty": "Пока нет событий",
+      "buy": {
+        "title": "Покупка",
+        "text": "{{user}} купил подарок"
+      },
+      "send": {
+        "title": "Отправка",
+        "text": "{{remitter}} отправил подарок {{beneficiary}}"
+      },
+      "receive": {
+        "title": "Получение",
+        "text": "{{beneficiary}} получил подарок от {{remitter}}"
+      }
+    },
+    "gift": {
+      "error": {
+        "soldOut": "Этот подарок уже распродан",
+        "invoice": "Ошибка создания счета. Попробуйте позже."
+      },
+      "buy": "Купить подарок",
+      "text": "Купите подарок, чтобы порадовать друга"
+    }
+  },
+  "menu": {
+    "gifts": "Подарки",
+    "leaderboard": "Лидеры",
+    "profile": "Профиль",
+    "store": "Магазин"
+  },
+  "search": "Поиск"
 }

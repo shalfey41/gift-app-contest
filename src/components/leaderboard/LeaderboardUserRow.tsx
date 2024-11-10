@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import Row from '@/components/ui/Row';
 import { LeaderboardProfile } from '@/modules/user/types';
 import { PageContext } from '@/components/app/PageContext';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   profile: LeaderboardProfile;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function LeaderboardUserRow({ profile, isCurrentUser, separator, onClick }: Props) {
+  const { t } = useTranslation();
   const currentUserRow = useRef<HTMLDivElement>(null);
   const { bottomBarHeight } = useContext(PageContext);
   const place = useMemo(() => {
@@ -57,7 +59,7 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
         <img
           className="rounded-full"
           src={profile.user.avatarUrl}
-          alt={profile.user.name || 'User avatar'}
+          alt={profile.user.name || t('user.avatar')}
         />
       }
       right={place}
@@ -69,7 +71,7 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
         <span className="block">{profile.user.name}</span>
         {isCurrentUser && (
           <span className="block rounded bg-label-secondary/20 px-1 text-[11px]/[14px] text-label-secondary">
-            You
+            {t('user.you')}
           </span>
         )}
       </span>
@@ -84,7 +86,7 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
             />
           </svg>
         </span>{' '}
-        {profile.giftsReceived} gifts
+        {t('leaderboard.gift', { count: profile.giftsReceived })}
       </span>
     </Row>
   );

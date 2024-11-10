@@ -8,6 +8,7 @@ import { getGiftAnimationBySymbol, giftPreviewIcon } from '@/components/utils';
 import useToast from '@/hooks/useToast';
 import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
 import { Page } from '@/modules/types';
+import { Trans, useTranslation } from 'react-i18next';
 
 type Props = {
   gift: Gift;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function PurchaseStatusPage({ gift, goBack }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar, setRoute } = useContext(PageContext);
   const { showToast } = useToast();
   const giftAnimation = getGiftAnimationBySymbol(gift.symbol);
@@ -35,10 +37,10 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
     setBottomBar(
       <div className="grid gap-2 px-4">
         <Button size="large" onClick={() => setRoute({ page: Page.gifts })}>
-          Send Gift
+          {t('gift.sendGift')}
         </Button>
         <Button variant="outline" size="large" onClick={() => setRoute({ page: Page.gifts })}>
-          Open Store
+          {t('gift.openStore')}
         </Button>
       </div>,
     );
@@ -46,24 +48,28 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
     setTimeout(() => {
       showToast({
         iconSrc: giftPreviewIcon[gift.symbol],
-        title: 'You Bought a Gift',
-        text: 'Now send it to your friend.',
-        buttonText: 'Send',
+        title: t('giftStatus.buy.toast.title'),
+        text: t('giftStatus.buy.toast.message'),
+        buttonText: t('giftStatus.buy.toast.button'),
         onClick: () => setRoute({ page: Page.gifts }),
       });
     }, 500);
-  }, [setRoute, showToast, setBottomBar, gift.symbol]);
+  }, [t, setRoute, showToast, setBottomBar, gift]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">
       {PurchasedAnimation}
       <div className="mb-4">{GiftAnimation}</div>
-      <h1 className="mb-2 text-lg font-semibold">Gift Purchased</h1>
+      <h1 className="mb-2 text-lg font-semibold">{t('giftStatus.buy.page.title')}</h1>
       <p className="text-balance">
-        The <span className="font-medium">{gift.name}</span> gift was purchased for{' '}
-        <span className="font-medium">
-          {gift.price} {gift.asset}.
-        </span>
+        <Trans
+          i18nKey="giftStatus.buy.page.message"
+          values={{ gift: gift.name, price: gift.price, asset: gift.asset }}
+          components={[
+            <span key="1" className="font-medium" />,
+            <span key="2" className="font-medium" />,
+          ]}
+        />
       </p>
 
       <BackButton onClick={() => goBack()} />

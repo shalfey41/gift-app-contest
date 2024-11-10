@@ -12,6 +12,7 @@ import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { Page } from '@/modules/types';
+import { Trans, useTranslation } from 'react-i18next';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }> | null;
@@ -21,6 +22,7 @@ type Props = {
 
 export default function SendStatusPage({ event, isLoading, goBack }: Props) {
   const { setBottomBar, setRoute } = useContext(PageContext);
+  const { t } = useTranslation();
   const { data: currentUser, isLoading: isLoadingCurrentUser } = useCurrentUserQuery();
   const { showToast } = useToast();
   const giftAnimation = getGiftAnimationBySymbol(event?.gift.symbol);
@@ -38,21 +40,27 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
 
     if (currentUser.id === event.remitterId) {
       return {
-        title: 'Gift Sent',
-        text: `${event.gift.name} to ${event.beneficiary?.name || 'Anonymous'}`,
+        title: t('giftStatus.sent.toast.title'),
+        text: t('giftStatus.sent.toast.message', {
+          gift: event.gift.name,
+          user: event.beneficiary?.name || t('user.anonymous'),
+        }),
       };
     }
 
     if (currentUser.id === event.beneficiaryId) {
       return {
-        title: 'Gift Received',
-        text: `${event.gift.name} from ${event.remitter?.name || 'Anonymous'}`,
-        buttonText: 'View',
+        title: t('giftStatus.received.toast.title'),
+        text: t('giftStatus.received.toast.message', {
+          gift: event.gift.name,
+          user: event.beneficiary?.name || t('user.anonymous'),
+        }),
+        buttonText: t('giftStatus.received.toast.button'),
       };
     }
 
     return null;
-  }, [currentUser, event]);
+  }, [t, currentUser, event]);
   const pageMessage = useMemo(() => {
     if (!event || !currentUser) {
       return null;
@@ -60,41 +68,41 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
 
     if (currentUser.id === event.remitterId) {
       return {
-        title: 'Gift Sent',
+        title: t('giftStatus.sent.page.title'),
         text: (
-          <span>
-            You have sent the gift <span className="font-medium">{event.gift.name}</span>.
-          </span>
+          <Trans
+            i18nKey="giftStatus.sent.page.message"
+            values={{ gift: event.gift.name }}
+            components={[<span key="1" className="font-medium" />]}
+          />
         ),
       };
     }
 
     if (currentUser.id === event.beneficiaryId) {
       return {
-        title: 'Gift Received',
+        title: t('giftStatus.received.page.title'),
         text: (
-          <span>
-            You have received the gift <span className="font-medium">{event.gift.name}</span>.
-          </span>
+          <Trans
+            i18nKey="giftStatus.received.page.message"
+            values={{ gift: event.gift.name }}
+            components={[<span key="1" className="font-medium" />]}
+          />
         ),
       };
     }
 
     return {
-      title: `Looks like you've landed on the wrong page`,
-      text: (
-        <span>
-          Are you a <span className="font-medium">hacker?</span>
-        </span>
-      ),
+      title: t('giftStatus.error.page.title'),
+      text: t('giftStatus.error.page.message'),
     };
-  }, [currentUser, event]);
+  }, [t, currentUser, event]);
 
   useEffect(() => {
     setBottomBar(
       <div className="grid gap-2 px-4">
         <Button size="large" onClick={() => setRoute({ page: Page.profile })}>
-          Open Profile
+          {t('giftStatus.openProfile')}
         </Button>
       </div>,
     );
@@ -113,7 +121,7 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
         onClick: () => setRoute({ page: Page.profile }),
       });
     }, 500);
-  }, [setRoute, showToast, setBottomBar, event, toastMessage]);
+  }, [t, setRoute, showToast, setBottomBar, event, toastMessage]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">

@@ -96,24 +96,24 @@ export const getGiftAnimationBySymbol = (symbol?: string) => {
 export const parseError = (error: ErrorCode) => {
   switch (error) {
     case ErrorCode.entityNotFound: {
-      return 'Gift not found';
+      return 'giftStatus.error.entityNotFound';
     }
 
     case ErrorCode.eventReceiveRemitterIsBeneficiary: {
-      return `You can't receive your own gift`;
+      return 'giftStatus.error.eventReceiveRemitterIsBeneficiary';
     }
 
     case ErrorCode.eventReceiveWrongBeneficiary: {
-      return 'This gift is not for you';
+      return 'giftStatus.error.eventReceiveWrongBeneficiary';
     }
 
     case ErrorCode.eventReceiveGiftAlreadyReceived: {
-      return 'Gift already received';
+      return 'giftStatus.error.eventReceiveGiftAlreadyReceived';
     }
 
     case ErrorCode.unknown:
     default: {
-      return 'Unknown error happened';
+      return 'giftStatus.error.unknown';
     }
   }
 };

@@ -10,12 +10,15 @@ import { Prisma } from '@prisma/client';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
 import { Page } from '@/modules/types';
+import { useTranslation } from 'react-i18next';
+import { getLanguage } from '@/modules/i18n/client';
 
 type Props = {
   userId: string;
 };
 
 export default function UserEvents({ userId }: Props) {
+  const { t } = useTranslation();
   const { route, setRoute } = useContext(PageContext);
   const { showPopup, closePopup } = usePopup();
   const { data: events, isPending: isLoadingEvents } = useReceivedGiftsByUserIdQuery(userId);
@@ -28,29 +31,29 @@ export default function UserEvents({ userId }: Props) {
         animation: getGiftAnimationBySymbol(event.gift.symbol),
         tableData: [
           {
-            key: 'From',
+            key: t('gift.table.from'),
             value: (
               <p className="flex items-center gap-2">
                 {event.remitter && (
                   <img
                     className="h-5 w-5 rounded-full"
                     src={event.remitter.avatarUrl}
-                    alt={event.remitter.name || 'User avatar'}
+                    alt={event.remitter.name || t('user.avatar')}
                   />
                 )}
-                <span>{event.remitter?.name || 'Anonymous'}</span>
+                <span>{event.remitter?.name || t('user.anonymous')}</span>
               </p>
             ),
           },
           {
-            key: 'Date',
-            value: new Intl.DateTimeFormat('en', {
+            key: t('gift.table.date'),
+            value: new Intl.DateTimeFormat(getLanguage(), {
               dateStyle: 'long',
               timeStyle: 'short',
             }).format(new Date(event.createdAt)),
           },
           {
-            key: 'Price',
+            key: t('gift.table.price'),
             value: (
               <p className="flex items-center gap-2">
                 <img className="h-5 w-5" src={assetIcon[event.gift.asset]} alt={event.gift.asset} />
@@ -61,15 +64,18 @@ export default function UserEvents({ userId }: Props) {
             ),
           },
           {
-            key: 'Availability',
-            value: `${event.gift.availableAmount} of ${event.gift.totalAmount}`,
+            key: t('gift.table.availability'),
+            value: t('gift.available', {
+              amount: event.gift.availableAmount,
+              total: event.gift.totalAmount,
+            }),
           },
         ],
-        buttonText: 'Close',
+        buttonText: t('gift.close'),
         onClick: closePopup,
       });
     },
-    [closePopup, showPopup],
+    [t, closePopup, showPopup],
   );
 
   useEffect(() => {
@@ -101,7 +107,7 @@ export default function UserEvents({ userId }: Props) {
   if (!events || !events?.total) {
     return (
       <ListEmpty
-        title="You can buy a gift to receive a gift in return."
+        title={t('user.receivedGiftsEmpty')}
         onClick={() => setRoute({ page: Page.store })}
       />
     );

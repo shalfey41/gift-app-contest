@@ -3,6 +3,7 @@ import Row from '@/components/ui/Row';
 import { Event, User } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
 import classNames from 'classnames';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface GiftEvent extends Event {
   buyer: User | null;
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export default function GiftEventsRow({ separator, event }: Props) {
+  const { t } = useTranslation();
   const left = useMemo(() => {
     const getUser = () => {
       switch (event.action) {
@@ -48,54 +50,76 @@ export default function GiftEventsRow({ separator, event }: Props) {
     return (
       <div className="relative h-full w-full">
         <div className={classNames('overflow-hidden rounded-full', { 'bg-secondary': !url })}>
-          {url && <img src={url} alt={user?.name || 'User avatar'} />}
+          {url && <img src={url} alt={user?.name || t('user.avatar')} />}
         </div>
         <div className="absolute -bottom-0.5 -right-0.5">
-          {icon && <img src={icon} alt={`${event.action} icon`} />}
+          {icon && <img src={icon} alt={event.action} />}
         </div>
       </div>
     );
-  }, [event]);
+  }, [t, event]);
 
   const subtitle = useMemo(() => {
     switch (event.action) {
       case EventAction.buy:
-        return 'Buy gift';
+        return t('store.event.buy.title');
       case EventAction.send:
-        return 'Send gift';
+        return t('store.event.send.title');
       case EventAction.receive:
-        return 'Receive gift';
+        return t('store.event.receive.title');
       default:
         return '';
     }
-  }, [event]);
+  }, [t, event]);
 
   const text = useMemo(() => {
     switch (event.action) {
       case EventAction.buy:
         return (
           <span>
-            <span className="text-primary">{event.buyer?.name || 'Anonymous'}</span> bought a gift
+            <Trans
+              i18nKey="store.event.buy.text"
+              values={{ user: event.buyer?.name || t('user.anonymous') }}
+              components={[<span key="1" className="text-primary" />]}
+            />
           </span>
         );
       case EventAction.send:
         return (
           <span>
-            <span className="text-primary">{event.remitter?.name || 'Anonymous'}</span> sent gift to{' '}
-            <span className="text-primary">{event.beneficiary?.name || 'Anonymous'}</span>
+            <Trans
+              i18nKey="store.event.send.text"
+              values={{
+                remitter: event.remitter?.name || t('user.anonymous'),
+                beneficiary: event.beneficiary?.name || t('user.anonymous'),
+              }}
+              components={[
+                <span key="1" className="text-primary" />,
+                <span key="2" className="text-primary" />,
+              ]}
+            />
           </span>
         );
       case EventAction.receive:
         return (
           <span>
-            <span className="text-primary">{event.beneficiary?.name || 'Anonymous'}</span> received
-            gift from <span className="text-primary">{event.remitter?.name || 'Anonymous'}</span>
+            <Trans
+              i18nKey="store.event.receive.text"
+              values={{
+                beneficiary: event.beneficiary?.name || t('user.anonymous'),
+                remitter: event.remitter?.name || t('user.anonymous'),
+              }}
+              components={[
+                <span key="1" className="text-primary" />,
+                <span key="2" className="text-primary" />,
+              ]}
+            />
           </span>
         );
       default:
         return null;
     }
-  }, [event]);
+  }, [t, event]);
 
   return (
     <Row left={left} subtitle={subtitle} separator={separator}>

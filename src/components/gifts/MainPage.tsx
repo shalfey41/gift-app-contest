@@ -9,6 +9,8 @@ import ContactsListPage from '@/components/gifts/ContactsListPage';
 import SendStatusPage from '@/components/gifts/SendStatusPage';
 import { assetIcon, getGiftAnimationBySymbol } from '@/components/utils';
 import usePopup from '@/hooks/usePopup';
+import { useTranslation } from 'react-i18next';
+import { getLanguage } from '@/modules/i18n/client';
 
 enum Page {
   giftsList,
@@ -17,6 +19,7 @@ enum Page {
 }
 
 export default function MainPage() {
+  const { t } = useTranslation();
   const [eventId, setEventId] = useState<string | null>(null);
   const { showPopup } = usePopup();
   const { data: user } = useCurrentUserQuery();
@@ -54,19 +57,19 @@ export default function MainPage() {
       setSelectedUserGift(userGift);
 
       showPopup({
-        title: 'Send Gift',
+        title: t('gift.sendGift'),
         animation: getGiftAnimationBySymbol(userGift.gift.symbol),
         tableData: [
-          { key: 'Gift', value: userGift.gift.name },
+          { key: t('gift.table.gift'), value: userGift.gift.name },
           {
-            key: 'Date',
-            value: new Intl.DateTimeFormat('en', {
+            key: t('gift.table.date'),
+            value: new Intl.DateTimeFormat(getLanguage(), {
               dateStyle: 'long',
               timeStyle: 'short',
             }).format(new Date(userGift.boughtAt)),
           },
           {
-            key: 'Price',
+            key: t('gift.table.price'),
             value: (
               <p className="flex items-center gap-2">
                 <img
@@ -81,15 +84,18 @@ export default function MainPage() {
             ),
           },
           {
-            key: 'Availability',
-            value: `${userGift.gift.availableAmount} of ${userGift.gift.totalAmount}`,
+            key: t('gift.table.availability'),
+            value: t('gift.available', {
+              amount: userGift.gift.availableAmount,
+              total: userGift.gift.totalAmount,
+            }),
           },
         ],
-        buttonText: 'Send Gift to Contact',
+        buttonText: t('gift.sendToContact'),
         onClick: goToContactsList,
       });
     },
-    [showPopup, goToContactsList],
+    [showPopup, t, goToContactsList],
   );
 
   return (

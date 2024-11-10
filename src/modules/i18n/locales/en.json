@@ -1,3 +1,154 @@
 {
-  "welcome": "Welcome to React and react-i18next"
+  "webAppHashValidation": {
+    "noData": "You need to open the app from telegram",
+    "fail": "Hash is not valid"
+  },
+  "contactList": {
+    "confirmTransfer": "You're going to send the gift of {{gift}} to {{contact}}",
+    "sendError": "Error sending the gift",
+    "instructionTitle": "Select a user from the list or…",
+    "instructionItem1": "Open a chat with your friend",
+    "instructionItem2": "Send them the following message:",
+    "instructionItem3": "Done! Your friend will receive the gift",
+    "instructionAction": "Copy the message",
+    "notRealUser": "(not real user)"
+  },
+  "user": {
+    "anonymous": "Anonymous",
+    "you": "You",
+    "recentActions": "Недавние действия ›",
+    "avatar": "User avatar",
+    "giftReceived_one": "{{count}} gift received",
+    "giftReceived_other": "{{count}} gifts received",
+    "receivedGiftsEmpty": "You can buy a gift to receive a gift in return."
+  },
+  "gift": {
+    "send": "Send",
+    "sendGift": "Send Gift",
+    "openStore": "Open Store",
+    "close": "Close",
+    "sendToContact": "Send Gift to Contact",
+    "available": "{{amount}} of {{total}}",
+    "soldOut": "Sold Out",
+    "oneOfTotal": "1 of {{total}}",
+    "table": {
+      "from": "From",
+      "gift": "Gift",
+      "date": "Date",
+      "price": "Price",
+      "availability": "Availability"
+    }
+  },
+  "gifts": {
+    "title": "Send Gifts in Telegram",
+    "text": "Send gifts to users that can be stored in their app profile.",
+    "empty": "You don't have any gifts yet."
+  },
+  "giftStatus": {
+    "buy": {
+      "toast": {
+        "title": "You Bought a Gift",
+        "message": "Now send it to your friend.",
+        "button": "Send"
+      },
+      "page": {
+        "title": "Gift Purchased",
+        "message": "The <0>{{gift}}</0> gift was purchased for <1>{{price}} {{asset}}</1>."
+      }
+    },
+    "sent": {
+      "toast": {
+        "title": "Gift Sent",
+        "message": "{{gift}} to {{user}}"
+      },
+      "page": {
+        "title": "Gift Sent",
+        "message": "You have sent the gift <0>{{gift}}</0>."
+      }
+    },
+    "received": {
+      "toast": {
+        "title": "Gift Received",
+        "message": "{{gift}} from {{user}}",
+        "button": "View"
+      },
+      "page": {
+        "title": "Gift Received",
+        "message": "You have received the gift <0>{{gift}}</0>."
+      }
+    },
+    "error": {
+      "page": {
+        "title": "Looks like you've landed on the wrong page",
+        "message": "Are you a hacker?"
+      },
+      "entityNotFound": "Gift not found",
+      "eventReceiveRemitterIsBeneficiary": "You can't receive your own gift",
+      "eventReceiveWrongBeneficiary": "This gift is not for you",
+      "eventReceiveGiftAlreadyReceived": "Gift already received",
+      "unknown": "Unknown error happened"
+    },
+    "openProfile": "Open Profile"
+  },
+  "leaderboard": {
+    "empty": "No users on the leaderboard yet.",
+    "gift_one": "{{count}} gift",
+    "gift_other": "{{count}} gifts"
+  },
+  "history": {
+    "title": "Recent Actions",
+    "text": "Here is your action history.",
+    "empty": {
+      "title": "History is Empty",
+      "text": "Give and receive gifts so there's something here."
+    },
+    "buy": {
+      "title": "Buy",
+      "text": "−{{price}} {{asset}}"
+    },
+    "send": {
+      "title": "Sent",
+      "text": "to <0>{{user}}</0>"
+    },
+    "receive": {
+      "title": "Received",
+      "text": "from <0>{{user}}</0>"
+    }
+  },
+  "store": {
+    "title": "Buy and Send Gifts",
+    "text": "Unique gifts for everyone by Crypto Pay.",
+    "empty": "No gifts available yet.",
+    "event": {
+      "title": "Recent events",
+      "empty": "No events yet",
+      "buy": {
+        "title": "Buy gift",
+        "text": "{{user}} bought a gift"
+      },
+      "send": {
+        "title": "Send gift",
+        "text": "{{remitter}} sent gift to {{beneficiary}}"
+      },
+      "receive": {
+        "title": "Receive gift",
+        "text": "{{beneficiary}} received gift from {{remitter}}"
+      }
+    },
+    "gift": {
+      "error": {
+        "soldOut": "Gift is sold out",
+        "invoice": "Error creating invoice. Try again later."
+      },
+      "buy": "Buy a Gift",
+      "text": "Purchase this gift for the opportunity to give it to another user."
+    }
+  },
+  "menu": {
+    "gifts": "Gifts",
+    "leaderboard": "Leaderboard",
+    "profile": "Profile",
+    "store": "Store"
+  },
+  "search": "Search"
 }

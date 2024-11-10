@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   value: string;
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export default function SearchInput({ value, onChange, variant = 'default' }: Props) {
+  const { t } = useTranslation();
   const [isFocused, toggleFocus] = useState(false);
   const hasValue = value.length > 0;
 
@@ -51,13 +53,13 @@ export default function SearchInput({ value, onChange, variant = 'default' }: Pr
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
-            {!hasValue && <p className="text-separator/60">Search</p>}
+            {!hasValue && <p className="text-separator/60">{t('search')}</p>}
           </div>
         </div>
         <input
           type="search"
           inputMode="search"
-          className="w-full rounded-[10px] bg-close-button p-2 pl-8 outline-none placeholder:text-separator/60"
+          className="bg-close-button w-full rounded-[10px] p-2 pl-8 outline-none placeholder:text-separator/60"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onFocus={() => toggleFocus(true)}

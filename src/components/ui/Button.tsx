@@ -18,7 +18,7 @@ export default function Button({
   return (
     <button
       className={classNames(
-        'flex items-center justify-center transition-opacity hover:enabled:opacity-80 disabled:bg-label-secondary',
+        'flex items-center justify-center overflow-hidden text-ellipsis transition-opacity hover:enabled:opacity-80 disabled:bg-label-secondary',
         {
           'h-[30px] rounded-full px-4 py-1.5 text-xs font-semibold': size === 'small',
           'p-1 text-m': size === 'medium',

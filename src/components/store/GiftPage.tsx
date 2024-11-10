@@ -18,6 +18,7 @@ import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   gift: Gift;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export default function GiftPage({ gift, goNext, goBack }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar } = useContext(PageContext);
   const { data: recentEvents, isLoading: isLoadingEvents } = useRecentGiftEventsQuery(gift.id);
   const animation = getGiftAnimationBySymbol(gift.symbol);
@@ -71,8 +73,8 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
       setLoader(false);
 
       const message = invoice.giftIsNotAvailable
-        ? 'Gift is not available'
-        : 'Invoice was not created. Try again later.';
+        ? t('store.gift.error.soldOut')
+        : t('store.gift.error.invoice');
 
       WebApp.showAlert(message);
 
@@ -85,7 +87,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
     WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
     checkInvoiceStatus(invoice.id);
-  }, [checkInvoiceStatus, gift, goBack, user]);
+  }, [t, checkInvoiceStatus, gift, goBack, user]);
 
   // handle checkInvoiceStatus race condition
   useEffect(() => {
@@ -100,11 +102,11 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
     setBottomBar(
       <div className="px-4">
         <Button className="w-full" size="large" disabled={isSoldOut || isLoading} onClick={pay}>
-          Buy a Gift
+          {t('store.gift.buy')}
         </Button>
       </div>,
     );
-  }, [pay, isLoading, goNext, isSoldOut, setBottomBar]);
+  }, [t, pay, isLoading, goNext, isSoldOut, setBottomBar]);
 
   return (
     <div className="bg-secondary">
@@ -122,12 +124,12 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
           <div className="mb-2 mt-3 flex items-center gap-3">
             <h2 className="text-lg font-semibold">{gift.name}</h2>
             <p className="rounded-full bg-primary/[0.12] px-2 text-s font-medium text-primary">
-              {isSoldOut ? 'Sold out' : `${gift.availableAmount} of ${gift.totalAmount}`}
+              {isSoldOut
+                ? t('gift.soldOut')
+                : t('gift.available', { amount: gift.availableAmount, total: gift.totalAmount })}
             </p>
           </div>
-          <p className="mb-2 text-label-secondary">
-            Purchase this gift for the opportunity to give it to another user.
-          </p>
+          <p className="mb-2 text-label-secondary">{t('store.gift.text')}</p>
           <p className="flex items-center gap-2 font-medium">
             <img className="h-5 w-5" src={assetIcon[gift.asset]} alt={gift.asset} />
             <span>
@@ -137,7 +139,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
         </div>
 
         <div className="bg-background pb-4">
-          <h2 className="mt-2 p-4 text-xs uppercase text-label-date">Recent events</h2>
+          <h2 className="mt-2 p-4 text-xs uppercase text-label-date">{t('store.event.title')}</h2>
 
           {isLoadingEvents ? (
             <div className="px-4">
@@ -153,7 +155,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
             ))
           ) : (
             <div className="px-4">
-              <p className="text-s text-label-secondary">No events yet</p>
+              <p className="text-s text-label-secondary">{t('store.event.empty')}</p>
             </div>
           )}
         </div>

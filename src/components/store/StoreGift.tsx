@@ -8,6 +8,7 @@ import {
   getGiftPatternBackgroundBySymbol,
 } from '@/components/utils';
 import { useLottie } from 'lottie-react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   gift: Gift;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function StoreGift({ gift, selectGift }: Props) {
+  const { t } = useTranslation();
   const isSoldOut = gift.availableAmount === 0;
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const { View } = useLottie({
@@ -32,7 +34,9 @@ export default function StoreGift({ gift, selectGift }: Props) {
       }}
     >
       <p className="justify-self-end text-xs text-label-secondary">
-        {isSoldOut ? 'Sold out' : `${gift.availableAmount} of ${gift.totalAmount}`}
+        {isSoldOut
+          ? t('gift.soldOut')
+          : t('gift.available', { amount: gift.availableAmount, total: gift.totalAmount })}
       </p>
       <div className="flex h-32 w-32 items-center justify-center p-2.5">{View}</div>
       <h2 className="mb-3 mt-1 font-semibold">{gift.name}</h2>

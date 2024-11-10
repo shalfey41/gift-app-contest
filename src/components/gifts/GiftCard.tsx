@@ -3,6 +3,7 @@ import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
 import { getGiftAnimationBySymbol } from '@/components/utils';
 import { useLottie } from 'lottie-react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   gift: Gift;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function GiftCard({ gift, selectGift }: Props) {
+  const { t } = useTranslation();
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const { View } = useLottie({
     animationData: animation,
@@ -26,7 +28,7 @@ export default function GiftCard({ gift, selectGift }: Props) {
         {gift.name}
       </h2>
       <div className="mb-2 flex h-20 w-20 items-center justify-center p-1">{View}</div>
-      <Button className="px-6">Send</Button>
+      <Button>{t('gift.send')}</Button>
     </article>
   );
 }

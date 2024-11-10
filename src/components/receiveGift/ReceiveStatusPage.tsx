@@ -10,6 +10,7 @@ import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
 import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
 import { ErrorCode, Page } from '@/modules/types';
+import { Trans, useTranslation } from 'react-i18next';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }> | null;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
+  const { t } = useTranslation();
   const { setBottomBar, setRoute } = useContext(PageContext);
   const { showToast } = useToast();
   const giftAnimation = getGiftAnimationBySymbol(event?.gift.symbol);
@@ -26,7 +28,7 @@ export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
     setBottomBar(
       <div className="grid gap-2 px-4">
         <Button size="large" onClick={() => setRoute({ page: Page.profile })}>
-          Open Profile
+          {t('giftStatus.openProfile')}
         </Button>
       </div>,
     );
@@ -38,14 +40,17 @@ export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
     setTimeout(() => {
       showToast({
         iconSrc: giftPreviewIcon[event.gift.symbol],
-        title: 'Gift Received',
-        text: `${event.gift.name} from ${event.remitter?.name || 'Anonymous'}`,
-        buttonText: 'View',
+        title: t('giftStatus.received.toast.title'),
+        text: t('giftStatus.received.toast.message', {
+          gift: event.gift.name,
+          user: event.remitter?.name || t('user.anonymous'),
+        }),
+        buttonText: t('giftStatus.received.toast.button'),
         // todo send param to giftId
         onClick: () => setRoute({ page: Page.profile }),
       });
     }, 500);
-  }, [setRoute, showToast, setBottomBar, event]);
+  }, [t, setRoute, showToast, setBottomBar, event]);
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">
@@ -55,17 +60,19 @@ export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
         }
 
         if (error) {
-          return <h1 className="mb-2 text-lg font-semibold">{parseError(error)}</h1>;
+          return <h1 className="mb-2 text-lg font-semibold">{t(parseError(error))}</h1>;
         }
 
         return (
           <>
             <Animations giftAnimation={giftAnimation} />
-            <h1 className="mb-2 text-lg font-semibold">Gift Received</h1>
+            <h1 className="mb-2 text-lg font-semibold">{t('giftStatus.received.page.title')}</h1>
             <p className="text-balance">
-              <span>
-                You have received the gift <span className="font-medium">{event?.gift.name}</span>.
-              </span>
+              <Trans
+                i18nKey="giftStatus.received.page.message"
+                values={{ gift: event?.gift.name }}
+                components={[<span key="1" className="font-medium" />]}
+              />
             </p>
           </>
         );

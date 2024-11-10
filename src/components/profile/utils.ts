@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
+import { getLanguage } from '@/modules/i18n/client';
 
 type Event = EventGetPayload<{ include: EventInclude }>;
 
@@ -10,7 +11,7 @@ export const groupEventsByDay = (events: Event[]) => {
   }
 
   const format = (date: Date) => {
-    return new Intl.DateTimeFormat('en', {
+    return new Intl.DateTimeFormat(getLanguage(), {
       dateStyle: 'long',
     }).format(date);
   };

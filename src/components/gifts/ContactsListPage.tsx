@@ -13,6 +13,7 @@ import { getCssVar } from '@/components/utils';
 import Row from '@/components/ui/Row';
 import { User } from '@prisma/client';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   selectedGift: UserGift;
@@ -29,6 +30,7 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
   const { data: users } = useUsersWithoutMeQuery(user?.id, debouncedSearchQuery);
   const sendGiftMutation = useSendGiftMutation();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const sendGift = useCallback(
     async (selectedUser: User) => {
@@ -36,8 +38,12 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
         return;
       }
 
+      // todo put localized gift name?
       WebApp.showConfirm(
-        `You're going to send the gift of ${selectedGift.gift.name} to ${selectedUser.name}`,
+        t('contactList.confirmTransfer', {
+          gift: selectedGift.gift.name,
+          contact: selectedUser.name,
+        }),
         (isConfirmed) => {
           if (!isConfirmed) {
             return;
@@ -56,19 +62,19 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
                 queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
                 goNext(event.id);
               } else {
-                WebApp.showAlert('Error happened');
+                WebApp.showAlert(t('contactList.sendError'));
                 goBack();
               }
             } catch (error) {
               console.error(error);
-              WebApp.showAlert('Error happened');
+              WebApp.showAlert(t('contactList.sendError'));
               goBack();
             }
           })();
         },
       );
     },
-    [goBack, goNext, queryClient, selectedGift, sendGiftMutation, user],
+    [goBack, goNext, queryClient, selectedGift, sendGiftMutation, t, user],
   );
 
   const copyContent = useCallback(async () => {
@@ -79,26 +85,26 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
   useEffect(() => {
     setBottomBar(
       <div className="grid justify-items-center gap-2 px-4 pt-2">
-        <h2 className="mb-1 font-semibold">Select a user from the list or…</h2>
+        <h2 className="mb-1 font-semibold">{t('contactList.instructionTitle')}</h2>
 
         <ol className="mb-2 list-decimal text-balance px-6 text-m/[25px]">
-          <li>Open a chat with your friend</li>
+          <li>{t('contactList.instructionItem1')}</li>
           <li>
-            Send them the following message:
+            {t('contactList.instructionItem2')}
             <br />
             <span className="text-nowrap rounded border border-primary bg-primary/10 p-0.5 text-s text-primary">
               {botInfo?.username ? `@${botInfo?.username}` : ''} {selectedGift.id}
             </span>
           </li>
-          <li>Done! Your friend will receive the gift</li>
+          <li>{t('contactList.instructionItem3')}</li>
         </ol>
 
         <Button size="large" className="w-full" onClick={() => copyContent()} disabled={!botInfo}>
-          Copy the message
+          {t('contactList.instructionAction')}
         </Button>
       </div>,
     );
-  }, [botInfo, copyContent, selectedGift, setBottomBar]);
+  }, [botInfo, copyContent, selectedGift, setBottomBar, t]);
 
   useEffect(() => {
     WebApp.setHeaderColor(getCssVar('--color-bg-tab-bar'));
@@ -129,7 +135,9 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
               <span>
                 {user.name}{' '}
                 {user.telegramId < 0 && (
-                  <span className="font-normal text-label-secondary">(not real user)</span>
+                  <span className="font-normal text-label-secondary">
+                    {t('contactList.notRealUser')}
+                  </span>
                 )}
               </span>
             </Row>

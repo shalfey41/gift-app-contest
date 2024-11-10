@@ -5,6 +5,7 @@ import { EventAction } from '@/modules/event/types';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
 import { giftPreviewIcon } from '@/components/utils';
+import { Trans, useTranslation } from 'react-i18next';
 
 type Props = {
   event: EventGetPayload<{ include: EventInclude }>;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function HistoryEventRow({ separator, event }: Props) {
+  const { t } = useTranslation();
   const left = useMemo(() => {
     const getUser = () => {
       switch (event.action) {
@@ -43,51 +45,59 @@ export default function HistoryEventRow({ separator, event }: Props) {
 
     return (
       <div className="relative h-full w-full rounded-[10px] bg-secondary p-1.5">
-        {url && <img src={url} alt={user?.name || 'User avatar'} />}
+        {url && <img src={url} alt={user?.name || t('user.avatar')} />}
         <div className="absolute -bottom-0.5 -right-0.5">
-          {icon && <img src={icon} alt={`${event.action} icon`} />}
+          {icon && <img src={icon} alt={event.action} />}
         </div>
       </div>
     );
-  }, [event]);
+  }, [t, event]);
 
   const subtitle = useMemo(() => {
     switch (event.action) {
       case EventAction.buy:
-        return 'Buy';
+        return t('history.buy.title');
       case EventAction.send:
-        return 'Sent';
+        return t('history.send.title');
       case EventAction.receive:
-        return 'Received';
+        return t('history.receive.title');
       default:
         return '';
     }
-  }, [event]);
+  }, [t, event]);
 
   const right = useMemo(() => {
     switch (event.action) {
       case EventAction.buy:
         return (
           <span className="text-[15px]/[22px]">
-            −{event.gift.price} {event.gift.asset}
+            {t('history.buy.text', { price: event.gift.price, asset: event.gift.asset })}
           </span>
         );
       case EventAction.send:
         return (
           <span className="text-[15px]/[22px]">
-            to <span className="text-primary">{event.beneficiary?.name || 'Anonymous'}</span>
+            <Trans
+              i18nKey="history.send.text"
+              values={{ user: event.beneficiary?.name || t('user.anonymous') }}
+              components={[<span key="1" className="text-primary" />]}
+            />
           </span>
         );
       case EventAction.receive:
         return (
           <span className="text-[15px]/[22px]">
-            from <span className="text-primary">{event.remitter?.name || 'Anonymous'}</span>
+            <Trans
+              i18nKey="history.receive.text"
+              values={{ user: event.remitter?.name || t('user.anonymous') }}
+              components={[<span key="1" className="text-primary" />]}
+            />
           </span>
         );
       default:
         return null;
     }
-  }, [event]);
+  }, [t, event]);
 
   return (
     <Row left={left} right={right} subtitle={subtitle} separator={separator}>

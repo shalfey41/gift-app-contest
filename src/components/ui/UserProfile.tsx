@@ -1,5 +1,6 @@
 import React from 'react';
 import { LeaderboardProfile } from '@/modules/user/types';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   profile: LeaderboardProfile;
@@ -12,6 +13,8 @@ const prizePlace: Record<string, string> = {
 };
 
 export default function UserProfile({ profile }: Props) {
+  const { t } = useTranslation();
+
   return (
     <div className="grid w-full max-w-52 justify-items-center text-center">
       <div className="relative mb-5">
@@ -19,7 +22,7 @@ export default function UserProfile({ profile }: Props) {
           <img
             className="rounded-full"
             src={profile.user.avatarUrl}
-            alt={profile.user?.name || 'User avatar'}
+            alt={profile.user?.name || t('user.avatar')}
           />
         </div>
         {profile.place > 3 && (
@@ -32,7 +35,9 @@ export default function UserProfile({ profile }: Props) {
         {profile.user.name}
         {prizePlace[profile.place] ? prizePlace[profile.place] : ''}
       </h1>
-      <p className="text-label-secondary">{profile.giftsReceived} gifts received</p>
+      <p className="text-label-secondary">
+        {t('user.giftReceived_one', { count: profile.giftsReceived })}
+      </p>
     </div>
   );
 }
