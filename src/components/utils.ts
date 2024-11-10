@@ -29,6 +29,13 @@ export const giftPreviewIcon: Record<string, string> = {
   [GiftSymbol.redStar]: '/preview-red-star.png',
 };
 
+export const giftPreviewImg: Record<string, string> = {
+  [GiftSymbol.cake]: '/cake-placeholder.svg',
+  [GiftSymbol.greenStar]: '/star-placeholder.svg',
+  [GiftSymbol.blueStar]: '/star-placeholder.svg',
+  [GiftSymbol.redStar]: '/star-placeholder.svg',
+};
+
 export const firstNonZeroDigit = (number: number) => {
   if (number === 0) return '0';
 
@@ -166,4 +173,10 @@ export const parseStartParam = (startParam?: string): Route => {
     default:
       return defaultRoute;
   }
+};
+
+export const pageAnimation = {
+  initial: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
+  animate: { opacity: 1, scale: 1, filter: 'blur(0)' },
+  exit: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
 };

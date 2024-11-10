@@ -6,6 +6,8 @@ import StorePage from '@/components/store/StorePage';
 import GiftPage from '@/components/store/GiftPage';
 import PurchaseStatusPage from '@/components/store/PurchaseStatusPage';
 import { useGiftsQuery } from '@/queries/useGiftQuery';
+import { AnimatePresence, motion } from 'framer-motion';
+import { pageAnimation } from '@/components/utils';
 
 enum Page {
   store,
@@ -44,16 +46,31 @@ export default function MainPage() {
   );
 
   return (
-    <>
+    <AnimatePresence mode="wait">
       {page === Page.store && (
-        <StorePage isLoading={isLoadingGifts} gifts={gifts || []} selectGift={selectGift} />
+        <motion.div
+          key={Page.store}
+          initial={{ opacity: 0, scale: 0.9, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0)' }}
+        >
+          <StorePage isLoading={isLoadingGifts} gifts={gifts || []} selectGift={selectGift} />
+        </motion.div>
       )}
       {page === Page.gift && selectedGift && (
-        <GiftPage gift={selectedGift} goNext={goToPurchaseStatus} goBack={goToStore} />
+        <motion.div
+          key={Page.gift}
+          initial={{ y: 50, opacity: 0, filter: 'blur(4px)' }}
+          animate={{ y: 0, opacity: 1, filter: 'blur(0)' }}
+          exit={{ y: 50, opacity: 0, filter: 'blur(4px)' }}
+        >
+          <GiftPage gift={selectedGift} goNext={goToPurchaseStatus} goBack={goToStore} />
+        </motion.div>
       )}
       {page === Page.purchaseStatus && selectedGift && (
-        <PurchaseStatusPage gift={selectedGift} goBack={goToStore} />
+        <motion.div key={Page.purchaseStatus} {...pageAnimation} className="h-full">
+          <PurchaseStatusPage gift={selectedGift} goBack={goToStore} />
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 }

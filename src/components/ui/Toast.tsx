@@ -22,7 +22,7 @@ export default function Toast({
   return (
     <div
       className={classNames(
-        'flex w-full items-center gap-3 rounded-[14px] bg-notification/80 px-4 py-3 text-s text-white',
+        'flex w-full items-center gap-3 rounded-[14px] bg-notification/80 px-4 py-3 text-s text-white dark:bg-black/80',
         className,
       )}
     >

@@ -14,12 +14,12 @@ export const initColorTheme = async () => {
 export const applyColorThemeChanges = (theme: ColorTheme) => {
   document.documentElement.className = theme;
 
+  WebApp.setBackgroundColor(getCssVar('--color-bg-tab-bar'));
+  WebApp.setHeaderColor(getCssVar('--white'));
+  WebApp.setBottomBarColor(getCssVar('--color-bg-tab-bar'));
+
   if (theme === 'dark') {
-    // WebApp.setBackgroundColor('#121212');
-  } else {
-    WebApp.setBackgroundColor(getCssVar('--color-bg-tab-bar'));
-    WebApp.setHeaderColor(getCssVar('--white'));
-    WebApp.setBottomBarColor(getCssVar('--color-bg-tab-bar'));
+    WebApp.setHeaderColor(getCssVar('--color-bg-tab-bar'));
   }
 };
 

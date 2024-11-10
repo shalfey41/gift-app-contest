@@ -9,6 +9,7 @@ import useToast from '@/hooks/useToast';
 import giftPurchasedAnimation from '@/lottie/effect-gift-purchased.json';
 import { Page } from '@/modules/types';
 import { Trans, useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 type Props = {
   gift: Gift;
@@ -35,14 +36,19 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
 
   useEffect(() => {
     setBottomBar(
-      <div className="grid gap-2 px-4">
+      <motion.div
+        className="grid gap-2 px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Button size="large" onClick={() => setRoute({ page: Page.gifts })}>
           {t('gift.sendGift')}
         </Button>
         <Button variant="outline" size="large" onClick={() => setRoute({ page: Page.gifts })}>
           {t('gift.openStore')}
         </Button>
-      </div>,
+      </motion.div>,
     );
 
     setTimeout(() => {

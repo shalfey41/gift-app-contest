@@ -14,15 +14,9 @@ import BottomBar from '@/components/ui/BottomBar';
 import { useTraceUpdate } from '@/hooks/useTraceUpdate';
 import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
-import { parseStartParam } from '@/components/utils';
+import { pageAnimation, parseStartParam } from '@/components/utils';
 import { Page } from '@/modules/types';
 import { AnimatePresence, motion } from 'framer-motion';
-
-const pageAnimation = {
-  initial: { opacity: 0, scale: 0.9 },
-  animate: { opacity: 1, scale: 1, filter: 'blur(0)' },
-  exit: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
-};
 
 export default function App() {
   const bottomBarRef = useRef<HTMLDivElement>(null);
@@ -66,59 +60,74 @@ export default function App() {
         className={classNames('relative grow bg-background')}
         style={{ paddingBottom: bottomBarHeight }}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {route.page === Page.store && (
-            <motion.div key={Page.store} {...pageAnimation}>
+            <motion.div key={Page.store} {...pageAnimation} className="h-full">
               <StorePage />
             </motion.div>
           )}
           {route.page === Page.gifts && (
-            <motion.div key={Page.gifts} {...pageAnimation}>
+            <motion.div key={Page.gifts} {...pageAnimation} className="h-full">
               <GiftsPage />
             </motion.div>
           )}
           {route.page === Page.leaderboard && (
-            <motion.div key={Page.leaderboard} {...pageAnimation}>
+            <motion.div key={Page.leaderboard} {...pageAnimation} className="h-full">
               <LeaderboardPage />
             </motion.div>
           )}
           {route.page === Page.profile && (
-            <motion.div key={Page.profile} {...pageAnimation}>
+            <motion.div key={Page.profile} {...pageAnimation} className="h-full">
               <ProfilePage />
             </motion.div>
           )}
           {route.page === Page.receiveGift && (
-            <motion.div key={Page.receiveGift} {...pageAnimation}>
+            <motion.div key={Page.receiveGift} {...pageAnimation} className="h-full">
               <ReceiveGiftPage />
             </motion.div>
           )}
-        </AnimatePresence>
 
-        {popup && <div className="absolute inset-0 z-20 bg-black/30" />}
+          {popup && (
+            <motion.div
+              className="absolute inset-0 z-20 bg-black/30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="fixed bottom-0 z-30 w-full bg-tab-bar" ref={bottomBarRef}>
-        {popup && (
-          <div className="absolute top-full w-full -translate-y-full">
-            <Popup />
-          </div>
-        )}
-        {toast && (
-          <div className="absolute top-0 w-full -translate-y-full p-4 pb-8">
-            <Toast
-              iconSrc={toast.iconSrc}
-              title={toast.title}
-              text={toast.text}
-              buttonText={toast.buttonText}
-              onClick={toast.onClick}
-            />
-          </div>
-        )}
-        {showBottomBar && (
-          <div className="relative pb-4">
-            <BottomBar>{bottomBar}</BottomBar>
-          </div>
-        )}
+        <AnimatePresence>
+          {popup && (
+            <div className="absolute top-full w-full -translate-y-full">
+              <Popup />
+            </div>
+          )}
+          {toast && (
+            <motion.div
+              key="toast"
+              className="absolute top-0 w-full p-4"
+              initial={{ y: 0 }}
+              animate={{ y: '-100%' }}
+              exit={{ opacity: 0, scale: 0.9, filter: 'blur(4px)' }}
+            >
+              <Toast
+                iconSrc={toast.iconSrc}
+                title={toast.title}
+                text={toast.text}
+                buttonText={toast.buttonText}
+                onClick={toast.onClick}
+              />
+            </motion.div>
+          )}
+          {showBottomBar && (
+            <motion.div className="relative pb-4" layout key="showBottomBar">
+              <BottomBar>{bottomBar}</BottomBar>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </PageContext.Provider>
   );

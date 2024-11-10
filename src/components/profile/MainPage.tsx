@@ -4,6 +4,8 @@ import React, { useCallback, useState } from 'react';
 import { useCurrentUserQuery, useLeaderboardProfileQuery } from '@/queries/useUserQuery';
 import UserProfilePage from '@/components/profile/UserProfilePage';
 import HistoryPage from '@/components/profile/HistoryPage';
+import { AnimatePresence, motion } from 'framer-motion';
+import { pageAnimation } from '@/components/utils';
 
 enum Page {
   profile,
@@ -28,12 +30,18 @@ export default function MainPage() {
   }, []);
 
   return (
-    <>
+    <AnimatePresence mode="wait">
       {page === Page.profile && (
-        <UserProfilePage profile={profile} isLoading={isPending} goNext={goToHistory} />
+        <motion.div key={Page.profile} {...pageAnimation}>
+          <UserProfilePage profile={profile} isLoading={isPending} goNext={goToHistory} />
+        </motion.div>
       )}
 
-      {page === Page.history && user && <HistoryPage userId={user.id} goBack={goToProfile} />}
-    </>
+      {page === Page.history && user && (
+        <motion.div key={Page.history} {...pageAnimation}>
+          <HistoryPage userId={user.id} goBack={goToProfile} />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

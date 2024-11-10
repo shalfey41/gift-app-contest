@@ -32,16 +32,22 @@ export default function MenuItem({
       onClick={playAnimationOnce}
     >
       <span
-        className={classNames('flex h-[26px] w-[26px] items-center justify-center text-icons', {
-          'text-primary': isActive,
-        })}
+        className={classNames(
+          'flex h-[26px] w-[26px] items-center justify-center text-icons dark:text-white/40',
+          {
+            '!text-primary': isActive,
+          },
+        )}
       >
         {View}
       </span>
       <span
-        className={classNames('mt-1 flex text-[10px]/[12px] text-label-tab-bar/65', {
-          'text-primary': isActive,
-        })}
+        className={classNames(
+          'mt-1 flex text-[10px]/[12px] text-label-tab-bar/65 dark:text-white/40',
+          {
+            '!text-primary': isActive,
+          },
+        )}
       >
         {label}
       </span>

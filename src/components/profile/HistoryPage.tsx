@@ -28,8 +28,21 @@ export default function HistoryPage({ userId, goBack }: Props) {
     };
   }, [toggleBottomBar, isEmptyList]);
 
+  if (isLoading) {
+    return (
+      <div className="mt-8 flex w-full justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   if (isEmptyList) {
-    return <HistoryEmpty />;
+    return (
+      <>
+        <HistoryEmpty />
+        <BackButton onClick={() => goBack()} />
+      </>
+    );
   }
 
   return (
@@ -42,28 +55,18 @@ export default function HistoryPage({ userId, goBack }: Props) {
       </section>
 
       <div className="mb-8">
-        {(() => {
-          if (isLoading) {
-            return (
-              <div className="flex w-full justify-center">
-                <Loader />
-              </div>
-            );
-          }
-
-          return eventsByDay?.dates.map((date) => (
-            <div key={date}>
-              <p className="px-4 pb-3 pt-6 text-xs uppercase text-label-date">{date}</p>
-              {eventsByDay.eventsByDate[date].map((event, index) => (
-                <HistoryEventRow
-                  event={event}
-                  key={event.id}
-                  separator={index !== eventsByDay.eventsByDate[date].length - 1}
-                />
-              ))}
-            </div>
-          ));
-        })()}
+        {eventsByDay?.dates.map((date) => (
+          <div key={date}>
+            <p className="px-4 pb-3 pt-6 text-xs uppercase text-label-date">{date}</p>
+            {eventsByDay.eventsByDate[date].map((event, index) => (
+              <HistoryEventRow
+                event={event}
+                key={event.id}
+                separator={index !== eventsByDay.eventsByDate[date].length - 1}
+              />
+            ))}
+          </div>
+        ))}
       </div>
 
       <BackButton onClick={() => goBack()} />

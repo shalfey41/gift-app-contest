@@ -7,6 +7,7 @@ import tabProfileAnimation from '@/lottie/tab-profile.json';
 import MenuItem from '@/components/ui/menu/MenuItem';
 import { Page } from '@/modules/types';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 const pages = [
   { page: Page.store, label: 'menu.store', animation: tabStoreAnimation },
@@ -20,7 +21,12 @@ export default function MenuBar() {
   const { route, setRoute } = useContext(PageContext);
 
   return (
-    <div className="grid grid-cols-4 gap-2 pt-2">
+    <motion.div
+      className="grid grid-cols-4 gap-2 pt-2"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {pages.map(({ page, label, animation }) => (
         <MenuItem
           key={page}
@@ -30,6 +36,6 @@ export default function MenuBar() {
           onClick={() => setRoute({ page })}
         />
       ))}
-    </div>
+    </motion.div>
   );
 }

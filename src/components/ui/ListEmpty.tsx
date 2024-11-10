@@ -21,7 +21,7 @@ export default function ListEmpty({ title, onClick }: Props) {
   return (
     <div className="grid justify-items-center rounded-xl bg-secondary px-4 py-8">
       <div className="mb-4 h-[100px] w-[100px]">{View}</div>
-      <h2 className="mb-3">{title}</h2>
+      <h2 className="mb-3 text-balance text-center">{title}</h2>
       <Button variant="outline" size="medium" onClick={onClick}>
         {t('gift.openStore')}
       </Button>

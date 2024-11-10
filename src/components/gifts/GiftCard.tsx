@@ -1,9 +1,10 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import React, { lazy, Suspense, useRef, useState } from 'react';
 import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
-import { getGiftAnimationBySymbol } from '@/components/utils';
+import { getGiftAnimationBySymbol, giftPreviewImg } from '@/components/utils';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'framer-motion';
+import Image from 'next/image';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -17,6 +18,7 @@ export default function GiftCard({ gift, selectGift }: Props) {
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const ref = useRef<HTMLDivElement>(null);
   const isVisible = useInView(ref, { margin: '200px 0px', once: true });
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   return (
     <article
@@ -28,9 +30,17 @@ export default function GiftCard({ gift, selectGift }: Props) {
         {gift.name}
       </h2>
       <div className="mb-2 flex h-20 w-20 items-center justify-center p-1">
+        {showPlaceholder && (
+          <Image width={80} height={80} src={giftPreviewImg[gift.symbol]} alt="icon" />
+        )}
         {isVisible && (
           <Suspense>
-            <LazyGiftLottie animationData={animation} className="h-full w-full" renderer="canvas" />
+            <LazyGiftLottie
+              animationData={animation}
+              className="h-full w-full"
+              renderer="canvas"
+              onLoad={() => setShowPlaceholder(false)}
+            />
           </Suspense>
         )}
       </div>

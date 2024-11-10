@@ -20,11 +20,11 @@ export default function HistoryEmpty() {
     setBottomBar(
       <div className="px-4">
         <Button size="large" className="w-full" onClick={() => setRoute({ page: Page.store })}>
-          Open Store
+          {t('gift.openStore')}
         </Button>
       </div>,
     );
-  }, [setBottomBar, setRoute]);
+  }, [t, setBottomBar, setRoute]);
 
   return (
     <section className="flex h-full items-center justify-center px-4">

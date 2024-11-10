@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import React, { lazy, Suspense, useRef, useState } from 'react';
 import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
 import {
@@ -6,9 +6,11 @@ import {
   firstNonZeroDigit,
   getGiftAnimationBySymbol,
   getGiftPatternBackgroundBySymbol,
+  giftPreviewImg,
 } from '@/components/utils';
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'framer-motion';
+import Image from 'next/image';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -23,6 +25,7 @@ export default function StoreGift({ gift, selectGift }: Props) {
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const ref = useRef<HTMLDivElement>(null);
   const isVisible = useInView(ref, { margin: '200px 0px', once: true });
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   return (
     <article
@@ -33,15 +36,22 @@ export default function StoreGift({ gift, selectGift }: Props) {
         background: getGiftPatternBackgroundBySymbol(gift.symbol),
       }}
     >
-      <p className="justify-self-end text-xs text-label-secondary">
+      <p className="justify-self-end text-xs text-label-secondary dark:text-white/50">
         {isSoldOut
           ? t('gift.soldOut')
           : t('gift.available', { amount: gift.availableAmount, total: gift.totalAmount })}
       </p>
       <div className="flex h-32 w-32 items-center justify-center p-2.5">
+        {showPlaceholder && (
+          <Image width={128} height={128} src={giftPreviewImg[gift.symbol]} alt="icon" />
+        )}
         {isVisible && (
           <Suspense>
-            <LazyGiftLottie animationData={animation} className="h-full w-full" />
+            <LazyGiftLottie
+              animationData={animation}
+              onLoad={() => setShowPlaceholder(false)}
+              className="h-full w-full"
+            />
           </Suspense>
         )}
       </div>

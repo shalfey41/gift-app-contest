@@ -2,7 +2,6 @@
 
 import * as repository from '@/modules/user/repository';
 import { getProfilePhoto } from '@/modules/bot/service';
-import { faker } from '@faker-js/faker';
 import { Leaderboard, LeaderboardProfile } from '@/modules/user/types';
 
 export const createUserIfNotExists = async (telegramId: number, userName: string) => {
@@ -170,28 +169,6 @@ export const getUsersWithoutMe = async (
 export const incrementReceivedGifts = async (userId: string) => {
   try {
     return repository.incrementReceivedGifts(userId);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-export const createSampleUsers = async () => {
-  try {
-    const users = [];
-
-    for (let i = 0; i < 30; i++) {
-      const name = faker.person.firstName();
-      users.push({
-        telegramId: faker.number.int({ min: -1000000, max: -1 }),
-        name: name,
-        nameLowerCase: name.toLowerCase(),
-        avatarUrl: faker.image.avatar(),
-        giftsReceived: faker.number.int({ min: 0, max: 100 }),
-      });
-    }
-
-    return repository.createUsers(users);
   } catch (error) {
     console.error(error);
     return null;

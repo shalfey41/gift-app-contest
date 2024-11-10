@@ -1,6 +1,5 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { BackButton } from '@twa-dev/sdk/react';
-import { useLottie } from 'lottie-react';
 import WebApp from '@twa-dev/sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { InvoiceStatus } from 'crypto-bot-api';
@@ -19,6 +18,9 @@ import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+
+const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
 type Props = {
   gift: Gift;
@@ -32,11 +34,6 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
   const { data: recentEvents, isLoading: isLoadingEvents } = useRecentGiftEventsQuery(gift.id);
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const isSoldOut = gift.availableAmount === 0;
-  const { View } = useLottie({
-    animationData: animation,
-    renderer: 'canvas',
-    className: 'h-[267px] w-[267px]',
-  });
   const queryClient = useQueryClient();
   const isMounted = useRef(false);
   const [isLoading, setLoader] = useState(false);
@@ -100,11 +97,16 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
   useEffect(() => {
     setBottomBar(
-      <div className="px-4">
+      <motion.div
+        className="px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Button className="w-full" size="large" disabled={isSoldOut || isLoading} onClick={pay}>
           {t('store.gift.buy')}
         </Button>
-      </div>,
+      </motion.div>,
     );
   }, [t, pay, isLoading, goNext, isSoldOut, setBottomBar]);
 
@@ -118,7 +120,13 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
               background: getGiftPatternBackgroundBySymbol(gift.symbol),
             }}
           >
-            {View}
+            <Suspense>
+              <LazyGiftLottie
+                animationData={animation}
+                renderer="canvas"
+                className="h-[267px] w-[267px]"
+              />
+            </Suspense>
           </div>
 
           <div className="mb-2 mt-3 flex items-center gap-3">

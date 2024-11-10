@@ -39,7 +39,7 @@ export default function SearchInput({ value, onChange, variant = 'default' }: Pr
         >
           <div className="flex items-center gap-1.5">
             <svg
-              className="h-4 w-4 shrink-0 text-separator/60"
+              className="h-4 w-4 shrink-0 text-separator/60 dark:text-label-secondary"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -53,13 +53,15 @@ export default function SearchInput({ value, onChange, variant = 'default' }: Pr
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
-            {!hasValue && <p className="text-separator/60">{t('search')}</p>}
+            {!hasValue && (
+              <p className="text-separator/60 dark:text-label-secondary">{t('search')}</p>
+            )}
           </div>
         </div>
         <input
           type="search"
           inputMode="search"
-          className="bg-close-button w-full rounded-[10px] p-2 pl-8 outline-none placeholder:text-separator/60"
+          className="bg-close-button w-full rounded-[10px] p-2 pl-8 outline-none placeholder:text-separator/60 dark:bg-black/95 dark:placeholder:text-label-secondary"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onFocus={() => toggleFocus(true)}

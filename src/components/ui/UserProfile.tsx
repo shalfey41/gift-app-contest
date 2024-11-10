@@ -36,7 +36,7 @@ export default function UserProfile({ profile }: Props) {
         {prizePlace[profile.place] ? prizePlace[profile.place] : ''}
       </h1>
       <p className="text-label-secondary">
-        {t('user.giftReceived_one', { count: profile.giftsReceived })}
+        {t('user.giftReceived', { count: profile.giftsReceived })}
       </p>
     </div>
   );
