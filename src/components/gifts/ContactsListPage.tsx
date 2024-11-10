@@ -14,6 +14,7 @@ import Row from '@/components/ui/Row';
 import { User } from '@prisma/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import Loader from '@/components/ui/Loader';
 
 type Props = {
   selectedGift: UserGift;
@@ -27,7 +28,7 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
   const { data: botInfo } = useBotInfoQuery();
   const { data: user } = useCurrentUserQuery();
-  const { data: users } = useUsersWithoutMeQuery(user?.id, debouncedSearchQuery);
+  const { data: users, isPending } = useUsersWithoutMeQuery(user?.id, debouncedSearchQuery);
   const sendGiftMutation = useSendGiftMutation();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -38,7 +39,6 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
         return;
       }
 
-      // todo put localized gift name?
       WebApp.showConfirm(
         t('contactList.confirmTransfer', {
           gift: selectedGift.gift.name,
@@ -114,34 +114,45 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
     };
   }, []);
 
+  if (isPending) {
+    return (
+      <div className="mt-8 flex w-full justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
+  if (!users?.list.length && !searchQuery.length) {
+    return null;
+  }
+
   return (
     <>
       <SearchInput value={searchQuery} onChange={setSearchQuery} />
       <div className="mb-6">
-        {Array.isArray(users?.list) &&
-          users?.list.map((user) => (
-            <Row
-              py={1}
-              key={user.id}
-              left={<img className="rounded-full" src={user.avatarUrl} alt={user.name} />}
-              onClick={() => {
-                if (sendGiftMutation.isPending || sendGiftMutation.isSuccess) {
-                  return;
-                }
+        {users?.list.map((user) => (
+          <Row
+            py={1}
+            key={user.id}
+            left={<img className="rounded-full" src={user.avatarUrl} alt={user.name} />}
+            onClick={() => {
+              if (sendGiftMutation.isPending || sendGiftMutation.isSuccess) {
+                return;
+              }
 
-                sendGift(user);
-              }}
-            >
-              <span>
-                {user.name}{' '}
-                {user.telegramId < 0 && (
-                  <span className="font-normal text-label-secondary">
-                    {t('contactList.notRealUser')}
-                  </span>
-                )}
-              </span>
-            </Row>
-          ))}
+              sendGift(user);
+            }}
+          >
+            <span>
+              {user.name}{' '}
+              {user.telegramId < 0 && (
+                <span className="text-s font-normal text-label-secondary">
+                  {t('contactList.notRealUser')}
+                </span>
+              )}
+            </span>
+          </Row>
+        ))}
       </div>
 
       <BackButton onClick={() => goBack()} />

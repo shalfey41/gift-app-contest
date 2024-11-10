@@ -23,10 +23,10 @@ export const assetOutlineIcon: Record<string, string> = {
 };
 
 export const giftPreviewIcon: Record<string, string> = {
-  [GiftSymbol.cake]: '/preview-delicious-cake.png',
-  [GiftSymbol.greenStar]: '/preview-green-star.png',
-  [GiftSymbol.blueStar]: '/preview-blue-star.png',
-  [GiftSymbol.redStar]: '/preview-red-star.png',
+  [GiftSymbol.cake]: '/cake.svg',
+  [GiftSymbol.greenStar]: '/green-star.svg',
+  [GiftSymbol.blueStar]: '/blue-star.svg',
+  [GiftSymbol.redStar]: '/red-star.svg',
 };
 
 export const giftPreviewImg: Record<string, string> = {

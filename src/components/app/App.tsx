@@ -60,7 +60,7 @@ export default function App() {
         className={classNames('relative grow bg-background')}
         style={{ paddingBottom: bottomBarHeight }}
       >
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {route.page === Page.store && (
             <motion.div key={Page.store} {...pageAnimation} className="h-full">
               <StorePage />
@@ -89,7 +89,8 @@ export default function App() {
 
           {popup && (
             <motion.div
-              className="absolute inset-0 z-20 bg-black/30"
+              key="overlay"
+              className="absolute inset-0 z-20 bg-black/40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -101,9 +102,16 @@ export default function App() {
       <div className="fixed bottom-0 z-30 w-full bg-tab-bar" ref={bottomBarRef}>
         <AnimatePresence>
           {popup && (
-            <div className="absolute top-full w-full -translate-y-full">
+            <motion.div
+              key="popup"
+              className="absolute top-full z-10 w-full"
+              initial={{ y: 0 }}
+              animate={{ y: '-100%' }}
+              exit={{ y: 0 }}
+              transition={{ ease: 'anticipate' }}
+            >
               <Popup />
-            </div>
+            </motion.div>
           )}
           {toast && (
             <motion.div
@@ -123,7 +131,14 @@ export default function App() {
             </motion.div>
           )}
           {showBottomBar && (
-            <motion.div className="relative pb-4" layout key="showBottomBar">
+            <motion.div
+              key="showBottomBar"
+              layout
+              className="relative pb-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
               <BottomBar>{bottomBar}</BottomBar>
             </motion.div>
           )}

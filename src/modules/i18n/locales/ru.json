@@ -4,14 +4,14 @@
     "fail": "Невалидный хэш"
   },
   "contactList": {
-    "confirmTransfer": "Вы собираетесь отправить {{gift}} контакту {{contact}}",
+    "confirmTransfer": "Мы отправим сообщение {{contact}}, что вы отправили {{gift}}",
     "sendError": "Ошибка отправки подарка",
     "instructionTitle": "Выберите контакт из списка или…",
     "instructionItem1": "Откройте чат с вашим другом",
     "instructionItem2": "Отправьте ему это сообщение:",
     "instructionItem3": "Готово! Ваш друг получит подарок",
     "instructionAction": "Скопировать сообщение",
-    "notRealUser": "(не настоящий пользователь)"
+    "notRealUser": "(фейк юзер)"
   },
   "user": {
     "anonymous": "Аноним",
@@ -29,7 +29,7 @@
     "sendGift": "Отправить подарок",
     "openStore": "Открыть магазин",
     "close": "Закрыть",
-    "sendToContact": "Отправить подарок контакту",
+    "sendToContact": "Выбрать контакт",
     "available": "{{amount}} из {{total}}",
     "soldOut": "Распродано",
     "oneOfTotal": "1 из {{total}}",
@@ -65,7 +65,7 @@
       },
       "page": {
         "title": "Подарок отправлен",
-        "message": "Вы отправили подарок <0>{{gift}}</0>."
+        "message": "Вы отправили <0>{{gift}}</0>."
       }
     },
     "received": {

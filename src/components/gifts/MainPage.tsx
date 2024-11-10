@@ -7,10 +7,12 @@ import { UserGift } from '@/modules/event/types';
 import GiftsListPage from '@/components/gifts/GiftsListPage';
 import ContactsListPage from '@/components/gifts/ContactsListPage';
 import SendStatusPage from '@/components/gifts/SendStatusPage';
-import { assetIcon, getGiftAnimationBySymbol } from '@/components/utils';
+import { assetIcon, getGiftAnimationBySymbol, pageAnimation } from '@/components/utils';
 import usePopup from '@/hooks/usePopup';
 import { useTranslation } from 'react-i18next';
 import { getLanguage } from '@/modules/i18n/client';
+import Image from 'next/image';
+import { AnimatePresence, motion } from 'framer-motion';
 
 enum Page {
   giftsList,
@@ -72,8 +74,9 @@ export default function MainPage() {
             key: t('gift.table.price'),
             value: (
               <p className="flex items-center gap-2">
-                <img
-                  className="h-5 w-5"
+                <Image
+                  width={20}
+                  height={20}
                   src={assetIcon[userGift.gift.asset]}
                   alt={userGift.gift.asset}
                 />
@@ -99,20 +102,26 @@ export default function MainPage() {
   );
 
   return (
-    <>
+    <AnimatePresence>
       {page === Page.giftsList && (
-        <GiftsListPage userGifts={userGifts} goNext={selectGift} isLoading={isLoadingGifts} />
+        <motion.div {...pageAnimation} className="h-full">
+          <GiftsListPage userGifts={userGifts} goNext={selectGift} isLoading={isLoadingGifts} />
+        </motion.div>
       )}
       {page === Page.contactsList && selectedUserGift && (
-        <ContactsListPage
-          selectedGift={selectedUserGift}
-          goBack={goToGiftsList}
-          goNext={goToSendStatus}
-        />
+        <motion.div {...pageAnimation} className="h-full">
+          <ContactsListPage
+            selectedGift={selectedUserGift}
+            goBack={goToGiftsList}
+            goNext={goToSendStatus}
+          />
+        </motion.div>
       )}
       {page === Page.sendStatus && (
-        <SendStatusPage event={event} isLoading={isLoadingEvent} goBack={goToGiftsList} />
+        <motion.div {...pageAnimation} className="h-full">
+          <SendStatusPage event={event} isLoading={isLoadingEvent} goBack={goToGiftsList} />
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 }

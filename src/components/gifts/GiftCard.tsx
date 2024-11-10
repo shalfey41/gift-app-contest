@@ -38,7 +38,6 @@ export default function GiftCard({ gift, selectGift }: Props) {
             <LazyGiftLottie
               animationData={animation}
               className="h-full w-full"
-              renderer="canvas"
               onLoad={() => setShowPlaceholder(false)}
             />
           </Suspense>

@@ -26,6 +26,7 @@ export default function MenuBar() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ delay: 0.3 }}
     >
       {pages.map(({ page, label, animation }) => (
         <MenuItem

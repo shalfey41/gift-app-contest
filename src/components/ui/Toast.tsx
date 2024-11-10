@@ -1,6 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import classNames from 'classnames';
 import Button from '@/components/ui/Button';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 type Props = {
   iconSrc: string;
@@ -26,9 +28,15 @@ export default function Toast({
         className,
       )}
     >
-      <div className="h-[26px] w-[26px]">
-        <img src={iconSrc} alt="icon" />
-      </div>
+      <motion.div
+        key="toast-icon"
+        className="h-[26px] w-[26px]"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        <Image width={26} height={26} src={iconSrc} alt="icon" />
+      </motion.div>
       <div className="grow text-left">
         {Boolean(title) && <p className="font-semibold">{title}</p>}
         {Boolean(text) && <p>{text}</p>}

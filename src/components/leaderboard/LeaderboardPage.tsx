@@ -30,7 +30,7 @@ export default function LeaderboardPage({ goNext, leaderboard, isLoadingLeaderbo
   const hasCurrentUser = !isSearchMode
     ? currentLeaderboard.some((profile) => profile.id === user?.id)
     : false;
-  const showMyRow = Boolean(!hasCurrentUser && leaderboard?.me);
+  const showMyRow = Boolean(!hasCurrentUser && leaderboard?.me && !searchQuery.length);
 
   useEffect(() => {
     setBottomBar(<MenuBar />);
@@ -49,7 +49,7 @@ export default function LeaderboardPage({ goNext, leaderboard, isLoadingLeaderbo
             );
           }
 
-          if (currentLeaderboard?.length === 0) {
+          if (currentLeaderboard?.length === 0 && !searchQuery.length) {
             return (
               <p className="mt-8 flex w-full justify-center font-medium">
                 {t('leaderboard.empty')}

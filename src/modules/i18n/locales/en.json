@@ -4,7 +4,7 @@
     "fail": "Hash is not valid"
   },
   "contactList": {
-    "confirmTransfer": "You're going to send the gift of {{gift}} to {{contact}}",
+    "confirmTransfer": "We're going to send a message to {{contact}} that you're sending the {{gift}}",
     "sendError": "Error sending the gift",
     "instructionTitle": "Select a user from the list or…",
     "instructionItem1": "Open a chat with your friend",

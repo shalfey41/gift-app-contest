@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'framer-motion';
 import Image from 'next/image';
+import { getLanguage } from '@/modules/i18n/client';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -39,7 +40,12 @@ export default function StoreGift({ gift, selectGift }: Props) {
       <p className="justify-self-end text-xs text-label-secondary dark:text-white/50">
         {isSoldOut
           ? t('gift.soldOut')
-          : t('gift.available', { amount: gift.availableAmount, total: gift.totalAmount })}
+          : t('gift.available', {
+              amount: gift.availableAmount,
+              total: Intl.NumberFormat(getLanguage(), { notation: 'compact' }).format(
+                gift.totalAmount,
+              ),
+            })}
       </p>
       <div className="flex h-32 w-32 items-center justify-center p-2.5">
         {showPlaceholder && (
