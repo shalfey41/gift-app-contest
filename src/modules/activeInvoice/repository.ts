@@ -1,5 +1,3 @@
-'use server';
-
 import prisma from '@/modules/prisma/prisma';
 
 export const createActiveInvoice = async ({

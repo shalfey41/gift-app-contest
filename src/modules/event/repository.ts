@@ -1,5 +1,3 @@
-'use server';
-
 import { Prisma } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
 import { Pagination } from '@/modules/types';

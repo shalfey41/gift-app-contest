@@ -1,5 +1,3 @@
-'use server';
-
 import { Pagination } from '@/modules/types';
 import { Prisma, User } from '@prisma/client';
 import UserWhereInput = Prisma.UserWhereInput;

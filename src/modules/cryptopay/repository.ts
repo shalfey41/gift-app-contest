@@ -1,5 +1,3 @@
-'use server';
-
 import CryptoBot, { CryptoCurrencyCode } from 'crypto-bot-api';
 
 const token = process.env.CRYPTO_PAY_TOKEN;
