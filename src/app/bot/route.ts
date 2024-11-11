@@ -32,9 +32,8 @@ const bot = new Bot(token);
 const SEND_GIFT_COMMAND = 'sendGift';
 
 bot.command('start', async (ctx) => {
-  console.log('start command', ctx.from);
   if (ctx.from?.id && ctx.from?.first_name) {
-    await createUserIfNotExists(ctx.from.id, ctx.from.first_name);
+    createUserIfNotExists(ctx.from.id, ctx.from.first_name);
   }
 
   await sendGreetingsMessage(ctx);
