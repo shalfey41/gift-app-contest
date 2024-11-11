@@ -117,7 +117,6 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
         title: toastMessage.title,
         text: toastMessage.text,
         buttonText: toastMessage.buttonText,
-        // todo send param to giftId
         onClick: () => setRoute({ page: Page.profile }),
       });
     }, 500);

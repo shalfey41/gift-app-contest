@@ -46,7 +46,6 @@ export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
           user: event.remitter?.name || t('user.anonymous'),
         }),
         buttonText: t('giftStatus.received.toast.button'),
-        // todo send param to giftId
         onClick: () => setRoute({ page: Page.profile }),
       });
     }, 500);

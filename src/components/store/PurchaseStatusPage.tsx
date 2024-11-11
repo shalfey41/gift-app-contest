@@ -57,7 +57,6 @@ export default function PurchaseStatusPage({ gift, goBack }: Props) {
         title: t('giftStatus.buy.toast.title'),
         text: t('giftStatus.buy.toast.message'),
         buttonText: t('giftStatus.buy.toast.button'),
-        // todo send param to giftId
         onClick: () => setRoute({ page: Page.gifts }),
       });
     }, 500);
