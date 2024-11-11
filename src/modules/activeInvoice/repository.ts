@@ -1,23 +1,19 @@
 'use server';
 
 import { PrismaClient } from '@prisma/client';
-import { PrismaTxn } from '@/modules/types';
 
 const prisma = new PrismaClient();
 
-export const createActiveInvoice = async (
-  {
-    invoiceId,
-    userId,
-    giftId,
-  }: {
-    invoiceId: number;
-    giftId: string;
-    userId: string;
-  },
-  txn?: PrismaTxn,
-) => {
-  return (txn || prisma).activeInvoce.create({
+export const createActiveInvoice = async ({
+  invoiceId,
+  userId,
+  giftId,
+}: {
+  invoiceId: number;
+  giftId: string;
+  userId: string;
+}) => {
+  return prisma.activeInvoce.create({
     data: {
       invoiceId,
       userId,

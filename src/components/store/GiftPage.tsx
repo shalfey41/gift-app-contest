@@ -1,9 +1,6 @@
 import React, { lazy, Suspense, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { BackButton } from '@twa-dev/sdk/react';
 import WebApp from '@twa-dev/sdk';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 import { useQueryClient } from '@tanstack/react-query';
 import { InvoiceStatus } from 'crypto-bot-api';
 import { Gift } from '@prisma/client';
@@ -20,7 +17,9 @@ import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
-import { ErrorCode } from '@/modules/types';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -66,25 +65,26 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
     setLoader(true);
 
-    try {
-      const invoice = await createInvoice(gift, user.id);
+    const invoice = await createInvoice(gift, user.id);
 
-      WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
-      checkInvoiceStatus(invoice.id);
-    } catch (error: any) {
+    if ('giftIsNotAvailable' in invoice) {
       setLoader(false);
 
-      const message =
-        error?.message === ErrorCode.giftIsSoldOut
-          ? t('store.gift.error.soldOut')
-          : t('store.gift.error.invoice');
+      const message = invoice.giftIsNotAvailable
+        ? t('store.gift.error.soldOut')
+        : t('store.gift.error.invoice');
 
       WebApp.showAlert(message);
 
-      if (error === ErrorCode.giftIsSoldOut) {
+      if (invoice.giftIsNotAvailable) {
         goBack();
       }
+
+      return;
     }
+
+    WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
+    checkInvoiceStatus(invoice.id);
   }, [t, checkInvoiceStatus, gift, goBack, user]);
 
   // handle checkInvoiceStatus race condition

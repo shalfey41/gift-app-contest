@@ -1,7 +1,6 @@
 'use server';
 
 import { PrismaClient } from '@prisma/client';
-import { PrismaTxn } from '@/modules/types';
 
 const prisma = new PrismaClient();
 
@@ -24,10 +23,10 @@ export const incrementAvailableGiftsById = async (ids: string[]) => {
   });
 };
 
-export const decrementAvailableGiftById = async (giftId: string, txn?: PrismaTxn) => {
+export const decrementAvailableGiftById = async (giftId: string) => {
   // The updateMany method prevents race conditions
   // because MongoDB performs the update operation atomically
-  return (txn || prisma).gift.updateMany({
+  return prisma.gift.updateMany({
     where: {
       id: giftId,
       availableAmount: {
