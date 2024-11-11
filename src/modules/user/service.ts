@@ -10,6 +10,8 @@ export const createUserIfNotExists = async (telegramId: number, userName: string
 
     return repository.upsertUserByTelegramId(telegramId, { userName, avatarUrl });
   } catch (error) {
+    // @ts-ignore
+    console.log(error, error?.message);
     console.error(error);
     return null;
   }
