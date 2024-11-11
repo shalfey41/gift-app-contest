@@ -1,11 +1,12 @@
 import prisma from '@/modules/prisma/prisma';
+import { PrismaTxn } from '@/modules/types';
 
-export const getGifts = async () => {
-  return prisma.gift.findMany();
+export const getGifts = async (prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).gift.findMany();
 };
 
-export const incrementAvailableGiftsById = async (ids: string[]) => {
-  return prisma.gift.updateMany({
+export const incrementAvailableGiftsById = async (ids: string[], prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).gift.updateMany({
     where: {
       id: {
         in: ids,
@@ -19,10 +20,10 @@ export const incrementAvailableGiftsById = async (ids: string[]) => {
   });
 };
 
-export const decrementAvailableGiftById = async (giftId: string) => {
+export const decrementAvailableGiftById = async (giftId: string, prismaTxn?: PrismaTxn) => {
   // The updateMany method prevents race conditions
   // because MongoDB performs the update operation atomically
-  return prisma.gift.updateMany({
+  return (prismaTxn || prisma).gift.updateMany({
     where: {
       id: giftId,
       availableAmount: {

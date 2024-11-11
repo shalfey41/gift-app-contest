@@ -1,4 +1,4 @@
-import { Pagination } from '@/modules/types';
+import { Pagination, PrismaTxn } from '@/modules/types';
 import { Prisma, User } from '@prisma/client';
 import UserWhereInput = Prisma.UserWhereInput;
 import UserGetPayload = Prisma.UserGetPayload;
@@ -6,16 +6,16 @@ import UserOrderByWithAggregationInput = Prisma.UserOrderByWithAggregationInput;
 import UserSelect = Prisma.UserSelect;
 import prisma from '@/modules/prisma/prisma';
 
-export const getUserByTelegramId = async (telegramId: number) => {
-  return prisma.user.findUnique({
+export const getUserByTelegramId = async (telegramId: number, prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).user.findUnique({
     where: {
       telegramId,
     },
   });
 };
 
-export const getUserById = async (userId: string) => {
-  return prisma.user.findUnique({
+export const getUserById = async (userId: string, prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).user.findUnique({
     where: {
       id: userId,
     },
@@ -25,10 +25,11 @@ export const getUserById = async (userId: string) => {
 export const upsertUserByTelegramId = async (
   telegramId: number,
   { userName, avatarUrl }: { userName: string; avatarUrl: string },
+  prismaTxn?: PrismaTxn,
 ) => {
   const nameLowerCase = userName.toLowerCase();
 
-  return prisma.user.upsert({
+  return (prismaTxn || prisma).user.upsert({
     where: {
       telegramId,
     },
@@ -46,13 +47,16 @@ export const upsertUserByTelegramId = async (
   });
 };
 
-export const getUsers = async (options?: {
-  page?: number;
-  limit?: number;
-  orderBy?: UserOrderByWithAggregationInput;
-  where?: UserWhereInput;
-  select?: UserSelect;
-}): Promise<Pagination<UserGetPayload<null>>> => {
+export const getUsers = async (
+  options?: {
+    page?: number;
+    limit?: number;
+    orderBy?: UserOrderByWithAggregationInput;
+    where?: UserWhereInput;
+    select?: UserSelect;
+  },
+  prismaTxn?: PrismaTxn,
+): Promise<Pagination<UserGetPayload<null>>> => {
   const page = options?.page ?? 1;
   const limit = options?.limit ?? 50;
   const orderBy = options?.orderBy;
@@ -69,11 +73,11 @@ export const getUsers = async (options?: {
   };
 
   const [list, total] = await Promise.all([
-    prisma.user.findMany({
+    (prismaTxn || prisma).user.findMany({
       ...query,
       select,
     }),
-    prisma.user.count(query),
+    (prismaTxn || prisma).user.count(query),
   ]);
   const totalPages = Math.ceil(total / take);
 
@@ -85,8 +89,8 @@ export const getUsers = async (options?: {
   };
 };
 
-export const getUserRank = async (user: User) => {
-  const higherRankCount = await prisma.user.count({
+export const getUserRank = async (user: User, prismaTxn?: PrismaTxn) => {
+  const higherRankCount = await (prismaTxn || prisma).user.count({
     where: {
       OR: [
         { giftsReceived: { gt: user.giftsReceived } },
@@ -101,8 +105,8 @@ export const getUserRank = async (user: User) => {
   return higherRankCount + 1;
 };
 
-export const incrementReceivedGifts = async (id: string) => {
-  return prisma.user.updateMany({
+export const incrementReceivedGifts = async (id: string, prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).user.updateMany({
     where: {
       id,
     },

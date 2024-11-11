@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
-import { Pagination } from '@/modules/types';
+import { Pagination, PrismaTxn } from '@/modules/types';
 import EventWhereInput = Prisma.EventWhereInput;
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
@@ -13,8 +13,9 @@ export const getEventById = async (
   options?: {
     include?: EventInclude;
   },
+  prismaTxn?: PrismaTxn,
 ) => {
-  return prisma.event.findUnique({
+  return (prismaTxn || prisma).event.findUnique({
     where: {
       id,
     },
@@ -27,8 +28,12 @@ export const getEventById = async (
   });
 };
 
-export const createEvent = async (data: EventUncheckedCreateInput, include?: EventInclude) => {
-  return prisma.event.create({
+export const createEvent = async (
+  data: EventUncheckedCreateInput,
+  include?: EventInclude,
+  prismaTxn?: PrismaTxn,
+) => {
+  return (prismaTxn || prisma).event.create({
     data,
     include: {
       buyer: include?.buyer,
@@ -42,8 +47,9 @@ export const createEvent = async (data: EventUncheckedCreateInput, include?: Eve
 export const getEventsByGiftId = async (
   giftId: string,
   options?: { limit?: number; orderBy?: 'asc' | 'desc' },
+  prismaTxn?: PrismaTxn,
 ) => {
-  return prisma.event.findMany({
+  return (prismaTxn || prisma).event.findMany({
     where: {
       giftId,
       action: {
@@ -60,13 +66,16 @@ export const getEventsByGiftId = async (
   });
 };
 
-export const getEvents = async (options?: {
-  page?: number;
-  limit?: number;
-  orderBy?: EventOrderByWithAggregationInput;
-  include?: EventInclude;
-  where?: EventWhereInput;
-}): Promise<Pagination<EventGetPayload<{ include: EventInclude }>>> => {
+export const getEvents = async (
+  options?: {
+    page?: number;
+    limit?: number;
+    orderBy?: EventOrderByWithAggregationInput;
+    include?: EventInclude;
+    where?: EventWhereInput;
+  },
+  prismaTxn?: PrismaTxn,
+): Promise<Pagination<EventGetPayload<{ include: EventInclude }>>> => {
   const page = options?.page ?? 1;
   const limit = options?.limit ?? 50;
   const orderBy = options?.orderBy;
@@ -83,7 +92,7 @@ export const getEvents = async (options?: {
   };
 
   const [list, total] = await Promise.all([
-    prisma.event.findMany({
+    (prismaTxn || prisma).event.findMany({
       ...query,
       include: {
         gift: include?.gift,
@@ -92,7 +101,7 @@ export const getEvents = async (options?: {
         beneficiary: include?.beneficiary,
       },
     }),
-    prisma.event.count(query),
+    (prismaTxn || prisma).event.count(query),
   ]);
   const totalPages = Math.ceil(total / take);
 
@@ -104,8 +113,8 @@ export const getEvents = async (options?: {
   };
 };
 
-export const updateBuyEventById = async (id: string) => {
-  return prisma.event.updateMany({
+export const updateBuyEventById = async (id: string, prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).event.updateMany({
     where: {
       id,
       isGiftSent: false,
@@ -116,8 +125,8 @@ export const updateBuyEventById = async (id: string) => {
   });
 };
 
-export const updateSendEventById = async (id: string) => {
-  return prisma.event.updateMany({
+export const updateSendEventById = async (id: string, prismaTxn?: PrismaTxn) => {
+  return (prismaTxn || prisma).event.updateMany({
     where: {
       id,
       isGiftReceived: false,

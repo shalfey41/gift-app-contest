@@ -20,6 +20,7 @@ import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
 import { createInvoice, getInvoiceStatus } from '@/app/cryptopay/actions';
+import { ErrorCode } from '@/modules/types';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -65,26 +66,25 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
     setLoader(true);
 
-    const invoice = await createInvoice(gift, user.id);
+    try {
+      const invoice = await createInvoice(gift, user.id);
 
-    if ('giftIsNotAvailable' in invoice) {
+      WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
+      checkInvoiceStatus(invoice.id);
+    } catch (error: any) {
       setLoader(false);
 
-      const message = invoice.giftIsNotAvailable
-        ? t('store.gift.error.soldOut')
-        : t('store.gift.error.invoice');
+      const message =
+        error?.message === ErrorCode.giftIsSoldOut
+          ? t('store.gift.error.soldOut')
+          : t('store.gift.error.invoice');
 
       WebApp.showAlert(message);
 
-      if (invoice.giftIsNotAvailable) {
+      if (error === ErrorCode.giftIsSoldOut) {
         goBack();
       }
-
-      return;
     }
-
-    WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
-    checkInvoiceStatus(invoice.id);
   }, [t, checkInvoiceStatus, gift, goBack, user]);
 
   // handle checkInvoiceStatus race condition
@@ -108,7 +108,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
           className="w-full"
           size="large"
           isLoading={isLoading}
-          disabled={isSoldOut || isLoading}
+          // disabled={isSoldOut || isLoading}
           onClick={pay}
         >
           {t('store.gift.buy')}
