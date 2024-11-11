@@ -35,10 +35,6 @@ export const createInvoice = async ({
   });
 };
 
-export const getExchangeRate = async (asset: string, target = 'USD', isForce = true) => {
-  return await cryptoBot.getExchangeRate(asset, target, isForce);
-};
-
 export const getInvoiceStatus = async (invoiceId: number) => {
   const data = await cryptoBot.getInvoices({ ids: [invoiceId] });
 

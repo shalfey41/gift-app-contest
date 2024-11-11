@@ -1,27 +1,11 @@
 'use server';
 
 import { PrismaClient } from '@prisma/client';
-import { Asset, GiftSymbol } from '@/modules/gift/types';
 
 const prisma = new PrismaClient();
 
 export const getGifts = async () => {
   return prisma.gift.findMany();
-};
-
-export const createGifts = async (
-  gifts: Array<{
-    symbol: GiftSymbol;
-    name: string;
-    price: number;
-    asset: Asset;
-    totalAmount: number;
-    availableAmount: number;
-  }>,
-) => {
-  return prisma.gift.createMany({
-    data: gifts,
-  });
 };
 
 export const incrementAvailableGiftsById = async (ids: string[]) => {

@@ -1,11 +1,11 @@
 'use server';
 
 import { CryptoCurrencyCode } from 'crypto-bot-api';
-import Big from 'big.js';
 import { Gift } from '@prisma/client';
 import * as repository from '@/modules/cryptopay/repository';
 import { decrementGiftAvailableAmount } from '@/modules/gift/service';
 import { createActiveInvoice } from '@/modules/activeInvoice/service';
+import { getI18n, getLanguageCookie } from '@/modules/i18n/service';
 
 export const createInvoice = async (gift: Gift, userId: string) => {
   const errorResult = {
@@ -20,13 +20,15 @@ export const createInvoice = async (gift: Gift, userId: string) => {
       return errorResult;
     }
 
+    const [t, lang] = await Promise.all([getI18n(), getLanguageCookie()]);
     const invoice = await repository.createInvoice({
       amount: gift.price,
       asset: gift.asset as CryptoCurrencyCode,
-      description: `Purchasing a ${gift.name} gift`,
+      description: t('cryptoPay.invoiceDescription', { gift: gift.name }),
       payload: {
         giftId: gift.id,
         userId,
+        lang,
       },
       isAllowAnonymous: true,
       expiresIn: 60 * 15, // 15 minutes
@@ -42,18 +44,6 @@ export const createInvoice = async (gift: Gift, userId: string) => {
   } catch (error) {
     console.error(error);
     return errorResult;
-  }
-};
-
-export const getPriceInUsd = async (price: number, asset: string) => {
-  try {
-    const exchangeRate = await repository.getExchangeRate(asset);
-    const usdAssetPrice = new Big(exchangeRate);
-
-    return usdAssetPrice.times(price).toFixed(2);
-  } catch (error) {
-    console.error(error);
-    return null;
   }
 };
 

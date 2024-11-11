@@ -104,18 +104,6 @@ export const getUserRank = async (user: User) => {
   return higherRankCount + 1;
 };
 
-export const createUsers = async (
-  data: Array<{
-    telegramId: number;
-    name: string;
-    nameLowerCase: string;
-    avatarUrl: string;
-    giftsReceived: number;
-  }>,
-) => {
-  return prisma.user.createMany({ data });
-};
-
 export const incrementReceivedGifts = async (id: string) => {
   return prisma.user.updateMany({
     where: {

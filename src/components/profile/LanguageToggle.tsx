@@ -6,8 +6,10 @@ export default function LanguageToggle() {
   const [isRussianLanguage, toggleRussianLanguage] = useState(getLanguage() === 'ru');
 
   const toggleLanguage = (russianLanguage: boolean) => {
+    const lang = russianLanguage ? 'ru' : 'en';
     toggleRussianLanguage(russianLanguage);
-    changeLanguage(russianLanguage ? 'ru' : 'en');
+
+    changeLanguage(lang);
   };
 
   return (

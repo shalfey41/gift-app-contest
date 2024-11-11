@@ -107,15 +107,6 @@ export const getEvents = async (options?: {
   };
 };
 
-export const updateEventById = async (id: string, data: { isGiftSent: boolean }) => {
-  return prisma.event.update({
-    where: {
-      id,
-    },
-    data,
-  });
-};
-
 export const updateBuyEventById = async (id: string) => {
   return prisma.event.updateMany({
     where: {
@@ -138,20 +129,4 @@ export const updateSendEventById = async (id: string) => {
       isGiftReceived: true,
     },
   });
-};
-
-export const createEvents = async (
-  data: Array<{
-    action: EventAction;
-    buyerId?: string;
-    remitterId?: string;
-    beneficiaryId?: string;
-    giftId: string;
-    isGiftSent: boolean;
-    invoiceId: number;
-    createdAt: Date;
-    updatedAt: Date;
-  }>,
-) => {
-  return prisma.event.createMany({ data });
 };

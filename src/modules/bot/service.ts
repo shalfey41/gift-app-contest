@@ -7,6 +7,7 @@ import { getAvatarBackgroundColorByName, handleBotError, isHashValid } from '@/m
 import { getEventById } from '@/modules/event/service';
 import { StartParam } from '@/modules/bot/types';
 import { Page } from '@/modules/types';
+import { getI18n } from '@/modules/i18n/service';
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const webAppUrl = process.env.WEB_APP_URL;
@@ -49,7 +50,7 @@ export const getProfilePhoto = async (userId: number, userName: string) => {
   return telegramProfilePhoto || defaultAvatarUrl;
 };
 
-export const reactToBuyEvent = async (eventId: string) => {
+export const reactToBuyEvent = async (eventId: string, lang?: string) => {
   const event = await getEventById(eventId, { include: { gift: true, buyer: true } });
 
   if (!event) {
@@ -57,14 +58,15 @@ export const reactToBuyEvent = async (eventId: string) => {
   }
 
   try {
+    const t = await getI18n(lang);
     const keyboard = new InlineKeyboard().url(
-      'Open Gifts',
+      t('bot.openGifts'),
       `${botUrl}/app?startapp=${StartParam.openPage}_${Page.gifts}`,
     );
 
     await repository.sendMessage(
       Number(event.buyer?.telegramId),
-      `✅ You have purchased the gift of *${event.gift.name}*`,
+      t('bot.giftBuyNotification', { gift: event.gift.name }),
       { keyboard },
     );
   } catch (error: unknown) {
@@ -72,7 +74,7 @@ export const reactToBuyEvent = async (eventId: string) => {
   }
 };
 
-export const reactToSendEvent = async (eventId: string) => {
+export const reactToSendEvent = async (eventId: string, lang?: string) => {
   const event = await getEventById(eventId, {
     include: { gift: true, remitter: true, beneficiary: true },
   });
@@ -87,14 +89,15 @@ export const reactToSendEvent = async (eventId: string) => {
   }
 
   try {
+    const t = await getI18n(lang);
     const keyboard = new InlineKeyboard().url(
-      'View Gift',
+      t('bot.viewGift'),
       `${botUrl}/app?startapp=${StartParam.receiveGift}_${event.id}`,
     );
 
     await repository.sendMessage(
       Number(event.beneficiary.telegramId),
-      `⚡️*${event.remitter.name}* has given you the gift of *${event.gift.name}*`,
+      t('bot.giftSentNotification', { user: event.remitter.name, gift: event.gift.name }),
       { keyboard },
     );
   } catch (error: unknown) {
@@ -102,7 +105,7 @@ export const reactToSendEvent = async (eventId: string) => {
   }
 };
 
-export const reactToReceiveEvent = async (eventId: string) => {
+export const reactToReceiveEvent = async (eventId: string, lang?: string) => {
   const event = await getEventById(eventId, {
     include: { gift: true, remitter: true, beneficiary: true },
   });
@@ -117,11 +120,12 @@ export const reactToReceiveEvent = async (eventId: string) => {
   }
 
   try {
-    const keyboard = new InlineKeyboard().webApp('Open App', webAppUrl);
+    const t = await getI18n(lang);
+    const keyboard = new InlineKeyboard().webApp(t('bot.openApp'), webAppUrl);
 
     await repository.sendMessage(
       Number(event.remitter.telegramId),
-      `👌️*${event.beneficiary.name}* received your gift of *${event.gift.name}*`,
+      t('bot.giftReceivedNotification', { user: event.beneficiary.name, gift: event.gift.name }),
       { keyboard },
     );
   } catch (error: unknown) {
@@ -140,11 +144,11 @@ export const getBotInfo = async () => {
 
 export const sendGreetingsMessage = async (ctx: CommandContext<Context>) => {
   try {
-    // todo english russian language
-    const keyboard = new InlineKeyboard().url('Open App', `${botUrl}/app`);
+    const t = await getI18n(ctx.from?.language_code);
+    const keyboard = new InlineKeyboard().url(t('bot.openApp'), `${botUrl}/app`);
 
     await repository.sendPhoto(ctx.chatId, photoId, {
-      caption: '🎁 Here you can buy and send gifts to your friends.',
+      caption: t('bot.greetings'),
       keyboard,
     });
   } catch (error) {

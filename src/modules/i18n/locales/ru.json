@@ -154,5 +154,21 @@
     "profile": "Профиль",
     "store": "Магазин"
   },
-  "search": "Поиск"
+  "search": "Поиск",
+  "cryptoPay": {
+    "invoiceDescription": "Покупка подарка {{gift}}"
+  },
+  "bot": {
+    "openApp": "Открыть приложение",
+    "viewGift": "Посмотреть подарок",
+    "openGifts": "Посмотреть подарки",
+    "receiveGift": "Получить подарок",
+    "sendGiftTitle": "Отправить подарок",
+    "sendGiftText": "Подарок {{gift}}",
+    "receiveGiftMessage": "\uD83C\uDF81 У меня для тебя *подарок*\\! Нажми на кнопку ниже, чтобы получить его\\.",
+    "greetings": "\uD83C\uDF81 Здесь вы сможете купить уникальные подарки и отправить их друзьям",
+    "giftReceivedNotification": "\uD83D\uDC4C\uFE0F*{{user}}* получил ваш подарок *{{gift}}*",
+    "giftSentNotification": "⚡\uFE0F*{{user}}* подарил вам *{{gift}}*",
+    "giftBuyNotification": "✅ Вы купили подарок *{{gift}}*"
+  }
 }

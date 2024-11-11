@@ -10,6 +10,7 @@ import { createSendEvent, getBoughtGiftsByUserId, getEventById } from '@/modules
 import { sendGreetingsMessage } from '@/modules/bot/service';
 import { StartParam } from '@/modules/bot/types';
 import { giftPreviewPng } from '@/components/utils';
+import { getI18n } from '@/modules/i18n/service';
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -106,20 +107,21 @@ bot.on('inline_query', async (ctx) => {
       return;
     }
 
+    const t = await getI18n(ctx.from.language_code);
     const results = events.map((gift) => {
       const keyboard = new InlineKeyboard().url(
-        'Receive Gift',
+        t('bot.receiveGift'),
         `${botUrl}/app?startapp=${StartParam.receiveGift}_${gift?.eventId}`,
       );
 
       const articleId = `${SEND_GIFT_COMMAND}_${gift.id}_${gift.eventId}`;
-      return InlineQueryResultBuilder.article(articleId, 'Send Gift', {
+      return InlineQueryResultBuilder.article(articleId, t('bot.sendGiftTitle'), {
         thumbnail_url: gift.photoUrl,
-        description: `Send gift of a ${gift.name}`,
+        description: t('bot.sendGiftText', { gift: gift.name }),
         reply_markup: {
           inline_keyboard: keyboard.inline_keyboard,
         },
-      }).text('🎁 I have a *gift* for you\\! Tab the button below to get it\\.', {
+      }).text(t('bot.receiveGiftMessage'), {
         parse_mode: 'MarkdownV2',
       });
     });
@@ -156,11 +158,13 @@ bot.on('chosen_inline_result', async (ctx) => {
       buyEventId: eventId,
       giftId,
       remitterId: user.id,
+      lang: ctx.chosenInlineResult.from?.language_code,
     });
 
     if (event && ctx.chosenInlineResult.inline_message_id) {
+      const t = await getI18n(ctx.chosenInlineResult.from?.language_code);
       const keyboard = new InlineKeyboard().url(
-        'Receive Gift',
+        t('bot.receiveGift'),
         `${botUrl}/app?startapp=${StartParam.receiveGift}_${event.id}`,
       );
 
@@ -172,14 +176,6 @@ bot.on('chosen_inline_result', async (ctx) => {
     }
   } catch (error) {
     handleBotError(error);
-  }
-});
-
-bot.on('message:photo', async (ctx) => {
-  console.log(ctx.message.photo);
-
-  if (Array.isArray(ctx.message.photo)) {
-    ctx.reply(ctx.message.photo[ctx.message.photo.length - 1].file_id);
   }
 });
 

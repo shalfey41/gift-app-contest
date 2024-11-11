@@ -12,7 +12,11 @@ import { incrementReceivedGifts } from '@/modules/user/service';
 
 export const createBuyEvent = async (invoice: Invoice) => {
   try {
-    const { giftId, userId } = invoice.payload as { giftId: string; userId: string };
+    const { giftId, userId, lang } = invoice.payload as {
+      giftId: string;
+      userId: string;
+      lang: string;
+    };
 
     const event = await repository.createEvent({
       action: EventAction.buy,
@@ -22,7 +26,7 @@ export const createBuyEvent = async (invoice: Invoice) => {
       invoiceId: invoice.id,
     });
 
-    reactToBuyEvent(event.id);
+    reactToBuyEvent(event.id, lang);
 
     return event;
   } catch (error) {
@@ -36,11 +40,13 @@ export const createSendEvent = async ({
   giftId,
   remitterId,
   beneficiaryId,
+  lang,
 }: {
   buyEventId: string;
   giftId: string;
   remitterId: string;
   beneficiaryId?: string;
+  lang?: string;
 }) => {
   try {
     // todo transaction
@@ -60,7 +66,7 @@ export const createSendEvent = async ({
     });
 
     if (event.beneficiaryId) {
-      reactToSendEvent(event.id);
+      reactToSendEvent(event.id, lang);
     }
 
     return event;
@@ -246,7 +252,7 @@ export const getAllEventsByUserId = async (
         OR: [
           { beneficiaryId: userId, action: { not: 'send' } },
           { buyerId: userId },
-          { remitterId: userId },
+          { remitterId: userId, action: { not: 'receive' } },
         ],
       },
       orderBy: { createdAt: 'desc' },
