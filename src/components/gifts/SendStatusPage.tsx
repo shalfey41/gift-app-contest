@@ -13,6 +13,7 @@ import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { Page } from '@/modules/types';
 import { Trans, useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }> | null;
@@ -100,11 +101,17 @@ export default function SendStatusPage({ event, isLoading, goBack }: Props) {
 
   useEffect(() => {
     setBottomBar(
-      <div className="grid gap-2 px-4">
+      <motion.div
+        className="grid gap-2 px-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ delay: 0.3 }}
+      >
         <Button size="large" onClick={() => setRoute({ page: Page.profile })}>
           {t('giftStatus.openProfile')}
         </Button>
-      </div>,
+      </motion.div>,
     );
 
     if (!event || !toastMessage) {
