@@ -6,7 +6,7 @@ import { AppError, ErrorCode } from '@/modules/types';
 
 export const createInvoice = async (gift: Gift, userId: string) => {
   try {
-    return service.createInvoice(gift, userId);
+    return await service.createInvoice(gift, userId);
   } catch (error: any) {
     return { code: error?.message || ErrorCode.unknown } as AppError;
   }
