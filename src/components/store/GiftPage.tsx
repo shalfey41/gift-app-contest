@@ -81,7 +81,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
       WebApp.showAlert(t(parseError(error?.message)));
 
-      if (error === ErrorCode.giftIsSoldOut) {
+      if (error?.message === ErrorCode.giftIsSoldOut) {
         goBack();
       }
     }

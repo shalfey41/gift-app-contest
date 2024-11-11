@@ -63,38 +63,33 @@ export const validateGiftAvailability = async (giftId: string, txn: PrismaTxn) =
 };
 
 export const createInvoiceTransaction = async (gift: Gift, userId: string) => {
-  try {
-    const [t, lang] = await Promise.all([getI18n(), getLanguageCookie()]);
+  const [t, lang] = await Promise.all([getI18n(), getLanguageCookie()]);
 
-    return await prisma.$transaction(async (txn: PrismaTxn) => {
-      await validateGiftAvailability(gift.id, txn);
+  return prisma.$transaction(async (txn: PrismaTxn) => {
+    await validateGiftAvailability(gift.id, txn);
 
-      const invoice = await createInvoice({
-        amount: gift.price,
-        asset: gift.asset as CryptoCurrencyCode,
-        description: t('cryptoPay.invoiceDescription', { gift: gift.name }),
-        payload: {
-          giftId: gift.id,
-          userId,
-          lang,
-        },
-        isAllowAnonymous: true,
-        expiresIn: 60 * 15, // 15 minutes
-      });
-
-      await createActiveInvoice(
-        {
-          invoiceId: invoice.id,
-          userId,
-          giftId: gift.id,
-        },
-        txn,
-      );
-
-      return invoice;
+    const invoice = await createInvoice({
+      amount: gift.price,
+      asset: gift.asset as CryptoCurrencyCode,
+      description: t('cryptoPay.invoiceDescription', { gift: gift.name }),
+      payload: {
+        giftId: gift.id,
+        userId,
+        lang,
+      },
+      isAllowAnonymous: true,
+      expiresIn: 60 * 15, // 15 minutes
     });
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+
+    await createActiveInvoice(
+      {
+        invoiceId: invoice.id,
+        userId,
+        giftId: gift.id,
+      },
+      txn,
+    );
+
+    return invoice;
+  });
 };
