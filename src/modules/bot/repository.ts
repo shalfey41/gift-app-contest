@@ -41,7 +41,7 @@ export const sendPhoto = async (
   photoId: string,
   { caption, keyboard }: { caption?: string; keyboard?: InlineKeyboard },
 ) => {
-  await bot.api.sendPhoto(chatId, photoId, {
+  return bot.api.sendPhoto(chatId, photoId, {
     caption,
     ...(keyboard
       ? {
@@ -58,7 +58,7 @@ export const sendMessage = async (
   message: string,
   { keyboard }: { keyboard?: InlineKeyboard },
 ) => {
-  await bot.api.sendMessage(chatId, message, {
+  return bot.api.sendMessage(chatId, message, {
     parse_mode: 'MarkdownV2',
     ...(keyboard
       ? {
@@ -67,5 +67,13 @@ export const sendMessage = async (
           },
         }
       : {}),
+  });
+};
+
+export const editMessageInlineKeyboard = async (chatId: string, keyboard: InlineKeyboard) => {
+  return bot.api.editMessageReplyMarkupInline(chatId, {
+    reply_markup: {
+      inline_keyboard: keyboard.inline_keyboard,
+    },
   });
 };
