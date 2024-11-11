@@ -1,13 +1,12 @@
 'use server';
 
 import { Pagination } from '@/modules/types';
-import { Prisma, PrismaClient, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import UserWhereInput = Prisma.UserWhereInput;
 import UserGetPayload = Prisma.UserGetPayload;
 import UserOrderByWithAggregationInput = Prisma.UserOrderByWithAggregationInput;
 import UserSelect = Prisma.UserSelect;
-
-const prisma = new PrismaClient();
+import prisma from '@/modules/prisma/prisma';
 
 export const getUserByTelegramId = async (telegramId: number) => {
   return prisma.user.findUnique({

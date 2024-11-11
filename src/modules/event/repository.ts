@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
 import { Pagination } from '@/modules/types';
 import EventWhereInput = Prisma.EventWhereInput;
@@ -8,8 +8,7 @@ import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
 import EventUncheckedCreateInput = Prisma.EventUncheckedCreateInput;
 import EventOrderByWithAggregationInput = Prisma.EventOrderByWithAggregationInput;
-
-const prisma = new PrismaClient();
+import prisma from '@/modules/prisma/prisma';
 
 export const getEventById = async (
   id: string,
