@@ -13,7 +13,7 @@ import { ErrorCode, Page } from '@/modules/types';
 import { Trans, useTranslation } from 'react-i18next';
 
 type Props = {
-  event?: EventGetPayload<{ include: EventInclude }> | null;
+  event?: EventGetPayload<{ include: EventInclude }>;
   isLoading: boolean;
   error?: ErrorCode;
 };

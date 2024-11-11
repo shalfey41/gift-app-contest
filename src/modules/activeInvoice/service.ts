@@ -1,6 +1,8 @@
 import * as repository from '@/modules/activeInvoice/repository';
 import * as cryptoPayRepository from '@/modules/cryptopay/repository';
 import * as giftRepository from '@/modules/gift/repository';
+import prisma from '@/modules/prisma/prisma';
+import { PrismaTxn } from '@/modules/types';
 
 export const deleteExpiredInvoices = async () => {
   try {
@@ -21,32 +23,21 @@ export const deleteExpiredInvoices = async () => {
       .map((invoice) => invoice.payload?.giftId)
       .filter(Boolean);
 
-    if (expiredInvoicesIds.length) {
-      repository.deleteActiveInvoicesByInvoiceId(expiredInvoicesIds);
-    }
+    return await prisma.$transaction(async (txn: PrismaTxn) => {
+      const transactions = [];
 
-    if (expiredInvoicesGiftIds.length) {
-      giftRepository.incrementAvailableGiftsById(expiredInvoicesGiftIds);
-    }
+      if (expiredInvoicesIds.length) {
+        transactions.push(repository.deleteActiveInvoicesByInvoiceId(expiredInvoicesIds, txn));
+      }
+
+      if (expiredInvoicesGiftIds.length) {
+        transactions.push(giftRepository.incrementAvailableGiftsById(expiredInvoicesGiftIds, txn));
+      }
+
+      return await Promise.all(transactions);
+    });
   } catch (error) {
     console.error(error);
-  }
-};
-
-export const createActiveInvoice = async ({
-  invoiceId,
-  userId,
-  giftId,
-}: {
-  invoiceId: number;
-  giftId: string;
-  userId: string;
-}) => {
-  try {
-    return repository.createActiveInvoice({ invoiceId, giftId, userId });
-  } catch (error) {
-    console.error(error);
-    return null;
   }
 };
 

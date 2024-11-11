@@ -1,6 +1,7 @@
 import * as repository from '@/modules/user/repository';
 import { getProfilePhoto } from '@/modules/bot/service';
 import { Leaderboard, LeaderboardProfile } from '@/modules/user/types';
+import { PrismaTxn } from '@/modules/types';
 
 export const createUserIfNotExists = async (telegramId: number, userName: string) => {
   try {
@@ -164,11 +165,6 @@ export const getUsersWithoutMe = async (
   }
 };
 
-export const incrementReceivedGifts = async (userId: string) => {
-  try {
-    return repository.incrementReceivedGifts(userId);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
+export const incrementReceivedGifts = async (userId: string, prismaTxn?: PrismaTxn) => {
+  return repository.incrementReceivedGifts(userId, prismaTxn);
 };

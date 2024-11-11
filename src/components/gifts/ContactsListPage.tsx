@@ -57,13 +57,12 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
                 beneficiaryId: selectedUser.id,
               });
 
-              if (event?.id) {
-                queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
-                goNext(event.id);
-              } else {
-                WebApp.showAlert(t('contactList.sendError'));
-                goBack();
+              if ('code' in event) {
+                throw new Error(event.code);
               }
+
+              queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
+              goNext(event.id);
             } catch (error) {
               console.error(error);
               WebApp.showAlert(t('contactList.sendError'));

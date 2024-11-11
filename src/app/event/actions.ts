@@ -2,10 +2,10 @@
 
 import * as service from '@/modules/event/service';
 import { Prisma } from '@prisma/client';
+import { AppError, getAppError, Pagination } from '@/modules/types';
+import { UserGift } from '@/modules/event/types';
 import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
-import { Pagination } from '@/modules/types';
-import { UserGift } from '@/modules/event/types';
 
 export const createSendEvent = async (params: {
   buyEventId: string;
@@ -14,14 +14,22 @@ export const createSendEvent = async (params: {
   beneficiaryId?: string;
   lang?: string;
 }) => {
-  return service.createSendEvent(params);
+  try {
+    return await service.createSendEvent(params);
+  } catch (error) {
+    return getAppError(error);
+  }
 };
 
 export const receiveGiftByEventId = async (
   eventId: string,
   beneficiaryId: string,
-): Promise<EventGetPayload<{ include: EventInclude }>> => {
-  return service.receiveGiftByEventId(eventId, beneficiaryId);
+): Promise<EventGetPayload<{ include: EventInclude }> | AppError> => {
+  try {
+    return await service.receiveGiftByEventId(eventId, beneficiaryId);
+  } catch (error) {
+    return getAppError(error);
+  }
 };
 
 export const getEventById = async (

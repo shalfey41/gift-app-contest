@@ -2,11 +2,12 @@ import { Invoice } from 'crypto-bot-api';
 import * as repository from '@/modules/event/repository';
 import { EventAction, UserGift } from '@/modules/event/types';
 import { reactToBuyEvent, reactToReceiveEvent, reactToSendEvent } from '@/modules/bot/service';
-import { ErrorCode, Pagination } from '@/modules/types';
+import { ErrorCode, Pagination, PrismaTxn } from '@/modules/types';
 import { Prisma } from '@prisma/client';
 import EventInclude = Prisma.EventInclude;
 import EventGetPayload = Prisma.EventGetPayload;
 import { incrementReceivedGifts } from '@/modules/user/service';
+import prisma from '@/modules/prisma/prisma';
 
 export const createBuyEvent = async (invoice: Invoice) => {
   try {
@@ -46,45 +47,44 @@ export const createSendEvent = async ({
   beneficiaryId?: string;
   lang?: string;
 }) => {
-  try {
-    // todo transaction
-    const buyEventUpdate = await repository.updateBuyEventById(buyEventId);
+  const event = await prisma.$transaction(async (txn) => {
+    const buyEventUpdate = await repository.updateBuyEventById(buyEventId, txn);
     const isGiftAlreadySent = buyEventUpdate.count === 0;
 
     if (isGiftAlreadySent) {
-      throw new Error('Gift already sent');
+      throw new Error(ErrorCode.giftAlreadySent);
     }
 
-    const event = await repository.createEvent({
+    return await repository.createEvent({
       action: EventAction.send,
       giftId,
       remitterId,
       beneficiaryId,
       isGiftReceived: false,
     });
+  });
 
-    if (event.beneficiaryId) {
-      reactToSendEvent(event.id, lang);
-    }
-
-    return event;
-  } catch (error) {
-    console.error(error);
-    return null;
+  if (event.beneficiaryId) {
+    reactToSendEvent(event.id, lang);
   }
+
+  return event;
 };
 
-export const createReceiveEvent = async ({
-  giftId,
-  remitterId,
-  beneficiaryId,
-  include,
-}: {
-  giftId: string;
-  remitterId: string;
-  beneficiaryId: string;
-  include?: EventInclude;
-}): Promise<EventGetPayload<{ include: EventInclude }> | null> => {
+export const createReceiveEvent = async (
+  {
+    giftId,
+    remitterId,
+    beneficiaryId,
+    include,
+  }: {
+    giftId: string;
+    remitterId: string;
+    beneficiaryId: string;
+    include?: EventInclude;
+  },
+  prismaTxn?: PrismaTxn,
+): Promise<EventGetPayload<{ include: EventInclude }> | null> => {
   try {
     const event = await repository.createEvent(
       {
@@ -94,6 +94,7 @@ export const createReceiveEvent = async ({
         action: EventAction.receive,
       },
       include,
+      prismaTxn,
     );
 
     reactToReceiveEvent(event.id);
@@ -109,58 +110,50 @@ export const receiveGiftByEventId = async (
   eventId: string,
   beneficiaryId: string,
 ): Promise<EventGetPayload<{ include: EventInclude }>> => {
-  try {
-    // todo transaction
+  return prisma.$transaction(async (txn) => {
     const sendEvent = await getEventById(eventId);
 
     if (!sendEvent) {
-      console.error('Send event not found');
-      throw ErrorCode.entityNotFound;
+      throw new Error(ErrorCode.entityNotFound);
     }
 
     if (sendEvent.remitterId === beneficiaryId) {
-      throw ErrorCode.eventReceiveRemitterIsBeneficiary;
+      throw new Error(ErrorCode.eventReceiveRemitterIsBeneficiary);
     }
 
     if (sendEvent.beneficiaryId && sendEvent.beneficiaryId !== beneficiaryId) {
-      throw ErrorCode.eventReceiveWrongBeneficiary;
+      throw new Error(ErrorCode.eventReceiveWrongBeneficiary);
     }
 
     if (!sendEvent.remitterId) {
-      console.error('No remitter found');
-      throw ErrorCode.entityNotFound;
+      throw new Error(ErrorCode.entityNotFound);
     }
 
-    const sendEventUpdate = await repository.updateSendEventById(eventId);
+    const sendEventUpdate = await repository.updateSendEventById(eventId, txn);
     const isGiftAlreadyReceived = sendEventUpdate.count === 0;
 
     if (isGiftAlreadyReceived) {
-      throw ErrorCode.eventReceiveGiftAlreadyReceived;
+      throw new Error(ErrorCode.eventReceiveGiftAlreadyReceived);
     }
 
-    const event = await createReceiveEvent({
-      giftId: sendEvent.giftId,
-      remitterId: sendEvent.remitterId,
-      beneficiaryId,
-      include: { gift: true, remitter: true, beneficiary: true },
-    });
+    const event = await createReceiveEvent(
+      {
+        giftId: sendEvent.giftId,
+        remitterId: sendEvent.remitterId,
+        beneficiaryId,
+        include: { gift: true, remitter: true, beneficiary: true },
+      },
+      txn,
+    );
 
     if (!event || !event?.beneficiaryId) {
-      console.error('Receive event not found');
-      throw ErrorCode.entityNotFound;
+      throw new Error(ErrorCode.entityNotFound);
     }
 
-    await incrementReceivedGifts(event.beneficiaryId);
+    await incrementReceivedGifts(event.beneficiaryId, txn);
 
     return event;
-  } catch (error: unknown) {
-    if (typeof error === 'string' && error in ErrorCode) {
-      throw new Error(error);
-    }
-
-    console.error(error);
-    throw new Error(ErrorCode.unknown);
-  }
+  });
 };
 
 export const getEventById = async (

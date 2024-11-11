@@ -8,14 +8,3 @@ export const getGifts = async () => {
     return null;
   }
 };
-
-export const decrementGiftAvailableAmount = async (giftId: string) => {
-  try {
-    const result = await repository.decrementAvailableGiftById(giftId);
-
-    return result.count > 0;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};

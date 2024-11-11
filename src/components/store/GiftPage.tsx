@@ -108,7 +108,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
           className="w-full"
           size="large"
           isLoading={isLoading}
-          // disabled={isSoldOut || isLoading}
+          disabled={isSoldOut || isLoading}
           onClick={pay}
         >
           {t('store.gift.buy')}

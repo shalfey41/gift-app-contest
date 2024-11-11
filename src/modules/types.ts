@@ -12,6 +12,9 @@ export type AppError = {
   code: ErrorCode;
 };
 
+export const getAppError = (error: any) =>
+  ({ code: error?.message || ErrorCode.unknown }) as AppError;
+
 export enum ErrorCode {
   unknown = 'unknown',
   entityNotFound = 'entityNotFound',
@@ -19,6 +22,7 @@ export enum ErrorCode {
   eventReceiveWrongBeneficiary = 'eventReceiveWrongBeneficiary',
   eventReceiveGiftAlreadyReceived = 'eventReceiveGiftAlreadyReceived',
   giftIsSoldOut = 'giftIsSoldOut',
+  giftAlreadySent = 'giftAlreadySent',
 }
 
 export enum Page {
