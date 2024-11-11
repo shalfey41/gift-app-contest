@@ -163,7 +163,7 @@
     "sendGiftText": "Send gift of a {{gift}}",
     "receiveGiftMessage": "\uD83C\uDF81 I have a *gift* for you\\! Tab the button below to get it\\.",
     "greetings": "\uD83C\uDF81 Here you can buy and send gifts to your friends.",
-    "giftReceivedNotification": "\uD83D\uDC4C\uFE0F*{{user}} received your gift of *{{gift}}*",
+    "giftReceivedNotification": "\uD83D\uDC4C\uFE0F*{{user}}* received your gift of *{{gift}}*",
     "giftSentNotification": "⚡\uFE0F*{{user}}* has given you the gift of *{{gift}}*",
     "giftBuyNotification": "✅ You have purchased the gift of *{{gift}}*"
   }
