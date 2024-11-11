@@ -21,9 +21,13 @@ export const getLanguageCookie = async () => {
 export const getI18n = async (lang?: string) => {
   let language = lang;
 
+  console.log('getI18n', language);
+
   if (!language) {
     language = await getLanguageCookie();
   }
+
+  console.log('getI18n2', language);
 
   return i18n.init({
     resources: {

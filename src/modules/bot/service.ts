@@ -51,8 +51,10 @@ export const getProfilePhoto = async (userId: number, userName: string) => {
 };
 
 export const reactToBuyEvent = async (eventId: string, lang?: string) => {
+  console.log('reactToBuyEvent', eventId);
   const event = await getEventById(eventId, { include: { gift: true, buyer: true } });
 
+  console.log('event', event);
   if (!event) {
     return;
   }
@@ -70,6 +72,7 @@ export const reactToBuyEvent = async (eventId: string, lang?: string) => {
       { keyboard },
     );
   } catch (error: unknown) {
+    console.log('error', error);
     handleBotError(error);
   }
 };
