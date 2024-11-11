@@ -184,7 +184,6 @@ export const getRecentEventsByGiftId = async (giftId: string) => {
 
 export const getBoughtGiftsByUserId = async (
   userId: string,
-  giftId?: string,
 ): Promise<Pagination<UserGift> | null> => {
   try {
     const events = await repository.getEvents({
@@ -192,7 +191,6 @@ export const getBoughtGiftsByUserId = async (
         buyerId: userId,
         action: EventAction.buy,
         isGiftSent: false,
-        giftId,
       },
       orderBy: { createdAt: 'desc' },
       include: {
@@ -245,7 +243,11 @@ export const getAllEventsByUserId = async (
   try {
     return repository.getEvents({
       where: {
-        OR: [{ beneficiaryId: userId }, { buyerId: userId }, { remitterId: userId }],
+        OR: [
+          { beneficiaryId: userId, action: { not: 'send' } },
+          { buyerId: userId },
+          { remitterId: userId },
+        ],
       },
       orderBy: { createdAt: 'desc' },
       include: {

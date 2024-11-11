@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import Row from '@/components/ui/Row';
 import { LeaderboardProfile } from '@/modules/user/types';
 import { PageContext } from '@/components/app/PageContext';
@@ -31,26 +31,6 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
         );
     }
   }, [profile]);
-
-  useEffect(() => {
-    if (!isCurrentUser || !currentUserRow.current) {
-      return;
-    }
-
-    // todo add border
-    const observer = new IntersectionObserver(
-      ([e]) => {
-        console.log(e);
-      },
-      { threshold: [1] },
-    );
-
-    console.log('observe');
-
-    observer.observe(currentUserRow.current);
-
-    return () => observer.disconnect();
-  }, [isCurrentUser]);
 
   return (
     <Row

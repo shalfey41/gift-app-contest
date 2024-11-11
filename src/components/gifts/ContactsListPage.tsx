@@ -9,7 +9,6 @@ import { useBoughtGiftsByUserIdQueryKey, useSendGiftMutation } from '@/queries/u
 import Button from '@/components/ui/Button';
 import { PageContext } from '@/components/app/PageContext';
 import SearchInput from '@/components/ui/SearchInput';
-import { getCssVar } from '@/components/utils';
 import Row from '@/components/ui/Row';
 import { User } from '@prisma/client';
 import { useQueryClient } from '@tanstack/react-query';
@@ -84,7 +83,7 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
 
   useEffect(() => {
     setBottomBar(
-      <div className="grid justify-items-center gap-2 px-4 pt-2">
+      <div className="grid w-full justify-items-center gap-2 px-4 pt-2">
         <h2 className="mb-1 font-semibold">{t('contactList.instructionTitle')}</h2>
 
         <ol className="mb-2 list-decimal text-balance px-6 text-m/[25px]">
@@ -105,14 +104,6 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
       </div>,
     );
   }, [botInfo, copyContent, selectedGift, setBottomBar, t]);
-
-  useEffect(() => {
-    WebApp.setHeaderColor(getCssVar('--color-bg-tab-bar'));
-
-    return () => {
-      WebApp.setHeaderColor(getCssVar('--white'));
-    };
-  }, []);
 
   if (isPending) {
     return (

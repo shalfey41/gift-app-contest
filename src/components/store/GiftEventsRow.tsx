@@ -4,6 +4,10 @@ import { Event, User } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
 import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
+import Image from 'next/image';
+import { BuyIcon } from '@/components/icons/Buy';
+import { SendIcon } from '@/components/icons/Send';
+import { ReceiveIcon } from '@/components/icons/Receive';
 
 interface GiftEvent extends Event {
   buyer: User | null;
@@ -34,26 +38,26 @@ export default function GiftEventsRow({ separator, event }: Props) {
     const getIcon = () => {
       switch (event.action) {
         case EventAction.buy:
-          return '/buy.svg';
+          return <BuyIcon />;
         case EventAction.send:
-          return '/send.svg';
+          return <SendIcon />;
         case EventAction.receive:
-          return '/receive.svg';
+          return <ReceiveIcon />;
         default:
           return null;
       }
     };
     const user = getUser();
     const url = getUser()?.avatarUrl || null;
-    const icon = getIcon();
+    const Icon = getIcon();
 
     return (
       <div className="relative h-full w-full">
         <div className={classNames('overflow-hidden rounded-full', { 'bg-secondary': !url })}>
           {url && <img src={url} alt={user?.name || t('user.avatar')} />}
         </div>
-        <div className="absolute -bottom-0.5 -right-0.5">
-          {icon && <img src={icon} alt={event.action} />}
+        <div className="absolute -bottom-0.5 -right-0.5 text-white dark:text-background">
+          {Icon}
         </div>
       </div>
     );

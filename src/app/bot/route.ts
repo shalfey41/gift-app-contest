@@ -6,13 +6,18 @@ export const fetchCache = 'force-no-store';
 
 import { Bot, InlineKeyboard, InlineQueryResultBuilder, webhookCallback } from 'grammy';
 import { createUserIfNotExists, getUserByTelegramId } from '@/modules/user/service';
-import { createSendEvent, getBoughtGiftsByUserId } from '@/modules/event/service';
+import { createSendEvent, getBoughtGiftsByUserId, getEventById } from '@/modules/event/service';
 import { sendGreetingsMessage } from '@/modules/bot/service';
 import { StartParam } from '@/modules/bot/types';
-import { giftPreviewIcon } from '@/components/utils';
+import { giftPreviewIcon, giftPreviewPng } from '@/components/utils';
 
+const botUrl = process.env.TELEGRAM_BOT_URL;
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const webAppUrl = process.env.WEB_APP_URL;
+
+if (!botUrl) {
+  throw new Error('TELEGRAM_BOT_URL environment variable not found.');
+}
 
 if (!token) {
   throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.');
@@ -46,46 +51,65 @@ bot.on('inline_query', async (ctx) => {
       return;
     }
 
-    let giftId: string | undefined;
+    let eventId: string | undefined;
 
     if (ctx.inlineQuery.query && ObjectID.isValid(ctx.inlineQuery.query)) {
-      giftId = ctx.inlineQuery.query;
+      eventId = ctx.inlineQuery.query;
     }
 
-    const boughtGiftsEvents = await getBoughtGiftsByUserId(user.id, giftId);
+    let events: Array<{
+      id: string;
+      eventId: string;
+      name: string;
+      photoUrl: string;
+      boughtAt: string;
+    }> = [];
 
-    if (!boughtGiftsEvents || !boughtGiftsEvents.total) {
+    if (eventId) {
+      const oneGiftEvent = await getEventById(eventId, { include: { gift: true } });
+
+      if (oneGiftEvent) {
+        events.push({
+          id: oneGiftEvent.gift.id,
+          eventId: oneGiftEvent.id,
+          name: oneGiftEvent.gift.name,
+          photoUrl: `${webAppUrl}${giftPreviewPng[oneGiftEvent.gift.symbol]}`,
+          boughtAt: oneGiftEvent.createdAt.valueOf().toString(),
+        });
+      }
+    }
+
+    if (!events.length) {
+      const boughtGiftsEvents = await getBoughtGiftsByUserId(user.id);
+
+      if (boughtGiftsEvents && boughtGiftsEvents.list) {
+        events = boughtGiftsEvents.list
+          ?.map((event) => {
+            if (!event.gift) {
+              return;
+            }
+
+            return {
+              id: event.gift.id,
+              eventId: event.id,
+              name: event.gift.name,
+              photoUrl: `${webAppUrl}${giftPreviewPng[event.gift.symbol]}`,
+              boughtAt: event.boughtAt.valueOf().toString(),
+            };
+          })
+          .filter((gift) => gift !== undefined);
+      }
+    }
+
+    if (!events.length) {
       await ctx.answerInlineQuery([]);
       return;
     }
 
-    // todo english russian language
-    // todo maybe change https photo url
-    const userGifts = boughtGiftsEvents.list
-      ?.map((event) => {
-        if (!event.gift) {
-          return;
-        }
-
-        return {
-          id: event.gift.id,
-          eventId: event.id,
-          name: event.gift.name,
-          photoUrl: `${webAppUrl}/${giftPreviewIcon[event.gift.symbol]}`,
-          boughtAt: event.boughtAt.valueOf().toString(),
-        };
-      })
-      .filter((gift) => gift !== undefined);
-
-    if (!userGifts?.length) {
-      await ctx.answerInlineQuery([]);
-      return;
-    }
-
-    const results = userGifts.map((gift) => {
+    const results = events.map((gift) => {
       const keyboard = new InlineKeyboard().url(
         'Receive Gift',
-        `${webAppUrl}/app?startapp=${StartParam.receiveGift}_${gift?.eventId}`,
+        `${botUrl}/app?startapp=${StartParam.receiveGift}_${gift?.eventId}`,
       );
 
       const articleId = `${SEND_GIFT_COMMAND}_${gift.id}_${gift.eventId}`;
@@ -105,6 +129,7 @@ bot.on('inline_query', async (ctx) => {
       cache_time: 30,
     });
   } catch (error) {
+    console.log(error);
     await ctx.answerInlineQuery([]);
     handleBotError(error);
   }
@@ -127,11 +152,24 @@ bot.on('chosen_inline_result', async (ctx) => {
       return;
     }
 
-    createSendEvent({
+    const event = await createSendEvent({
       buyEventId: eventId,
       giftId,
       remitterId: user.id,
     });
+
+    if (event && ctx.chosenInlineResult.inline_message_id) {
+      const keyboard = new InlineKeyboard().url(
+        'Receive Gift',
+        `${botUrl}/app?startapp=${StartParam.receiveGift}_${event.id}`,
+      );
+
+      bot.api.editMessageReplyMarkupInline(ctx.chosenInlineResult.inline_message_id, {
+        reply_markup: {
+          inline_keyboard: keyboard.inline_keyboard,
+        },
+      });
+    }
   } catch (error) {
     handleBotError(error);
   }
@@ -139,6 +177,10 @@ bot.on('chosen_inline_result', async (ctx) => {
 
 bot.on('message:photo', async (ctx) => {
   console.log(ctx.message.photo);
+
+  if (Array.isArray(ctx.message.photo)) {
+    ctx.reply(ctx.message.photo[ctx.message.photo.length - 1].file_id);
+  }
 });
 
 export const POST = webhookCallback(bot, 'std/http');

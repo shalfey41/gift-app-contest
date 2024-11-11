@@ -1,17 +1,20 @@
 import React, { PropsWithChildren, ButtonHTMLAttributes } from 'react';
 import classNames from 'classnames';
 import Image from 'next/image';
+import Loader from '@/components/ui/Loader';
 
 type Props = {
   iconPath?: string;
   size?: 'small' | 'medium' | 'large';
   variant?: 'primary' | 'outline';
+  isLoading?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function Button({
   iconPath,
   children,
   className,
+  isLoading = false,
   size = 'small',
   variant = 'primary',
   ...rest
@@ -31,8 +34,14 @@ export default function Button({
       )}
       {...rest}
     >
-      {iconPath !== undefined && <Image width={24} height={24} src={iconPath} alt="icon" />}
-      {children}
+      {isLoading ? (
+        <Loader className="!size-6 text-white" />
+      ) : (
+        <>
+          {iconPath !== undefined && <Image width={24} height={24} src={iconPath} alt="icon" />}
+          {children}
+        </>
+      )}
     </button>
   );
 }

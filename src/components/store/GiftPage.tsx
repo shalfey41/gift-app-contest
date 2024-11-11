@@ -19,6 +19,7 @@ import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 
@@ -45,7 +46,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
       if (status === InvoiceStatus.Paid) {
         queryClient.invalidateQueries({ queryKey: [useGiftsQueryKey] });
-        queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey, user?.id] });
+        queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
 
         if (isMounted.current) {
           goNext();
@@ -54,7 +55,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
         setTimeout(() => checkInvoiceStatus(invoiceId), 5000);
       }
     },
-    [goNext, queryClient, user],
+    [goNext, queryClient],
   );
 
   const pay = useCallback(async () => {
@@ -103,7 +104,13 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <Button className="w-full" size="large" disabled={isSoldOut || isLoading} onClick={pay}>
+        <Button
+          className="w-full"
+          size="large"
+          isLoading={isLoading}
+          disabled={isSoldOut || isLoading}
+          onClick={pay}
+        >
           {t('store.gift.buy')}
         </Button>
       </motion.div>,
@@ -139,7 +146,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
           </div>
           <p className="mb-2 text-label-secondary">{t('store.gift.text')}</p>
           <p className="flex items-center gap-2 font-medium">
-            <img className="h-5 w-5" src={assetIcon[gift.asset]} alt={gift.asset} />
+            <Image width={20} height={20} src={assetIcon[gift.asset]} alt={gift.asset} />
             <span>
               {gift.price} {gift.asset}
             </span>

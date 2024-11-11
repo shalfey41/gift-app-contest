@@ -39,7 +39,6 @@ export const useBoughtGiftsByUserIdQuery = (userId?: string) => {
     },
     enabled: !!userId,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
     placeholderData: keepPreviousData,
   });
 };

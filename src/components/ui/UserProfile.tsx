@@ -26,7 +26,7 @@ export default function UserProfile({ profile }: Props) {
           />
         </div>
         {profile.place > 3 && (
-          <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-label-secondary px-2 text-s font-medium text-white">
+          <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-label-secondary px-2 text-s font-medium text-white dark:border-background">
             #{profile.place}
           </span>
         )}

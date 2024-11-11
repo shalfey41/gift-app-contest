@@ -29,6 +29,13 @@ export const giftPreviewIcon: Record<string, string> = {
   [GiftSymbol.redStar]: '/red-star.svg',
 };
 
+export const giftPreviewPng: Record<string, string> = {
+  [GiftSymbol.cake]: '/cake.jpg',
+  [GiftSymbol.greenStar]: '/green-star.jpg',
+  [GiftSymbol.blueStar]: '/blue-star.jpg',
+  [GiftSymbol.redStar]: '/red-star.jpg',
+};
+
 export const giftPreviewImg: Record<string, string> = {
   [GiftSymbol.cake]: '/cake-placeholder.svg',
   [GiftSymbol.greenStar]: '/star-placeholder.svg',

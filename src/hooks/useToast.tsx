@@ -5,7 +5,7 @@ export default function useToast() {
   const { setToast } = useContext(PageContext);
 
   const showToast = useCallback(
-    (toastOptions: ToastOptions, duration = 3000) => {
+    (toastOptions: ToastOptions, duration = 2000) => {
       setToast(toastOptions);
 
       setTimeout(() => {

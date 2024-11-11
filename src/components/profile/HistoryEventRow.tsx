@@ -6,6 +6,9 @@ import EventGetPayload = Prisma.EventGetPayload;
 import EventInclude = Prisma.EventInclude;
 import { giftPreviewIcon } from '@/components/utils';
 import { Trans, useTranslation } from 'react-i18next';
+import { BuyIcon } from '@/components/icons/Buy';
+import { SendIcon } from '@/components/icons/Send';
+import { ReceiveIcon } from '@/components/icons/Receive';
 
 type Props = {
   event: EventGetPayload<{ include: EventInclude }>;
@@ -30,24 +33,24 @@ export default function HistoryEventRow({ separator, event }: Props) {
     const getIcon = () => {
       switch (event.action) {
         case EventAction.buy:
-          return '/buy.svg';
+          return <BuyIcon />;
         case EventAction.send:
-          return '/send.svg';
+          return <SendIcon />;
         case EventAction.receive:
-          return '/receive.svg';
+          return <ReceiveIcon />;
         default:
           return null;
       }
     };
     const user = getUser();
     const url = giftPreviewIcon[event.gift.symbol] || null;
-    const icon = getIcon();
+    const Icon = getIcon();
 
     return (
       <div className="relative h-full w-full rounded-[10px] bg-secondary p-1.5">
         {url && <img src={url} alt={user?.name || t('user.avatar')} />}
-        <div className="absolute -bottom-0.5 -right-0.5">
-          {icon && <img src={icon} alt={event.action} />}
+        <div className="absolute -bottom-0.5 -right-0.5 text-white dark:text-background">
+          {Icon}
         </div>
       </div>
     );

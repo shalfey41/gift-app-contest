@@ -6,7 +6,7 @@ export default function Loader({ className, ...rest }: HTMLAttributes<HTMLDivEle
     <div
       {...rest}
       className={classNames(
-        `inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]`,
+        `inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]`,
         className,
       )}
       role="status"
