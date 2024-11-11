@@ -108,6 +108,7 @@ export const getGiftAnimationBySymbol = (symbol?: string) => {
 };
 
 export const parseError = (error: ErrorCode) => {
+  console.log(error);
   switch (error) {
     case ErrorCode.entityNotFound: {
       return 'giftStatus.error.entityNotFound';
