@@ -6,7 +6,6 @@ import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import ReceiveStatusPage from '@/components/receiveGift/ReceiveStatusPage';
 import { ErrorCode } from '@/modules/types';
 import { PageContext } from '@/components/app/PageContext';
-import { logError } from '@/modules/event/service';
 
 export default function MainPage() {
   const { route, setRoute } = useContext(PageContext);
@@ -23,12 +22,6 @@ export default function MainPage() {
       setRoute({ page: route.page });
     }
   }, []);
-
-  useEffect(() => {
-    if (error) {
-      logError(error, error.message);
-    }
-  }, [error]);
 
   return (
     <ReceiveStatusPage

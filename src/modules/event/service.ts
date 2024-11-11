@@ -269,10 +269,3 @@ export const getAllEventsByUserId = async (
     return null;
   }
 };
-
-// @ts-ignore
-export const logError = async (error, message) => {
-  console.log('log');
-  console.log(error);
-  console.log(message);
-};
