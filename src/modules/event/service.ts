@@ -156,9 +156,19 @@ export const receiveGiftByEventId = async (
 
     return event;
   } catch (error: unknown) {
+    console.log('OLOLO');
+    console.log(error);
+    console.log(typeof error);
+    // @ts-ignore
+    console.log(error in ErrorCode);
+    console.log(typeof error === 'string' && error in ErrorCode);
+    console.log('OLOLO end');
     if (typeof error === 'string' && error in ErrorCode) {
+      console.log('OLOLO 2');
       throw new Error(error);
     }
+
+    console.log('OLOLO 3');
 
     console.error(error);
     throw new Error(ErrorCode.unknown);
