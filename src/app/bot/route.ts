@@ -131,7 +131,6 @@ bot.on('inline_query', async (ctx) => {
       cache_time: 30,
     });
   } catch (error) {
-    console.log(error);
     await ctx.answerInlineQuery([]);
     handleBotError(error);
   }

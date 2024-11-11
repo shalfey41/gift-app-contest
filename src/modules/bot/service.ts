@@ -52,16 +52,13 @@ export const getProfilePhoto = async (userId: number, userName: string) => {
 
 export const reactToBuyEvent = async (eventId: string, lang?: string) => {
   try {
-    console.log('reactToBuyEvent', eventId, lang);
     const event = await getEventById(eventId, { include: { gift: true, buyer: true } });
 
-    console.log('event', event);
     if (!event) {
       return;
     }
 
     const t = await getI18n(lang);
-    console.log('t', t);
     const keyboard = new InlineKeyboard().url(
       t('bot.openGifts'),
       `${botUrl}/app?startapp=${StartParam.openPage}_${Page.gifts}`,
@@ -73,7 +70,6 @@ export const reactToBuyEvent = async (eventId: string, lang?: string) => {
       { keyboard },
     );
   } catch (error: unknown) {
-    console.log('error', error);
     handleBotError(error);
   }
 };
