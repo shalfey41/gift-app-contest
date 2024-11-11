@@ -8,6 +8,10 @@ export type PrismaTxn = Omit<
   '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
 >;
 
+export type AppError = {
+  code: ErrorCode;
+};
+
 export enum ErrorCode {
   unknown = 'unknown',
   entityNotFound = 'entityNotFound',

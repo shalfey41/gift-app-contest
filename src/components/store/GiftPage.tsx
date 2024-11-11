@@ -12,6 +12,7 @@ import {
   assetIcon,
   getGiftAnimationBySymbol,
   getGiftPatternBackgroundBySymbol,
+  parseError,
 } from '@/components/utils';
 import GiftEventsRow from '@/components/store/GiftEventsRow';
 import { PageContext } from '@/components/app/PageContext';
@@ -69,17 +70,16 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
     try {
       const invoice = await createInvoice(gift, user.id);
 
+      if ('code' in invoice) {
+        throw new Error(invoice.code);
+      }
+
       WebApp.openTelegramLink(`${invoice.miniAppPayUrl}&mode=compact`);
       checkInvoiceStatus(invoice.id);
     } catch (error: any) {
       setLoader(false);
 
-      const message =
-        error?.message === ErrorCode.giftIsSoldOut
-          ? t('store.gift.error.soldOut')
-          : t('store.gift.error.invoice');
-
-      WebApp.showAlert(message);
+      WebApp.showAlert(t(parseError(error?.message)));
 
       if (error === ErrorCode.giftIsSoldOut) {
         goBack();

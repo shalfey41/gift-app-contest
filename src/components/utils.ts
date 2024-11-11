@@ -110,24 +110,28 @@ export const getGiftAnimationBySymbol = (symbol?: string) => {
 export const parseError = (error: ErrorCode) => {
   switch (error) {
     case ErrorCode.entityNotFound: {
-      return 'giftStatus.error.entityNotFound';
+      return 'error.entityNotFound';
     }
 
     case ErrorCode.eventReceiveRemitterIsBeneficiary: {
-      return 'giftStatus.error.eventReceiveRemitterIsBeneficiary';
+      return 'error.eventReceiveRemitterIsBeneficiary';
     }
 
     case ErrorCode.eventReceiveWrongBeneficiary: {
-      return 'giftStatus.error.eventReceiveWrongBeneficiary';
+      return 'error.eventReceiveWrongBeneficiary';
     }
 
     case ErrorCode.eventReceiveGiftAlreadyReceived: {
-      return 'giftStatus.error.eventReceiveGiftAlreadyReceived';
+      return 'error.eventReceiveGiftAlreadyReceived';
+    }
+
+    case ErrorCode.giftIsSoldOut: {
+      return 'error.giftIsSoldOut';
     }
 
     case ErrorCode.unknown:
     default: {
-      return 'giftStatus.error.unknown';
+      return 'error.unknown';
     }
   }
 };

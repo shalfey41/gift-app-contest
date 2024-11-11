@@ -83,12 +83,7 @@
       "page": {
         "title": "Видимо, вы оказались на неправильной странице",
         "message": "Вы что, хакер?"
-      },
-      "entityNotFound": "Подарок не найден",
-      "eventReceiveRemitterIsBeneficiary": "Вы не можете получить свой собственный подарок",
-      "eventReceiveWrongBeneficiary": "Этот подарок не для вас",
-      "eventReceiveGiftAlreadyReceived": "Подарок уже получен",
-      "unknown": "Неизвестная ошибка"
+      }
     },
     "openProfile": "Открыть профиль"
   },
@@ -140,10 +135,6 @@
       }
     },
     "gift": {
-      "error": {
-        "soldOut": "Этот подарок уже распродан",
-        "invoice": "Ошибка создания счета. Попробуйте позже."
-      },
       "buy": "Купить подарок",
       "text": "Купите подарок, чтобы порадовать друга"
     }
@@ -170,5 +161,13 @@
     "giftReceivedNotification": "\uD83D\uDC4C\uFE0F*{{user}}* получил ваш подарок *{{gift}}*",
     "giftSentNotification": "⚡\uFE0F*{{user}}* подарил вам *{{gift}}*",
     "giftBuyNotification": "✅ Вы купили подарок *{{gift}}*"
+  },
+  "error": {
+    "unknown": "Неизвестная ошибка",
+    "entityNotFound": "Подарок не найден",
+    "eventReceiveRemitterIsBeneficiary": "Вы не можете получить свой собственный подарок",
+    "eventReceiveWrongBeneficiary": "Этот подарок не для вас",
+    "eventReceiveGiftAlreadyReceived": "Подарок уже получен",
+    "giftIsSoldOut": "Этот подарок распродан"
   }
 }

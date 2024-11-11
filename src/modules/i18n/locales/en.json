@@ -81,12 +81,7 @@
       "page": {
         "title": "Looks like you've landed on the wrong page",
         "message": "Are you a hacker?"
-      },
-      "entityNotFound": "Gift not found",
-      "eventReceiveRemitterIsBeneficiary": "You can't receive your own gift",
-      "eventReceiveWrongBeneficiary": "This gift is not for you",
-      "eventReceiveGiftAlreadyReceived": "Gift already received",
-      "unknown": "Unknown error happened"
+      }
     },
     "openProfile": "Open Profile"
   },
@@ -137,8 +132,7 @@
     },
     "gift": {
       "error": {
-        "soldOut": "Gift is sold out",
-        "invoice": "Error creating invoice. Try again later."
+        "soldOut": "Gift is sold out"
       },
       "buy": "Buy a Gift",
       "text": "Purchase this gift for the opportunity to give it to another user."
@@ -166,5 +160,13 @@
     "giftReceivedNotification": "\uD83D\uDC4C\uFE0F*{{user}}* received your gift of *{{gift}}*",
     "giftSentNotification": "⚡\uFE0F*{{user}}* has given you the gift of *{{gift}}*",
     "giftBuyNotification": "✅ You have purchased the gift of *{{gift}}*"
+  },
+  "error": {
+    "unknown": "Unknown error happened",
+    "entityNotFound": "Gift not found",
+    "eventReceiveRemitterIsBeneficiary": "You can't receive your own gift",
+    "eventReceiveWrongBeneficiary": "This gift is not for you",
+    "eventReceiveGiftAlreadyReceived": "Gift already received",
+    "giftIsSoldOut": "Gift is sold out"
   }
 }
