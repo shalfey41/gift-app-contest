@@ -65,7 +65,7 @@ export const validateGiftAvailability = async (giftId: string, txn: PrismaTxn) =
 export const createInvoiceTransaction = async (gift: Gift, userId: string) => {
   const [t, lang] = await Promise.all([getI18n(), getLanguageCookie()]);
 
-  return await prisma.$transaction(async (txn: PrismaTxn) => {
+  return prisma.$transaction(async (txn: PrismaTxn) => {
     await validateGiftAvailability(gift.id, txn);
 
     const invoice = await createInvoice({
