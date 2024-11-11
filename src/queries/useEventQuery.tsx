@@ -1,4 +1,6 @@
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { Prisma } from '@prisma/client';
+import EventInclude = Prisma.EventInclude;
 import {
   createSendEvent,
   getAllEventsByUserId,
@@ -7,9 +9,7 @@ import {
   getReceivedGiftsByUserId,
   getRecentEventsByGiftId,
   receiveGiftByEventId,
-} from '@/modules/event/service';
-import { Prisma } from '@prisma/client';
-import EventInclude = Prisma.EventInclude;
+} from '@/app/event/actions';
 
 export const useRecentGiftEventsQueryKey = 'getRecentEventsByGiftId';
 export const useBoughtGiftsByUserIdQueryKey = 'getBoughtGiftsByUserId';

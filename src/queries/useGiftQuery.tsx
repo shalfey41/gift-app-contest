@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getGifts } from '@/modules/gift/service';
+import { getGifts } from '@/app/gift/actions';
 
 export const useGiftsQueryKey = 'getGifts';
 

@@ -1,5 +1,3 @@
-'use server';
-
 import * as repository from '@/modules/gift/repository';
 
 export const getGifts = async () => {

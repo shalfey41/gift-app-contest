@@ -1,9 +1,7 @@
-'use server';
-
 import { CommandContext, Context, InlineKeyboard } from 'grammy';
 
 import * as repository from '@/modules/bot/repository';
-import { getAvatarBackgroundColorByName, handleBotError, isHashValid } from '@/modules/bot/utils';
+import { getAvatarBackgroundColorByName, handleBotError } from '@/modules/bot/utils';
 import { getEventById } from '@/modules/event/service';
 import { StartParam } from '@/modules/bot/types';
 import { Page } from '@/modules/types';
@@ -11,7 +9,6 @@ import { getI18n } from '@/modules/i18n/service';
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const webAppUrl = process.env.WEB_APP_URL;
-const token = process.env.TELEGRAM_BOT_TOKEN;
 const photoId = process.env.BOT_PHOTO_ID;
 
 if (!photoId) {
@@ -25,20 +22,6 @@ if (!botUrl) {
 if (!webAppUrl) {
   throw new Error('WEB_APP_URL environment variable not found.');
 }
-
-if (!token) {
-  throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.');
-}
-
-export const validateHash = async (telegramInitData: string): Promise<boolean> => {
-  const initData = new URLSearchParams(telegramInitData);
-
-  if (!initData.get('hash')) {
-    throw new Error('Missing required field hash');
-  }
-
-  return isHashValid(Object.fromEntries(initData), token);
-};
 
 export const getProfilePhoto = async (userId: number, userName: string) => {
   // create hash to make sure the background color is always the same for the same user

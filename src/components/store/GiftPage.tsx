@@ -3,6 +3,9 @@ import { BackButton } from '@twa-dev/sdk/react';
 import WebApp from '@twa-dev/sdk';
 import { useQueryClient } from '@tanstack/react-query';
 import { InvoiceStatus } from 'crypto-bot-api';
+import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Gift } from '@prisma/client';
 import { useBoughtGiftsByUserIdQueryKey, useRecentGiftEventsQuery } from '@/queries/useEventQuery';
 import {
@@ -15,11 +18,8 @@ import { PageContext } from '@/components/app/PageContext';
 import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
 import { useCurrentUserQuery } from '@/queries/useUserQuery';
-import { createInvoice, getInvoiceStatus } from '@/modules/cryptopay/service';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { createInvoice, getInvoiceStatus } from '@/app/cryptopay/actions';
 
 const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
 

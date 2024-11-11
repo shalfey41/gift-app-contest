@@ -4,7 +4,7 @@ import en from '@/modules/i18n/locales/en.json';
 import ru from '@/modules/i18n/locales/ru.json';
 import WebApp from '@twa-dev/sdk';
 import { Language } from '@/modules/i18n/types';
-import { setLanguageCookie } from '@/modules/i18n/service';
+import { setLanguageCookie } from '@/app/i18n/actions';
 
 const CsLangKey = 'language';
 

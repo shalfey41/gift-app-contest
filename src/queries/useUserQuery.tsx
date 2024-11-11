@@ -1,12 +1,12 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import WebApp from '@twa-dev/sdk';
 import {
+  getLeaderboardProfileById,
   getLeaderboardUsersWithMe,
-  searchLeaderboardUsersByName,
   getUserByTelegramId,
   getUsersWithoutMe,
-  getLeaderboardProfileById,
-} from '@/modules/user/service';
+  searchLeaderboardUsersByName,
+} from '@/app/user/actions';
 
 export const useCurrentUserQueryKey = 'currentUser';
 export const useLeaderboardUsersQueryKey = 'getLeaderboardUsersWithMe';

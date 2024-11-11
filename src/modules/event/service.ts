@@ -1,5 +1,3 @@
-'use server';
-
 import { Invoice } from 'crypto-bot-api';
 import * as repository from '@/modules/event/repository';
 import { EventAction, UserGift } from '@/modules/event/types';

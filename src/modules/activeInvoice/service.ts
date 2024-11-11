@@ -1,5 +1,3 @@
-'use server';
-
 import * as repository from '@/modules/activeInvoice/repository';
 import * as cryptoPayRepository from '@/modules/cryptopay/repository';
 import * as giftRepository from '@/modules/gift/repository';

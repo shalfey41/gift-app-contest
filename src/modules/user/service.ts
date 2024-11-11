@@ -1,5 +1,3 @@
-'use server';
-
 import * as repository from '@/modules/user/repository';
 import { getProfilePhoto } from '@/modules/bot/service';
 import { Leaderboard, LeaderboardProfile } from '@/modules/user/types';

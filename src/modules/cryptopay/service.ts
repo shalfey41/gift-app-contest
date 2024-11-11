@@ -1,5 +1,3 @@
-'use server';
-
 import { CryptoCurrencyCode } from 'crypto-bot-api';
 import { Gift } from '@prisma/client';
 import * as repository from '@/modules/cryptopay/repository';

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import WebApp from '@twa-dev/sdk';
-import { getBotInfo, validateHash } from '@/modules/bot/service';
+import { getBotInfo, validateHash } from '@/app/bot/actions';
 
 export const useValidateInitDataQueryKey = 'validateHash';
 export const useBotInfoQueryKey = 'botInfo';
