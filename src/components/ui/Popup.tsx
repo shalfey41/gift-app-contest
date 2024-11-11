@@ -33,7 +33,7 @@ export default function Popup({ className }: PropsWithChildren<Props>) {
     >
       {data.current?.onClose && (
         <button
-          className="bg-close-button text-close-icon absolute right-4 top-3 z-10 flex h-[30px] w-[30px] items-center justify-center rounded-full transition-opacity hover:opacity-80 dark:bg-secondary dark:text-label-secondary"
+          className="absolute right-4 top-3 z-10 flex h-[30px] w-[30px] items-center justify-center rounded-full bg-close-button text-close-icon transition-opacity hover:opacity-80 dark:bg-secondary dark:text-label-secondary"
           onClick={data.current.onClose}
         >
           <svg

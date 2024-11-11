@@ -4,7 +4,6 @@ import { Event, User } from '@prisma/client';
 import { EventAction } from '@/modules/event/types';
 import classNames from 'classnames';
 import { Trans, useTranslation } from 'react-i18next';
-import Image from 'next/image';
 import { BuyIcon } from '@/components/icons/Buy';
 import { SendIcon } from '@/components/icons/Send';
 import { ReceiveIcon } from '@/components/icons/Receive';

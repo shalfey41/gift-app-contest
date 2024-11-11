@@ -61,7 +61,7 @@ export default function SearchInput({ value, onChange, variant = 'default' }: Pr
         <input
           type="search"
           inputMode="search"
-          className="bg-close-button w-full rounded-[10px] p-2 pl-8 outline-none placeholder:text-separator/60 dark:bg-black/95 dark:placeholder:text-label-secondary"
+          className="w-full rounded-[10px] bg-close-button p-2 pl-8 outline-none placeholder:text-separator/60 dark:bg-black/95 dark:placeholder:text-label-secondary"
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onFocus={() => toggleFocus(true)}

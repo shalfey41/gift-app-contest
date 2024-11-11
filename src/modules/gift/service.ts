@@ -1,7 +1,6 @@
 'use server';
 
 import * as repository from '@/modules/gift/repository';
-import { Asset, GiftSymbol } from '@/modules/gift/types';
 
 export const getGifts = async () => {
   try {

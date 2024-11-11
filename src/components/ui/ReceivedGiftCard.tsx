@@ -1,7 +1,6 @@
 import React, { lazy, Suspense, useRef } from 'react';
 import { Gift, User } from '@prisma/client';
 import { getGiftAnimationBySymbol } from '@/components/utils';
-import { useLottie } from 'lottie-react';
 import { useTranslation } from 'react-i18next';
 import { getLanguage } from '@/modules/i18n/client';
 import { useInView } from 'framer-motion';

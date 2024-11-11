@@ -9,7 +9,7 @@ import { createUserIfNotExists, getUserByTelegramId } from '@/modules/user/servi
 import { createSendEvent, getBoughtGiftsByUserId, getEventById } from '@/modules/event/service';
 import { sendGreetingsMessage } from '@/modules/bot/service';
 import { StartParam } from '@/modules/bot/types';
-import { giftPreviewIcon, giftPreviewPng } from '@/components/utils';
+import { giftPreviewPng } from '@/components/utils';
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const token = process.env.TELEGRAM_BOT_TOKEN;

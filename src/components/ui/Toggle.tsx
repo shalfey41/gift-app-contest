@@ -16,7 +16,7 @@ export default function Toggle({ isChecked, onChange, icons }: Props) {
         onChange={() => onChange(!isChecked)}
         className="peer sr-only"
       />
-      <div className="after:shadow-toggle peer grid h-8 w-20 grid-cols-2 rounded-full bg-secondary after:absolute after:left-0.5 after:top-0.5 after:z-0 after:h-[28px] after:w-[38px] after:rounded-full after:border after:border-black/5 after:bg-white after:transition-transform peer-checked:after:translate-x-full dark:bg-black dark:after:bg-white/25">
+      <div className="peer grid h-8 w-20 grid-cols-2 rounded-full bg-secondary after:absolute after:left-0.5 after:top-0.5 after:z-0 after:h-[28px] after:w-[38px] after:rounded-full after:border after:border-black/5 after:bg-white after:shadow-toggle after:transition-transform peer-checked:after:translate-x-full dark:bg-black dark:after:bg-white/25">
         {icons.map((icon, index) => (
           <div
             key={index}
