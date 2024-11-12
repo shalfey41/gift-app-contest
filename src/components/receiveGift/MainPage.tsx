@@ -17,6 +17,9 @@ export default function MainPage() {
   let event;
   let error;
 
+  // NextJS server actions return either 200 or 500 status codes
+  // So I made for some events 200 status code only
+  // But maybe it's better to use 500 status code and get the real error from react query
   if (data && 'code' in data) {
     error = data.code;
   } else if (data) {
