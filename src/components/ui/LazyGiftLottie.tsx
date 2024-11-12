@@ -1,12 +1,12 @@
 import { LottieOptions, useLottie } from 'lottie-react';
 import { useInView } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 
-export default function LazyGiftLottie({
+const LazyGiftLottie = ({
   animationData,
   onLoad,
   ...props
-}: LottieOptions<'svg' | 'canvas'> & { onLoad?: () => void }) {
+}: LottieOptions<'svg' | 'canvas'> & { onLoad?: () => void }) => {
   const { View, animationContainerRef, goToAndPlay, animationLoaded } = useLottie({
     animationData,
     loop: false,
@@ -28,4 +28,6 @@ export default function LazyGiftLottie({
   }, [animationLoaded, onLoad]);
 
   return View;
-}
+};
+
+export default memo(LazyGiftLottie);

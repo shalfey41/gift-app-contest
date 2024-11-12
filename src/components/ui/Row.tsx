@@ -1,5 +1,6 @@
-import React, { HTMLAttributes } from 'react';
+import React, { PropsWithChildren } from 'react';
 import classNames from 'classnames';
+import { motion } from 'framer-motion';
 
 type Props = {
   left: React.ReactNode;
@@ -8,20 +9,31 @@ type Props = {
   separator?: boolean;
   py?: number;
   onClick?: () => void;
-  ref?: React.Ref<HTMLDivElement>;
-} & HTMLAttributes<HTMLDivElement>;
+  className?: string;
+};
 
-const Row = React.forwardRef<HTMLDivElement, Props>(function Row(
-  { children, left, right, subtitle, separator = true, py = 3, onClick, ...rest },
-  ref,
-) {
+export default function Row({
+  children,
+  left,
+  right,
+  subtitle,
+  className,
+  separator = true,
+  py = 3,
+  onClick,
+  ...rest
+}: PropsWithChildren<Props>) {
   return (
-    <div
+    <motion.div
+      layout
       {...rest}
-      ref={ref}
-      className={classNames('flex items-center gap-3 bg-background px-4', {
-        'cursor-pointer transition-opacity hover:opacity-80': onClick,
-      })}
+      className={classNames(
+        'flex items-center gap-3 bg-background px-4',
+        {
+          'cursor-pointer transition-opacity hover:opacity-80': onClick,
+        },
+        className,
+      )}
       onClick={() => onClick?.()}
     >
       <div className={`py-${py}`}>
@@ -29,7 +41,7 @@ const Row = React.forwardRef<HTMLDivElement, Props>(function Row(
       </div>
       <div
         className={classNames(`relative flex grow items-center gap-3 py-3`, {
-          'after:absolute after:bottom-0 after:block after:h-px after:w-full after:scale-y-[0.3] after:bg-separator/35':
+          'after:absolute after:bottom-0 after:block after:h-px after:w-full after:scale-y-[0.5] after:bg-separator/35':
             separator,
         })}
       >
@@ -39,8 +51,6 @@ const Row = React.forwardRef<HTMLDivElement, Props>(function Row(
         </div>
         {right && <div>{right}</div>}
       </div>
-    </div>
+    </motion.div>
   );
-});
-
-export default Row;
+}

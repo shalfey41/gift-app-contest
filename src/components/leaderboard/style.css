@@ -1,0 +1,8 @@
+.stickyTrigger .currentUser {
+    @apply hover:opacity-80
+}
+
+.stickyTrigger .currentUser:before {
+    @apply opacity-0;
+}
+

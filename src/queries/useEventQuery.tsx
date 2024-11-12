@@ -90,7 +90,6 @@ export const useReceivedGiftsByUserIdQuery = (userId?: string) => {
     enabled: !!userId,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-    placeholderData: keepPreviousData,
   });
 };
 

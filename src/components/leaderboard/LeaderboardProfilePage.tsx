@@ -30,7 +30,7 @@ export default function LeaderboardProfilePage({ goBack, profile }: Props) {
   return (
     <>
       <div className="flex items-start justify-center gap-4 px-4 pb-6 pt-2">
-        <UserProfile profile={profile} />
+        <UserProfile profile={profile} layoutId={profile.id} />
       </div>
 
       <div className="mb-8 px-4">

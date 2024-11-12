@@ -1,9 +1,11 @@
 import React from 'react';
 import { LeaderboardProfile } from '@/modules/user/types';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 type Props = {
   profile: LeaderboardProfile;
+  layoutId?: string;
 };
 
 const prizePlace: Record<string, string> = {
@@ -12,14 +14,15 @@ const prizePlace: Record<string, string> = {
   3: '🥉',
 };
 
-export default function UserProfile({ profile }: Props) {
+export default function UserProfile({ profile, layoutId }: Props) {
   const { t } = useTranslation();
 
   return (
     <div className="grid w-full max-w-52 justify-items-center text-center">
       <div className="relative mb-5">
         <div className="h-[100px] w-[100px]">
-          <img
+          <motion.img
+            layoutId={layoutId}
             className="rounded-full"
             src={profile.user.avatarUrl}
             alt={profile.user?.name || t('user.avatar')}

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { PageContext } from '@/components/app/PageContext';
 import Loader from '@/components/ui/Loader';
 import { useReceivedGiftsByUserIdQuery } from '@/queries/useEventQuery';
@@ -12,6 +12,7 @@ import EventInclude = Prisma.EventInclude;
 import { Page } from '@/modules/types';
 import { useTranslation } from 'react-i18next';
 import { getLanguage } from '@/modules/i18n/client';
+import { motion } from 'framer-motion';
 
 type Props = {
   userId: string;
@@ -23,6 +24,7 @@ export default function UserEvents({ userId }: Props) {
   const { showPopup, closePopup } = usePopup();
   const { data: events, isPending: isLoadingEvents } = useReceivedGiftsByUserIdQuery(userId);
   const wasGiftOpenedByRoute = useRef(false);
+  const timeoutRef = useRef<number | null>(null);
 
   const selectGift = useCallback(
     (event: EventGetPayload<{ include: EventInclude }>) => {
@@ -78,6 +80,20 @@ export default function UserEvents({ userId }: Props) {
     [t, closePopup, showPopup],
   );
 
+  // for smooth animation
+  const [showGifts, toggleShowGifts] = useState(false);
+  useEffect(() => {
+    timeoutRef.current = window.setTimeout(() => {
+      toggleShowGifts(true);
+    }, 500);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (!events || !events?.total || wasGiftOpenedByRoute.current) {
       return;
@@ -113,8 +129,20 @@ export default function UserEvents({ userId }: Props) {
     );
   }
 
+  if (!showGifts) {
+    return (
+      <div className="mt-5 flex w-full justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="grid grid-cols-3 gap-2"
+    >
       {events.list.map((event) => (
         <ReceivedGiftCard
           key={event.id}
@@ -123,6 +151,6 @@ export default function UserEvents({ userId }: Props) {
           selectGift={() => selectGift(event)}
         />
       ))}
-    </div>
+    </motion.div>
   );
 }

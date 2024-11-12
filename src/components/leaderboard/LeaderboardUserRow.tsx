@@ -1,8 +1,8 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Row from '@/components/ui/Row';
 import { LeaderboardProfile } from '@/modules/user/types';
-import { PageContext } from '@/components/app/PageContext';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 
 type Props = {
   profile: LeaderboardProfile;
@@ -13,8 +13,8 @@ type Props = {
 
 export default function LeaderboardUserRow({ profile, isCurrentUser, separator, onClick }: Props) {
   const { t } = useTranslation();
-  const currentUserRow = useRef<HTMLDivElement>(null);
-  const { bottomBarHeight } = useContext(PageContext);
+  const timeoutRef = useRef<number | null>(null);
+  const [rowClassName, setRowClassName] = useState('');
   const place = useMemo(() => {
     switch (profile.place) {
       case 1:
@@ -32,11 +32,28 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
     }
   }, [profile]);
 
+  useEffect(() => {
+    // for smooth animation
+    if (isCurrentUser) {
+      timeoutRef.current = window.setTimeout(() => {
+        setRowClassName(
+          'currentUser sticky -bottom-px hover:opacity-100 before:absolute before:-top-px before:left-0 before:block before:h-px before:w-full before:scale-y-[0.3] before:bg-separator/35',
+        );
+      }, 250);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [isCurrentUser]);
+
   return (
     <Row
-      ref={isCurrentUser ? currentUserRow : undefined}
       left={
-        <img
+        <motion.img
+          layoutId={profile.id}
           className="rounded-full"
           src={profile.user.avatarUrl}
           alt={profile.user.name || t('user.avatar')}
@@ -45,7 +62,7 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
       right={place}
       separator={separator}
       onClick={onClick}
-      style={isCurrentUser ? { position: 'sticky', bottom: Math.max(bottomBarHeight - 1, 0) } : {}}
+      className={rowClassName}
     >
       <span className="flex items-center gap-1.5">
         <span className="block">{profile.user.name}</span>

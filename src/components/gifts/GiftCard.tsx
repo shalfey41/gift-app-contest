@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef, useState } from 'react';
+import React, { lazy, Suspense, useCallback, useRef, useState } from 'react';
 import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
 import { getGiftAnimationBySymbol, giftPreviewImg } from '@/components/utils';
@@ -19,6 +19,7 @@ export default function GiftCard({ gift, selectGift }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const isVisible = useInView(ref, { margin: '200px 0px', once: true });
   const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const removePlaceholder = useCallback(() => setShowPlaceholder(false), []);
 
   return (
     <article
@@ -38,7 +39,7 @@ export default function GiftCard({ gift, selectGift }: Props) {
             <LazyGiftLottie
               animationData={animation}
               className="h-full w-full"
-              onLoad={() => setShowPlaceholder(false)}
+              onLoad={removePlaceholder}
             />
           </Suspense>
         )}
