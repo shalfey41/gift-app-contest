@@ -82,7 +82,7 @@ export default function Popup({ className }: PropsWithChildren<Props>) {
         <h2 className="mb-6 text-lg font-semibold">{data.current?.title}</h2>
 
         {data.current?.tableData && (
-          <table className="mb-4 border-collapse rounded-xl bg-white dark:bg-secondary">
+          <table className="mb-4 w-full border-collapse rounded-xl bg-white dark:bg-secondary">
             <tbody>
               {data.current.tableData.map(({ key, value }, i) => (
                 <tr key={key}>

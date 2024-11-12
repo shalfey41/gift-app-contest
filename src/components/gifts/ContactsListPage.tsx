@@ -85,7 +85,7 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
       <div className="grid w-full justify-items-center gap-2 px-4 pt-2">
         <h2 className="mb-1 font-semibold">{t('contactList.instructionTitle')}</h2>
 
-        <ol className="mb-2 list-decimal text-balance px-6 text-m/[25px]">
+        <ol className="mb-2 w-full list-decimal text-balance px-6 text-m/[25px]">
           <li>{t('contactList.instructionItem1')}</li>
           <li>
             {t('contactList.instructionItem2')}

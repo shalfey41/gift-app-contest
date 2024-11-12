@@ -157,6 +157,7 @@ export const getUsersWithoutMe = async (
           not: currentUserId,
         },
       },
+      orderBy: { createdAt: 'desc' },
       limit: 50,
     });
   } catch (error) {

@@ -23,6 +23,7 @@ import { useGiftsQueryKey } from '@/queries/useGiftQuery';
 import { createInvoice, getInvoiceStatus } from '@/app/cryptopay/actions';
 import { ErrorCode } from '@/modules/types';
 import { useLottie } from 'lottie-react';
+import classNames from 'classnames';
 
 type Props = {
   gift: Gift;
@@ -60,7 +61,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
           goNext();
         }
       } else {
-        setTimeout(() => checkInvoiceStatus(invoiceId), 5000);
+        setTimeout(() => checkInvoiceStatus(invoiceId), 4000);
       }
     },
     [goNext, queryClient],
@@ -140,7 +141,12 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
 
           <div className="mb-2 mt-3 flex items-center gap-3">
             <h2 className="text-lg font-semibold">{gift.name}</h2>
-            <p className="rounded-full bg-primary/[0.12] px-2 text-s font-medium text-primary">
+            <p
+              className={classNames('rounded-full px-2 text-s font-medium', {
+                'bg-accent-gold/[0.12] text-accent-gold': isSoldOut,
+                'bg-primary/[0.12] text-primary': !isSoldOut,
+              })}
+            >
               {isSoldOut
                 ? t('gift.soldOut')
                 : t('gift.available', { amount: gift.availableAmount, total: gift.totalAmount })}
