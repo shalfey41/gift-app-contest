@@ -8,6 +8,7 @@ import PurchaseStatusPage from '@/components/store/PurchaseStatusPage';
 import { useGiftsQuery } from '@/queries/useGiftQuery';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import { pageAnimation } from '@/components/utils';
+import WebApp from '@twa-dev/sdk';
 
 enum Page {
   store,
@@ -39,6 +40,7 @@ export default function MainPage() {
 
   const selectGift = useCallback(
     (gift: Gift) => {
+      WebApp.HapticFeedback.selectionChanged();
       setSelectedGift(gift);
       goToGift();
     },

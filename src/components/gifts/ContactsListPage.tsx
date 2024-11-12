@@ -38,6 +38,7 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
         return;
       }
 
+      WebApp.HapticFeedback.selectionChanged();
       WebApp.showConfirm(
         t('contactList.confirmTransfer', {
           gift: selectedGift.gift.name,
@@ -62,8 +63,10 @@ export default function ContactsListPage({ selectedGift, goBack, goNext }: Props
               }
 
               queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
+              WebApp.HapticFeedback.notificationOccurred('success');
               goNext(event.id);
             } catch (error) {
+              WebApp.HapticFeedback.notificationOccurred('error');
               console.error(error);
               WebApp.showAlert(t('contactList.sendError'));
               goBack();

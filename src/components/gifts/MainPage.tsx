@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { getLanguage } from '@/modules/i18n/client';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
+import WebApp from '@twa-dev/sdk';
 
 enum Page {
   giftsList,
@@ -56,6 +57,7 @@ export default function MainPage() {
 
   const selectGift = useCallback(
     (userGift: UserGift) => {
+      WebApp.HapticFeedback.selectionChanged();
       setSelectedUserGift(userGift);
 
       showPopup({

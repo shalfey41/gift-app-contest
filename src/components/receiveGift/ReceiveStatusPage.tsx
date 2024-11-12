@@ -11,6 +11,7 @@ import Button from '@/components/ui/Button';
 import Loader from '@/components/ui/Loader';
 import { ErrorCode, Page } from '@/modules/types';
 import { Trans, useTranslation } from 'react-i18next';
+import WebApp from '@twa-dev/sdk';
 
 type Props = {
   event?: EventGetPayload<{ include: EventInclude }>;
@@ -36,6 +37,8 @@ export default function ReceiveStatusPage({ event, isLoading, error }: Props) {
     if (!event) {
       return;
     }
+
+    WebApp.HapticFeedback.notificationOccurred('success');
 
     setTimeout(() => {
       showToast({

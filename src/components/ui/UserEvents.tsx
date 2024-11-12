@@ -13,6 +13,7 @@ import { Page } from '@/modules/types';
 import { useTranslation } from 'react-i18next';
 import { getLanguage } from '@/modules/i18n/client';
 import { motion } from 'framer-motion';
+import WebApp from '@twa-dev/sdk';
 
 type Props = {
   userId: string;
@@ -28,6 +29,8 @@ export default function UserEvents({ userId }: Props) {
 
   const selectGift = useCallback(
     (event: EventGetPayload<{ include: EventInclude }>) => {
+      WebApp.HapticFeedback.selectionChanged();
+
       showPopup({
         title: event.gift.name,
         animation: getGiftAnimationBySymbol(event.gift.symbol),

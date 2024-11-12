@@ -58,6 +58,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
         queryClient.invalidateQueries({ queryKey: [useBoughtGiftsByUserIdQueryKey] });
 
         if (isMounted.current) {
+          WebApp.HapticFeedback.notificationOccurred('success');
           goNext();
         }
       } else {
@@ -86,6 +87,7 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
     } catch (error: any) {
       setLoader(false);
 
+      WebApp.HapticFeedback.notificationOccurred('error');
       WebApp.showAlert(t(parseError(error?.message)));
 
       if (error?.message === ErrorCode.giftIsSoldOut) {
