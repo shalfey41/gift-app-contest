@@ -95,6 +95,10 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => {
+              setPopup(null);
+              toggleBottomBar(true);
+            }}
           />
         )}
       </div>
@@ -112,7 +116,7 @@ export default function App() {
               initial={{ y: 0 }}
               animate={{ y: '-100%' }}
               exit={{ y: 0 }}
-              transition={{ ease: 'anticipate' }}
+              transition={{ type: 'tween', duration: 0.3 }}
             >
               <Popup />
             </motion.div>
