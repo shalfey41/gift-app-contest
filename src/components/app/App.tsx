@@ -116,7 +116,7 @@ export default function App() {
               initial={{ y: 0 }}
               animate={{ y: '-100%' }}
               exit={{ y: 0 }}
-              transition={{ type: 'tween', duration: 0.3 }}
+              transition={{ type: 'tween', duration: 0.2 }}
             >
               <Popup />
             </motion.div>
