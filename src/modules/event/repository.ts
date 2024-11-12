@@ -7,6 +7,7 @@ import EventInclude = Prisma.EventInclude;
 import EventUncheckedCreateInput = Prisma.EventUncheckedCreateInput;
 import EventOrderByWithAggregationInput = Prisma.EventOrderByWithAggregationInput;
 import prisma from '@/modules/prisma/prisma';
+import EventWhereUniqueInput = Prisma.EventWhereUniqueInput;
 
 export const getEventById = async (
   id: string,
@@ -63,6 +64,26 @@ export const getEventsByGiftId = async (
     },
     take: options?.limit,
     ...(options?.orderBy ? { orderBy: { createdAt: options.orderBy } } : {}),
+  });
+};
+
+export const getOneEvent = async (
+  options: {
+    include?: EventInclude;
+    where: EventWhereUniqueInput;
+  },
+  prismaTxn?: PrismaTxn,
+): Promise<EventGetPayload<{ include: EventInclude }> | null> => {
+  const include = options?.include;
+
+  return (prismaTxn || prisma).event.findUnique({
+    where: options.where,
+    include: {
+      gift: include?.gift,
+      buyer: include?.buyer,
+      remitter: include?.remitter,
+      beneficiary: include?.beneficiary,
+    },
   });
 };
 

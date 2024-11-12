@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function LeaderboardProfilePage({ goBack, profile }: Props) {
-  const { setBottomBar } = useContext(PageContext);
+  const { setBottomBar, popup } = useContext(PageContext);
 
   useEffect(() => {
     setBottomBar(<MenuBar />);
@@ -37,7 +37,13 @@ export default function LeaderboardProfilePage({ goBack, profile }: Props) {
         <UserEvents userId={profile.user.id} />
       </div>
 
-      <BackButton onClick={() => goBack()} />
+      <BackButton
+        onClick={() => {
+          if (!popup) {
+            goBack();
+          }
+        }}
+      />
     </>
   );
 }

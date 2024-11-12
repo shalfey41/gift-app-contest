@@ -17,15 +17,18 @@ export const createBuyEvent = async (invoice: Invoice) => {
       lang: string;
     };
 
-    const event = await repository.createEvent({
-      action: EventAction.buy,
-      giftId,
-      buyerId: userId,
-      isGiftSent: false,
-      invoiceId: invoice.id,
-    });
+    const event = await repository.createEvent(
+      {
+        action: EventAction.buy,
+        giftId,
+        buyerId: userId,
+        isGiftSent: false,
+        invoiceId: invoice.id,
+      },
+      { gift: true, buyer: true },
+    );
 
-    reactToBuyEvent(event.id, lang);
+    reactToBuyEvent(event, lang);
 
     return event;
   } catch (error) {
@@ -55,17 +58,21 @@ export const createSendEvent = async ({
       throw new Error(ErrorCode.giftAlreadySent);
     }
 
-    return await repository.createEvent({
-      action: EventAction.send,
-      giftId,
-      remitterId,
-      beneficiaryId,
-      isGiftReceived: false,
-    });
+    return await repository.createEvent(
+      {
+        action: EventAction.send,
+        giftId,
+        remitterId,
+        beneficiaryId,
+        isGiftReceived: false,
+      },
+      { gift: true, remitter: true, beneficiary: true },
+      txn,
+    );
   });
 
   if (event.beneficiaryId) {
-    reactToSendEvent(event.id, lang);
+    reactToSendEvent(event, lang);
   }
 
   return event;
@@ -97,7 +104,7 @@ export const createReceiveEvent = async (
       prismaTxn,
     );
 
-    reactToReceiveEvent(event.id);
+    reactToReceiveEvent(event);
 
     return event;
   } catch (error) {
@@ -173,6 +180,38 @@ export const getEventById = async (
 export const getRecentEventsByGiftId = async (giftId: string) => {
   try {
     return repository.getEventsByGiftId(giftId, { limit: 10, orderBy: 'desc' });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getOneBoughtGiftByUserId = async (
+  eventId: string,
+  userId: string,
+): Promise<UserGift | null> => {
+  try {
+    const event = await repository.getOneEvent({
+      where: {
+        id: eventId,
+        buyerId: userId,
+        action: EventAction.buy,
+        isGiftSent: false,
+      },
+      include: {
+        gift: true,
+      },
+    });
+
+    if (!event) {
+      return null;
+    }
+
+    return {
+      id: event.id,
+      boughtAt: event.createdAt,
+      gift: event.gift,
+    };
   } catch (error) {
     console.error(error);
     return null;

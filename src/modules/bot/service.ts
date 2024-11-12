@@ -8,7 +8,11 @@ import {
 
 import * as repository from '@/modules/bot/repository';
 import { getAvatarBackgroundColorByName, handleBotError } from '@/modules/bot/utils';
-import { createSendEvent, getBoughtGiftsByUserId, getEventById } from '@/modules/event/service';
+import {
+  createSendEvent,
+  getBoughtGiftsByUserId,
+  getOneBoughtGiftByUserId,
+} from '@/modules/event/service';
 import { StartParam } from '@/modules/bot/types';
 import { Page } from '@/modules/types';
 import { getI18n } from '@/modules/i18n/service';
@@ -16,6 +20,9 @@ import { getUserByTelegramId } from '@/modules/user/service';
 import ObjectID from 'bson-objectid';
 import { giftPreviewPng } from '@/components/utils';
 import { InlineQueryResult } from '@grammyjs/types';
+import { Prisma } from '@prisma/client';
+import EventGetPayload = Prisma.EventGetPayload;
+import EventInclude = Prisma.EventInclude;
 
 const botUrl = process.env.TELEGRAM_BOT_URL;
 const webAppUrl = process.env.WEB_APP_URL;
@@ -44,14 +51,15 @@ export const getProfilePhoto = async (userId: number, userName: string) => {
   return telegramProfilePhoto || defaultAvatarUrl;
 };
 
-export const reactToBuyEvent = async (eventId: string, lang?: string) => {
+export const reactToBuyEvent = async (
+  event: EventGetPayload<{ include: EventInclude }>,
+  lang?: string,
+) => {
+  if (!event || !event.buyer || !event.gift) {
+    return;
+  }
+
   try {
-    const event = await getEventById(eventId, { include: { gift: true, buyer: true } });
-
-    if (!event) {
-      return;
-    }
-
     const t = await getI18n(lang);
     const keyboard = new InlineKeyboard().url(
       t('bot.openGifts'),
@@ -59,7 +67,7 @@ export const reactToBuyEvent = async (eventId: string, lang?: string) => {
     );
 
     await repository.sendMessage(
-      Number(event.buyer?.telegramId),
+      Number(event.buyer.telegramId),
       t('bot.giftBuyNotification', { gift: event.gift.name }),
       { keyboard },
     );
@@ -68,11 +76,10 @@ export const reactToBuyEvent = async (eventId: string, lang?: string) => {
   }
 };
 
-export const reactToSendEvent = async (eventId: string, lang?: string) => {
-  const event = await getEventById(eventId, {
-    include: { gift: true, remitter: true, beneficiary: true },
-  });
-
+export const reactToSendEvent = async (
+  event: EventGetPayload<{ include: EventInclude }>,
+  lang?: string,
+) => {
   if (!event || !event.beneficiary || !event.remitter || !event.gift) {
     return;
   }
@@ -99,11 +106,10 @@ export const reactToSendEvent = async (eventId: string, lang?: string) => {
   }
 };
 
-export const reactToReceiveEvent = async (eventId: string, lang?: string) => {
-  const event = await getEventById(eventId, {
-    include: { gift: true, remitter: true, beneficiary: true },
-  });
-
+export const reactToReceiveEvent = async (
+  event: EventGetPayload<{ include: EventInclude }>,
+  lang?: string,
+) => {
   if (!event || !event.beneficiary || !event.remitter || !event.gift) {
     return;
   }
@@ -174,7 +180,7 @@ export const handleInlineQuery = async (ctx: InlineQueryContext<Context>) => {
     }> = [];
 
     if (eventId) {
-      const oneGiftEvent = await getEventById(eventId, { include: { gift: true } });
+      const oneGiftEvent = await getOneBoughtGiftByUserId(eventId, user.id);
 
       if (oneGiftEvent) {
         events.push({
@@ -182,7 +188,7 @@ export const handleInlineQuery = async (ctx: InlineQueryContext<Context>) => {
           eventId: oneGiftEvent.id,
           name: oneGiftEvent.gift.name,
           photoUrl: `${webAppUrl}${giftPreviewPng[oneGiftEvent.gift.symbol]}`,
-          boughtAt: oneGiftEvent.createdAt.valueOf().toString(),
+          boughtAt: oneGiftEvent.boughtAt.valueOf().toString(),
         });
       }
     }
