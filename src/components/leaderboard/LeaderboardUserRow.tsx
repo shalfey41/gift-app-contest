@@ -37,7 +37,7 @@ export default function LeaderboardUserRow({ profile, isCurrentUser, separator, 
     if (isCurrentUser) {
       timeoutRef.current = window.setTimeout(() => {
         setRowClassName(
-          'currentUser sticky -bottom-px hover:opacity-100 before:absolute before:-top-px before:left-0 before:block before:h-px before:w-full before:scale-y-[0.3] before:bg-separator/35',
+          'currentUser sticky -bottom-px before:opacity-0 before:absolute before:-top-px before:left-0 before:block before:h-px before:w-full before:scale-y-[0.3] before:bg-separator/35',
         );
       }, 250);
     }

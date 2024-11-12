@@ -21,7 +21,7 @@ export default function LeaderboardList({ goNext, showMyRow, leaderboard, me }: 
   });
 
   return (
-    <div className={isStickyTriggerVisible ? 'stickyTrigger' : ''}>
+    <div className={!isStickyTriggerVisible ? 'noSticky' : ''}>
       {leaderboard.map((profile, index) => (
         <Fragment key={profile.id}>
           {profile.id === me.id && (

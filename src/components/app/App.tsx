@@ -11,7 +11,6 @@ import ReceiveGiftPage from '@/components/receiveGift/MainPage';
 import { PageContext, PopupOptions, ToastOptions } from '@/components/app/PageContext';
 import MenuBar from '@/components/ui/menu/MenuBar';
 import BottomBar from '@/components/ui/BottomBar';
-import { useTraceUpdate } from '@/hooks/useTraceUpdate';
 import Toast from '@/components/ui/Toast';
 import Popup from '@/components/ui/Popup';
 import { pageAnimation, parseStartParam } from '@/components/utils';
@@ -26,8 +25,6 @@ export default function App() {
   const [bottomBar, setBottomBar] = useState<React.ReactNode>(<MenuBar />);
   const [toast, setToast] = useState<ToastOptions | null>(null);
   const [popup, setPopup] = useState<PopupOptions | null>(null);
-
-  useTraceUpdate('App', { route, showBottomBar, bottomBar, toast, popup, bottomBarHeight });
 
   useEffect(() => {
     if (bottomBarRef.current) {

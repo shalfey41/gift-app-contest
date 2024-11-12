@@ -2,6 +2,7 @@ import React from 'react';
 import { LeaderboardProfile } from '@/modules/user/types';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import classNames from 'classnames';
 
 type Props = {
   profile: LeaderboardProfile;
@@ -28,11 +29,17 @@ export default function UserProfile({ profile, layoutId }: Props) {
             alt={profile.user?.name || t('user.avatar')}
           />
         </div>
-        {profile.place > 3 && (
-          <span className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-label-secondary px-2 text-s font-medium text-white dark:border-background">
-            #{profile.place}
-          </span>
-        )}
+        <span
+          className={classNames(
+            'absolute left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white px-2 text-s font-medium text-white dark:border-background',
+            {
+              'bg-label-secondary': profile.place > 3,
+              'bg-accent-gold': profile.place <= 3,
+            },
+          )}
+        >
+          #{profile.place}
+        </span>
       </div>
       <h1 className="mb-1 text-lg font-semibold">
         {profile.user.name}
