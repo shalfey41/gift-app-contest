@@ -60,7 +60,7 @@ export default function App() {
         className={classNames('relative grow bg-background')}
         style={{ paddingBottom: bottomBarHeight }}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {route.page === Page.store && (
             <motion.div key={Page.store} {...pageAnimation} className="h-full">
               <StorePage />
@@ -86,20 +86,24 @@ export default function App() {
               <ReceiveGiftPage />
             </motion.div>
           )}
-
-          {popup && (
-            <motion.div
-              key="overlay"
-              className="absolute inset-0 z-20 bg-black/40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-          )}
         </AnimatePresence>
+
+        {popup && (
+          <motion.div
+            key="overlay"
+            className="absolute inset-0 z-20 bg-black/40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+        )}
       </div>
 
-      <div className="fixed bottom-0 z-30 w-full bg-tab-bar" ref={bottomBarRef}>
+      <motion.div
+        layout="position"
+        className="fixed bottom-0 z-30 w-full bg-tab-bar"
+        ref={bottomBarRef}
+      >
         <AnimatePresence>
           {popup && (
             <motion.div
@@ -132,8 +136,8 @@ export default function App() {
           )}
           {showBottomBar && (
             <motion.div
-              key="showBottomBar"
               layout
+              key="showBottomBar"
               className="relative pb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -143,7 +147,7 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </PageContext.Provider>
   );
 }

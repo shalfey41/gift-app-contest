@@ -190,4 +190,5 @@ export const pageAnimation = {
   initial: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
   animate: { opacity: 1, scale: 1, filter: 'blur(0)' },
   exit: { opacity: 0, scale: 0.9, filter: 'blur(4px)' },
+  transition: { type: 'spring', stiffness: 300, damping: 30 },
 };

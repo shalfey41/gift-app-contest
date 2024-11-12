@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { BackButton } from '@twa-dev/sdk/react';
 import WebApp from '@twa-dev/sdk';
 import { useQueryClient } from '@tanstack/react-query';
@@ -22,8 +22,7 @@ import { useCurrentUserQuery } from '@/queries/useUserQuery';
 import { useGiftsQueryKey } from '@/queries/useGiftQuery';
 import { createInvoice, getInvoiceStatus } from '@/app/cryptopay/actions';
 import { ErrorCode } from '@/modules/types';
-
-const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
+import { useLottie } from 'lottie-react';
 
 type Props = {
   gift: Gift;
@@ -41,6 +40,13 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
   const isMounted = useRef(false);
   const [isLoading, setLoader] = useState(false);
   const { data: user } = useCurrentUserQuery();
+  const { View } = useLottie({
+    animationData: animation,
+    loop: false,
+    autoPlay: true,
+    renderer: 'canvas',
+    className: 'size-full',
+  });
 
   const checkInvoiceStatus = useCallback(
     async (invoiceId: number) => {
@@ -127,13 +133,9 @@ export default function GiftPage({ gift, goNext, goBack }: Props) {
               background: getGiftPatternBackgroundBySymbol(gift.symbol),
             }}
           >
-            <Suspense>
-              <LazyGiftLottie
-                animationData={animation}
-                renderer="canvas"
-                className="h-[267px] w-[267px]"
-              />
-            </Suspense>
+            <motion.div layoutId={gift.id} className="h-[267px] w-[267px]">
+              {View}
+            </motion.div>
           </div>
 
           <div className="mb-2 mt-3 flex items-center gap-3">

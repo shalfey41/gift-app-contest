@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Gift } from '@prisma/client';
 import Button from '@/components/ui/Button';
 import {
@@ -6,14 +6,11 @@ import {
   firstNonZeroDigit,
   getGiftAnimationBySymbol,
   getGiftPatternBackgroundBySymbol,
-  giftPreviewImg,
 } from '@/components/utils';
 import { useTranslation } from 'react-i18next';
-import { useInView } from 'framer-motion';
-import Image from 'next/image';
 import { getLanguage } from '@/modules/i18n/client';
-
-const LazyGiftLottie = lazy(() => import('@/components/ui/LazyGiftLottie'));
+import { motion } from 'framer-motion';
+import { useLottie } from 'lottie-react';
 
 type Props = {
   gift: Gift;
@@ -25,8 +22,13 @@ export default function StoreGift({ gift, selectGift }: Props) {
   const isSoldOut = gift.availableAmount === 0;
   const animation = getGiftAnimationBySymbol(gift.symbol);
   const ref = useRef<HTMLDivElement>(null);
-  const isVisible = useInView(ref, { margin: '200px 0px', once: true });
-  const [showPlaceholder, setShowPlaceholder] = useState(true);
+  const { View } = useLottie({
+    animationData: animation,
+    loop: false,
+    autoPlay: true,
+    renderer: 'canvas',
+    className: 'size-full',
+  });
 
   return (
     <article
@@ -48,18 +50,9 @@ export default function StoreGift({ gift, selectGift }: Props) {
             })}
       </p>
       <div className="flex h-32 w-32 items-center justify-center p-2.5">
-        {showPlaceholder && (
-          <Image width={128} height={128} src={giftPreviewImg[gift.symbol]} alt="icon" />
-        )}
-        {isVisible && (
-          <Suspense>
-            <LazyGiftLottie
-              animationData={animation}
-              onLoad={() => setShowPlaceholder(false)}
-              className="h-full w-full"
-            />
-          </Suspense>
-        )}
+        <motion.div layoutId={gift.id} className="size-full">
+          {View}
+        </motion.div>
       </div>
       <h2 className="mb-3 mt-1 font-semibold">{gift.name}</h2>
       <Button disabled={isSoldOut} iconPath={assetOutlineIcon[gift.asset]} className="pl-3">
